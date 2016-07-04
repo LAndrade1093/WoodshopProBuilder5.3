@@ -1,35 +1,77 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class CameraHelper
+public static class CameraHelper
 {
-    //public static float ClampAngle(float angle, float minAngle, float maxAngle)
-    //{
-    //    float adjustedAngle = angle;
-    //    do
-    //    {
-    //        if (adjustedAngle < -360)
-    //        {
-    //            adjustedAngle += 360;
-    //        }
+    public class ClipPlaneCoordinates
+    {
+        public Vector3 TopLeft;
+        public Vector3 TopRight;
+        public Vector3 BottomLeft;
+        public Vector3 BottomRight;
+        public Vector3 Center;
 
-    //        if (adjustedAngle > 360)
-    //        {
-    //            adjustedAngle -= 360;
-    //        }
+        public Vector3[] GetCoordinatesArray()
+        {
+            Vector3[] collisionPoints = new Vector3[5];
+            collisionPoints[0] = BottomLeft;
+            collisionPoints[1] = TopLeft;
+            collisionPoints[2] = BottomRight;
+            collisionPoints[3] = TopRight;
+            collisionPoints[4] = Center;
+            return collisionPoints;
+        }
+    }
 
-    //    } while (adjustedAngle < -360 || adjustedAngle > 360);
+    public static ClipPlaneCoordinates getNearClipPlanePoints(Vector3 cameraPos)
+    {
+        if (Camera.main == null)
+        {
+            Debug.LogError("\"(InputHelper\\getNearClipPlanePoints)\" - Main camera is missing");
+            return new ClipPlaneCoordinates();
+        }
+        else
+        {
+            ClipPlaneCoordinates points = new ClipPlaneCoordinates();
 
-    //    float finalAngle = Mathf.Clamp(adjustedAngle, minAngle, maxAngle);
+            Transform mainCameraTrans = Camera.main.transform;
+            float halfFOV = (Camera.main.fieldOfView * 0.5f) * Mathf.Deg2Rad;
+            float aspectRatio = Camera.main.aspect;
+            float nearClipDistance = Camera.main.nearClipPlane;
+            float planeHeight = Mathf.Tan(halfFOV) * nearClipDistance;
+            float planeWidth = planeHeight * aspectRatio;
+            Vector3 toNearClipPlaneVector = mainCameraTrans.forward * nearClipDistance;
 
-    //    return finalAngle;
-    //}
+            Vector3 moveRightVector = cameraPos + (mainCameraTrans.right * planeWidth);
+            Vector3 moveLeftVector = cameraPos - (mainCameraTrans.right * planeWidth);
+            Vector3 upPlaneVector = mainCameraTrans.up * planeHeight;
 
-    //public static Vector3 CalculatePosition(float zDistance, Vector3 lookAtPoint, float xRotation, float yRotation, Vector3 lookAtPointOffset = new Vector3())
-    //{
-    //    Vector3 direction = new Vector3(0.0f, 0.0f, -zDistance);
-    //    Quaternion rotation = Quaternion.Euler(xRotation, yRotation, 0.0f);
-    //    Vector3 calculatedPosition = (lookAtPoint + lookAtPointOffset) + (rotation * direction);
-    //    return calculatedPosition;
-    //}
+            points.TopLeft = moveLeftVector;
+            points.TopLeft += upPlaneVector;
+            points.TopLeft += toNearClipPlaneVector;
+
+            points.TopRight = moveRightVector;
+            points.TopRight += upPlaneVector;
+            points.TopRight += toNearClipPlaneVector;
+
+            points.BottomLeft = moveLeftVector;
+            points.BottomLeft -= upPlaneVector;
+            points.BottomLeft += toNearClipPlaneVector;
+
+            points.BottomRight = moveRightVector;
+            points.BottomRight -= upPlaneVector;
+            points.BottomRight += toNearClipPlaneVector;
+
+            points.Center = toNearClipPlaneVector;
+            points.Center += cameraPos;
+
+            //Debug.Log("TopLeft : " + points.TopLeft);
+            //Debug.Log("TopRight : " + points.TopRight);
+            //Debug.Log("BottomLeft : " + points.BottomLeft);
+            //Debug.Log("BottomRight : " + points.BottomRight);
+            //Debug.Log("Center : " + points.Center);
+
+            return points;
+        }
+    }
 }

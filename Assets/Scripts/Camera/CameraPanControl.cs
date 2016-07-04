@@ -5,6 +5,7 @@ using HedgehogTeam.EasyTouch;
 public class CameraPanControl : MonoBehaviour
 {
     public Transform LookAtPoint;
+    public LayerMask CollisionMask;
 
     [Header("Distance Variables")]
     public float Distance = 2.0f;
@@ -60,6 +61,7 @@ public class CameraPanControl : MonoBehaviour
         LookAtPoint.position = finalPannedPosition;
 
         CalculateNewPosition();
+        CheckCollision();
 
         finalPosition = newPosition - transform.position;
         transform.Translate(finalPosition, Space.Self);
@@ -130,7 +132,7 @@ public class CameraPanControl : MonoBehaviour
     private void CalculateNewPosition()
     {
         Distance = Mathf.SmoothDamp(Distance, desiredDistance, ref distanceVelocity, ZoomSmoothing);
-        newPosition = CalculatePosition(Distance, LookAtPoint.position, 0, 0);
+        newPosition = CalculatePosition(Distance, LookAtPoint.position, 0f, 0f);
     }
 
     private Vector3 CalculatePosition(float zDistance, Vector3 lookAtPoint, float xRotation, float yRotation, Vector3 lookAtPointOffset = new Vector3())
@@ -139,6 +141,32 @@ public class CameraPanControl : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(xRotation, yRotation, 0.0f);
         Vector3 calculatedPosition = (lookAtPoint + lookAtPointOffset) + (rotation * direction);
         return calculatedPosition;
+    }
+
+    private void CheckCollision()
+    {
+        CameraHelper.ClipPlaneCoordinates planeCoordinates = CameraHelper.getNearClipPlanePoints(newPosition);
+        Vector3[] collisionPoints = planeCoordinates.GetCoordinatesArray();
+
+        RaycastHit hitInfo;
+        float intersectingDistance = -1.0f;
+        for (int i = 0; i < collisionPoints.Length; i++)
+        {
+            if (Physics.Linecast(transform.position, collisionPoints[i], out hitInfo, CollisionMask))
+            {
+                float distance = (transform.position - collisionPoints[i]).magnitude - hitInfo.distance;
+                if (intersectingDistance < distance || intersectingDistance == -1)
+                {
+                    intersectingDistance = distance;
+                }
+            }
+        }
+
+        if (intersectingDistance != -1.0f)
+        {
+            float finalDistance = intersectingDistance + Distance + 0.2f;
+            newPosition = CalculatePosition(finalDistance, LookAtPoint.position, 0f, 0f);
+        }
     }
 
     private bool PlayerStartedTouchingScreen(Gesture gesture)

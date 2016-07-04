@@ -5,6 +5,7 @@ using HedgehogTeam.EasyTouch;
 public class CameraOrbitControl : MonoBehaviour
 {
     public Transform LookAtPoint;
+    public LayerMask CollisionMask;
 
     [Header("Distance Variables")]
     public float Distance = 2.0f;
@@ -48,11 +49,11 @@ public class CameraOrbitControl : MonoBehaviour
         repositionVelocity = Vector3.zero;
     }
 
-    void Update()
+    void FixedUpdate()
     {
         HandleInput();
         CalculateNewPosition();
-
+        CheckCollision();
         finalPosition = Vector3.SmoothDamp(finalPosition, newPosition, ref repositionVelocity, OrbitSmoothing);
         transform.position = finalPosition;
         transform.LookAt(LookAtPoint.position);
@@ -95,6 +96,32 @@ public class CameraOrbitControl : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(xRotation, yRotation, 0.0f);
         Vector3 calculatedPosition = (lookAtPoint + lookAtPointOffset) + (rotation * direction);
         return calculatedPosition;
+    }
+
+    private void CheckCollision()
+    {
+        CameraHelper.ClipPlaneCoordinates planeCoordinates = CameraHelper.getNearClipPlanePoints(newPosition);
+        Vector3[] collisionPoints = planeCoordinates.GetCoordinatesArray();
+
+        RaycastHit hitInfo;
+        float intersectingDistance = -1.0f;
+        for (int i = 0; i < collisionPoints.Length; i++)
+        {
+            if (Physics.Linecast(transform.position, collisionPoints[i], out hitInfo, CollisionMask))
+            {
+                float distance = (transform.position - collisionPoints[i]).magnitude - hitInfo.distance;
+                if(intersectingDistance < distance || intersectingDistance == -1)
+                {
+                    intersectingDistance = distance;
+                }
+            }
+        }
+
+        if (intersectingDistance != -1.0f)
+        {
+            float finalDistance = intersectingDistance + Distance + 0.2f;
+            newPosition = CalculatePosition(finalDistance, LookAtPoint.position, verticalInput, horizontalInput);
+        }
     }
 
     private float ClampAngle(float angle, float minAngle, float maxAngle)
