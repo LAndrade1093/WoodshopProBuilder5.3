@@ -1,42 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 using HedgehogTeam.EasyTouch;
+using System;
 
-public class CameraPanControl : MonoBehaviour
+public class CameraPanControl : CameraControl
 {
-    public Transform LookAtPoint;
-    public LayerMask CollisionMask;
-
-    [Header("Distance Variables")]
-    public float Distance = 2.0f;
-    public float MinDistance = 0.5f;
-    public float MaxDistance = 5f;
-
-    [Header("Touch Sensitivity")]
-    public float ZoomSensitivity = 10.0f;
     public float PanSensitivity = 5.0f;
-
-    [Header("Smoothing")]
-    public float ZoomSmoothing = 0.5f;
     public float PanSmoothing = 0.5f;
 
     [Header("Camera Pan Options")]
     public CameraBoundary bounds;
     public PanDirection MovementPlane = PanDirection.XZ_Plane;
     public bool MaintainCameraBounds = false;
-
-    private Transform objTransform;
+    
     private Vector2 previousFingerPosition;
     private Vector3 newPanningPosition;
     private Vector3 finalPannedPosition;
     private Vector3 pannedPositionVelocity;
-
-    private float desiredDistance;
-    private float distanceVelocity;
-
-    private Vector3 finalPosition;
-    private Vector3 newPosition;
-    private Vector3 repositionVelocity;
 
     void Awake()
     {
@@ -56,34 +36,16 @@ public class CameraPanControl : MonoBehaviour
     void Update()
     {
         HandleInput();
-
-        finalPannedPosition =  Vector3.SmoothDamp(finalPannedPosition, newPanningPosition, ref pannedPositionVelocity, PanSmoothing);
-        LookAtPoint.position = finalPannedPosition;
-
         CalculateNewPosition();
-        CheckCollision();
-
-        finalPosition = newPosition - transform.position;
-        transform.Translate(finalPosition, Space.Self);
-        transform.LookAt(LookAtPoint.position);
+        float collidedDistance = CalculateWoodProjectCollision();
+        if(collidedDistance != -1)
+        {
+            newPosition = CalculatePosition(collidedDistance, LookAtPoint.position, 0f, 0f);
+        }
+        UpdateCameraPosition();
     }
 
-    private Vector3 AdjustToBoundary(Vector3 position)
-    {
-        Vector3 adjustedPosition = position;
-        if (MovementPlane == PanDirection.XY_Plane)
-        {
-            adjustedPosition.y = Mathf.Clamp(position.y, bounds.MinVerticalBounds, bounds.MaxVerticalBounds);
-        }
-        else if (MovementPlane == PanDirection.XZ_Plane)
-        {
-            adjustedPosition.z = Mathf.Clamp(position.z, bounds.MinVerticalBounds, bounds.MaxVerticalBounds);
-        }
-        adjustedPosition.x = Mathf.Clamp(position.x, bounds.MinHorizontalBounds, bounds.MaxHorizontalBounds);
-        return adjustedPosition;
-    }
-
-    private void HandleInput()
+    protected override void HandleInput()
     {
         Gesture gesture = EasyTouch.current;
         if(PlayerStartedTouchingScreen(gesture))
@@ -127,46 +89,36 @@ public class CameraPanControl : MonoBehaviour
             desiredDistance -= zoomAmount;
             desiredDistance = Mathf.Clamp(desiredDistance, MinDistance, MaxDistance);
         }
+        finalPannedPosition = Vector3.SmoothDamp(finalPannedPosition, newPanningPosition, ref pannedPositionVelocity, PanSmoothing);
+        LookAtPoint.position = finalPannedPosition;
     }
 
-    private void CalculateNewPosition()
+    protected override void CalculateNewPosition()
     {
         Distance = Mathf.SmoothDamp(Distance, desiredDistance, ref distanceVelocity, ZoomSmoothing);
         newPosition = CalculatePosition(Distance, LookAtPoint.position, 0f, 0f);
     }
 
-    private Vector3 CalculatePosition(float zDistance, Vector3 lookAtPoint, float xRotation, float yRotation, Vector3 lookAtPointOffset = new Vector3())
+    protected override void UpdateCameraPosition()
     {
-        Vector3 direction = new Vector3(0.0f, 0.0f, -zDistance);
-        Quaternion rotation = Quaternion.Euler(xRotation, yRotation, 0.0f);
-        Vector3 calculatedPosition = (lookAtPoint + lookAtPointOffset) + (rotation * direction);
-        return calculatedPosition;
+        finalPosition = newPosition - transform.position;
+        transform.Translate(finalPosition, Space.Self);
+        transform.LookAt(LookAtPoint.position);
     }
 
-    private void CheckCollision()
+    private Vector3 AdjustToBoundary(Vector3 position)
     {
-        CameraHelper.ClipPlaneCoordinates planeCoordinates = CameraHelper.getNearClipPlanePoints(newPosition);
-        Vector3[] collisionPoints = planeCoordinates.GetCoordinatesArray();
-
-        RaycastHit hitInfo;
-        float intersectingDistance = -1.0f;
-        for (int i = 0; i < collisionPoints.Length; i++)
+        Vector3 adjustedPosition = position;
+        if (MovementPlane == PanDirection.XY_Plane)
         {
-            if (Physics.Linecast(transform.position, collisionPoints[i], out hitInfo, CollisionMask))
-            {
-                float distance = (transform.position - collisionPoints[i]).magnitude - hitInfo.distance;
-                if (intersectingDistance < distance || intersectingDistance == -1)
-                {
-                    intersectingDistance = distance;
-                }
-            }
+            adjustedPosition.y = Mathf.Clamp(position.y, bounds.MinVerticalBounds, bounds.MaxVerticalBounds);
         }
-
-        if (intersectingDistance != -1.0f)
+        else if (MovementPlane == PanDirection.XZ_Plane)
         {
-            float finalDistance = intersectingDistance + Distance + 0.2f;
-            newPosition = CalculatePosition(finalDistance, LookAtPoint.position, 0f, 0f);
+            adjustedPosition.z = Mathf.Clamp(position.z, bounds.MinVerticalBounds, bounds.MaxVerticalBounds);
         }
+        adjustedPosition.x = Mathf.Clamp(position.x, bounds.MinHorizontalBounds, bounds.MaxHorizontalBounds);
+        return adjustedPosition;
     }
 
     private bool PlayerStartedTouchingScreen(Gesture gesture)
@@ -177,31 +129,79 @@ public class CameraPanControl : MonoBehaviour
             && !gesture.isOverGui
             && gesture.type == EasyTouch.EvtType.On_TouchStart;
     }
+}
 
-    private bool PlayerIsSwipingCamera(Gesture gesture)
+public enum PanDirection
+{
+    XY_Plane,
+    XZ_Plane
+}
+
+[System.Serializable]
+public class CameraBoundary
+{
+    public float MaxVerticalBounds;
+    public float MinVerticalBounds;
+    public float MaxHorizontalBounds;
+    public float MinHorizontalBounds;
+
+    public void ApplyBounds(float bounds)
     {
-        return gesture.touchCount == 1
-            && gesture.pickedObject == null
-            && gesture.pickedUIElement == null
-            && !gesture.isOverGui
-            && gesture.type == EasyTouch.EvtType.On_Swipe;
+        MaxVerticalBounds = bounds;
+        MinVerticalBounds = -bounds;
+        MaxHorizontalBounds = bounds;
+        MinHorizontalBounds = -bounds;
     }
 
-    private bool PlayerIsPinchingIn(Gesture gesture)
+    public void ApplyVerticalBounds(float bounds)
     {
-        return gesture.touchCount == 2
-            && gesture.pickedObject == null
-            && gesture.pickedUIElement == null
-            && !gesture.isOverGui
-            && gesture.type == EasyTouch.EvtType.On_PinchIn;
+        if (bounds > 0)
+        {
+            MaxVerticalBounds = bounds;
+            MinVerticalBounds = -bounds;
+        }
+        else
+        {
+            Debug.Log("Cannot apply negative vertical boundaries to camera");
+        }
     }
 
-    private bool PlayerIsPinchingOut(Gesture gesture)
+    public void ApplyVerticalBounds(float min, float max)
     {
-        return gesture.touchCount == 2
-            && gesture.pickedObject == null
-            && gesture.pickedUIElement == null
-            && !gesture.isOverGui
-            && gesture.type == EasyTouch.EvtType.On_PinchOut;
+        if (max <= min)
+        {
+            Debug.LogError("The vertical max is less than the minimum");
+        }
+        else
+        {
+            MaxVerticalBounds = max;
+            MinVerticalBounds = min;
+        }
+    }
+
+    public void ApplyHorizontalBounds(float bounds)
+    {
+        if (bounds > 0)
+        {
+            MaxHorizontalBounds = bounds;
+            MinHorizontalBounds = -bounds;
+        }
+        else
+        {
+            Debug.Log("Cannot apply negative horizontal boundaries to camera");
+        }
+    }
+
+    public void ApplyHorizontalBounds(float min, float max)
+    {
+        if (max <= min)
+        {
+            Debug.LogError("The horizontal max is less than the minimum");
+        }
+        else
+        {
+            MaxHorizontalBounds = max;
+            MinHorizontalBounds = min;
+        }
     }
 }
