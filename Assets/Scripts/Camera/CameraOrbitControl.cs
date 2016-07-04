@@ -61,7 +61,7 @@ public class CameraOrbitControl : MonoBehaviour
     private void HandleInput()
     {
         Gesture gesture = EasyTouch.current;
-        if (playerIsSwipingCamera(gesture))
+        if (PlayerIsSwipingCamera(gesture))
         {
             horizontalInput += gesture.deltaPosition.x * OrbitSensitivity;
             horizontalInput = ClampAngle(horizontalInput, HorizontalMin, HorizontalMax);
@@ -119,7 +119,7 @@ public class CameraOrbitControl : MonoBehaviour
         return finalAngle;
     }
 
-    private bool playerIsSwipingCamera(Gesture gesture)
+    private bool PlayerIsSwipingCamera(Gesture gesture)
     {
         return gesture.touchCount == 1 
             && gesture.pickedObject == null 
