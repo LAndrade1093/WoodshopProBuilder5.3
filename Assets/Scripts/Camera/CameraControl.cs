@@ -6,7 +6,7 @@ public abstract class CameraControl : MonoBehaviour
 {
     public Transform LookAtPoint;
     public LayerMask WoodProjectCollisionMask;
-    public LayerMask OtherCollisionMask;
+    public LayerMask EnvironmentCollisionMask;
 
     [Header("Distance Variables")]
     public float Distance = 2.0f;
@@ -23,6 +23,18 @@ public abstract class CameraControl : MonoBehaviour
     protected Vector3 finalPosition;
     protected Vector3 newPosition;
     protected Vector3 repositionVelocity;
+    protected CameraHelper.ClipPlaneCoordinates planeCoordinates;
+
+    protected void Init()
+    {
+        objTransform = transform;
+        desiredDistance = Distance;
+        distanceVelocity = 0f;
+        finalPosition = objTransform.position;
+        newPosition = Vector3.zero;
+        repositionVelocity = Vector3.zero;
+        planeCoordinates = new CameraHelper.ClipPlaneCoordinates();
+    }
 
     protected abstract void HandleInput();
 
@@ -40,7 +52,6 @@ public abstract class CameraControl : MonoBehaviour
 
     protected float CalculateWoodProjectCollision()
     {
-        CameraHelper.ClipPlaneCoordinates planeCoordinates = CameraHelper.getNearClipPlanePoints(newPosition);
         Vector3[] collisionPoints = planeCoordinates.GetCoordinatesArray();
 
         RaycastHit hitInfo;
@@ -63,6 +74,35 @@ public abstract class CameraControl : MonoBehaviour
             collisionDistance = intersectingDistance + Distance + 0.2f;
         }
         return collisionDistance;
+    }
+
+    protected float CalculateEnvironmentCollision()
+    {
+        Vector3[] collisionPoints = planeCoordinates.GetCoordinatesArray(objTransform, false);
+
+        RaycastHit hitInfo;
+        float smallestDistance = -1.0f;
+        for (int i = 0; i < collisionPoints.Length; i++)
+        {
+            if (Physics.Linecast(LookAtPoint.position, collisionPoints[i], out hitInfo, EnvironmentCollisionMask))
+            {
+                if (hitInfo.distance < smallestDistance || smallestDistance == -1.0f)
+                {
+                    smallestDistance = hitInfo.distance;
+                }
+            }
+        }
+
+        float finalDistance = -1.0f;
+        if (smallestDistance != -1.0f)
+        {
+            finalDistance = smallestDistance - Camera.main.nearClipPlane + 0.2f;
+            if (finalDistance < 0.25f)
+            {
+                finalDistance = 0.25f;
+            }
+        }
+        return finalDistance;
     }
 
     protected bool PlayerIsSwipingCamera(Gesture gesture)

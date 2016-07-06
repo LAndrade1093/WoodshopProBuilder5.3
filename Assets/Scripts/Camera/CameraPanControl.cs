@@ -20,27 +20,30 @@ public class CameraPanControl : CameraControl
 
     void Awake()
     {
-        objTransform = transform;
+        Init();
         previousFingerPosition = Vector2.zero;
         newPanningPosition = LookAtPoint.position;
         finalPannedPosition = LookAtPoint.position;
-
-        desiredDistance = Distance;
-        distanceVelocity = 0f;
-
-        finalPosition = objTransform.position;
-        newPosition = Vector3.zero;
-        repositionVelocity = Vector3.zero;
+        pannedPositionVelocity = Vector3.zero;
     }
 
     void Update()
     {
         HandleInput();
         CalculateNewPosition();
+        planeCoordinates = CameraHelper.getNearClipPlanePoints(newPosition);
         float collidedDistance = CalculateWoodProjectCollision();
         if(collidedDistance != -1)
         {
             newPosition = CalculatePosition(collidedDistance, LookAtPoint.position, 0f, 0f);
+        }
+        else
+        {
+            float distance = CalculateEnvironmentCollision();
+            if(distance != -1.0f)
+            {
+                newPosition = CalculatePosition(distance, LookAtPoint.position, 0f, 0f);
+            }
         }
         UpdateCameraPosition();
     }

@@ -11,14 +11,14 @@ public static class CameraHelper
         public Vector3 BottomRight;
         public Vector3 Center;
 
-        public Vector3[] GetCoordinatesArray()
+        public Vector3[] GetCoordinatesArray(Transform camera = null, bool userNearClipCenter = true)
         {
             Vector3[] collisionPoints = new Vector3[5];
             collisionPoints[0] = BottomLeft;
             collisionPoints[1] = TopLeft;
             collisionPoints[2] = BottomRight;
             collisionPoints[3] = TopRight;
-            collisionPoints[4] = Center;
+            collisionPoints[4] = (userNearClipCenter) ? Center : camera.position;
             return collisionPoints;
         }
     }

@@ -21,24 +21,28 @@ public class CameraOrbitControl : CameraControl
 
     void Awake()
     {
-        objTransform = transform;
+        Init();
         horizontalInput = 0;
         verticalInput = 0;
-        desiredDistance = Distance;
-        distanceVelocity = 0f;
-        finalPosition = objTransform.position;
-        newPosition = Vector3.zero;
-        repositionVelocity = Vector3.zero;
     }
 
-    void FixedUpdate()
+    void Update()
     {
         HandleInput();
         CalculateNewPosition();
-        float collisionDistance = CalculateWoodProjectCollision();
-        if (collisionDistance != -1)
+        planeCoordinates = CameraHelper.getNearClipPlanePoints(newPosition);
+        float collidedDistance = CalculateWoodProjectCollision();
+        if (collidedDistance != -1)
         {
-            newPosition = CalculatePosition(collisionDistance, LookAtPoint.position, verticalInput, horizontalInput);
+            newPosition = CalculatePosition(collidedDistance, LookAtPoint.position, verticalInput, horizontalInput);
+        }
+        else
+        {
+            float distance = CalculateEnvironmentCollision();
+            if (distance != -1.0f)
+            {
+                newPosition = CalculatePosition(distance, LookAtPoint.position, verticalInput, horizontalInput);
+            }
         }
         UpdateCameraPosition();
     }
