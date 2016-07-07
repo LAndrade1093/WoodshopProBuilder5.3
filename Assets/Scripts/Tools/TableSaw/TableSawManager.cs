@@ -32,12 +32,12 @@ public class TableSawManager : MonoBehaviour, IToolManager
     private BoardController currentBoardController;
     private float cumulativeLineScore = 0.0f;
     private float numberOfCuts;
-    private OrbitCamera orbitCamera;
+    private CameraOrbitControl orbitCamera;
     private PanCamera panCamera;
 
 	void Start ()
     {
-        orbitCamera = GameCamera.GetComponent<OrbitCamera>();
+        orbitCamera = GameCamera.GetComponent<CameraOrbitControl>();
         panCamera = GameCamera.GetComponent<PanCamera>();
 
         numberOfCuts = LinesToCut.Count;
@@ -282,7 +282,7 @@ public class TableSawManager : MonoBehaviour, IToolManager
             PlacePiece();
             orbitCamera.enabled = true;
             panCamera.enabled = false;
-            orbitCamera.ChangeAngle(0f, 50f);
+            //orbitCamera.ChangeAngle(0f, 50f);
             orbitCamera.Distance = 1.5f;
         }
         SawBlade.TurnOff();

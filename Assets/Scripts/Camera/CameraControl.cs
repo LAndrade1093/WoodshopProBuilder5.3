@@ -78,12 +78,13 @@ public abstract class CameraControl : MonoBehaviour
 
     protected float CalculateEnvironmentCollision()
     {
-        Vector3[] collisionPoints = planeCoordinates.GetCoordinatesArray(objTransform, false);
+        Vector3[] collisionPoints = planeCoordinates.GetCoordinatesArray();
 
         RaycastHit hitInfo;
         float smallestDistance = -1.0f;
         for (int i = 0; i < collisionPoints.Length; i++)
         {
+            Debug.DrawLine(LookAtPoint.position, collisionPoints[i]);
             if (Physics.Linecast(LookAtPoint.position, collisionPoints[i], out hitInfo, EnvironmentCollisionMask))
             {
                 if (hitInfo.distance < smallestDistance || smallestDistance == -1.0f)
