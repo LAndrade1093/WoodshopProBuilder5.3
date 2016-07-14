@@ -75,11 +75,11 @@ public class ChopSawUI : MonoBehaviour
 
     public void UpdateSelectionButtons(int index, int totalWoodMaterial)
     {
-        if (NextButton != null && PreviousButton != null)
-        {
-            NextButton.interactable = (index < totalWoodMaterial - 1);
-            PreviousButton.interactable = (index > 0);
-        }
+        //if (NextButton != null && PreviousButton != null)
+        //{
+        //    NextButton.interactable = (index < totalWoodMaterial - 1);
+        //    PreviousButton.interactable = (index > 0);
+        //}
     }
 
     public void EnableOptions()
@@ -102,8 +102,8 @@ public class ChopSawUI : MonoBehaviour
     public void EnableAllButtons()
     {
         EnableOptions();
-        NextButton.interactable = true;
-        PreviousButton.interactable = true;
+        //NextButton.interactable = true;
+        //PreviousButton.interactable = true;
         StartSawButton.interactable = true;
         StopSawButton.interactable = true;
     }
@@ -111,8 +111,8 @@ public class ChopSawUI : MonoBehaviour
     public void DisableAllButtons()
     {
         DisableOptions();
-        NextButton.interactable = false;
-        PreviousButton.interactable = false;
+        //NextButton.interactable = false;
+        //PreviousButton.interactable = false;
         StartSawButton.interactable = false;
         StopSawButton.interactable = false;
     }

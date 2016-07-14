@@ -6,6 +6,8 @@ public class MiterGaugeController : MonoBehaviour
 {
     public float MinimumLimitZ;
     public float MaximumLimitZ;
+    public float MinRotation;
+    public float MaxRotation;
     public GameObject MiterGaugeObject;
 
     private Vector3 previousPosition;
@@ -20,7 +22,7 @@ public class MiterGaugeController : MonoBehaviour
     void Update()
     {
         Gesture gesture = EasyTouch.current;
-        if (PlayerHasTouchedObject(gesture))
+        if (PlayerHasStartedDraggingObject(gesture))
         {
             previousPosition = gesture.GetTouchToWorldPoint(objTransform.position);
         }
@@ -35,13 +37,13 @@ public class MiterGaugeController : MonoBehaviour
         }
     }
 
-    private bool PlayerHasTouchedObject(Gesture gesture)
+    private bool PlayerHasStartedDraggingObject(Gesture gesture)
     {
         return gesture.touchCount == 1
             && gesture.pickedObject == MiterGaugeObject
             && gesture.pickedUIElement == null
             && !gesture.isOverGui
-            && gesture.type == EasyTouch.EvtType.On_TouchStart;
+            && gesture.type == EasyTouch.EvtType.On_DragStart;
     }
 
     private bool PlayerIsDragginObject(Gesture gesture)

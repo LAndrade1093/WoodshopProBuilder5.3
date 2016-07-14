@@ -22,8 +22,8 @@ public class CameraOrbitControl : CameraControl
     void Awake()
     {
         Init();
-        horizontalInput = 0;
-        verticalInput = 0;
+        horizontalInput = objTransform.rotation.eulerAngles.y;
+        verticalInput = objTransform.rotation.eulerAngles.x;
     }
 
     void Update()
@@ -53,10 +53,7 @@ public class CameraOrbitControl : CameraControl
         if (PlayerIsSwipingCamera(gesture))
         {
             horizontalInput += gesture.deltaPosition.x * OrbitSensitivity;
-            horizontalInput = ClampAngle(horizontalInput, HorizontalMin, HorizontalMax);
-
             verticalInput -= gesture.deltaPosition.y * OrbitSensitivity;
-            verticalInput = ClampAngle(verticalInput, VerticalMin, VerticalMax);
         }
         else if (PlayerIsPinchingIn(gesture))
         {
@@ -70,6 +67,8 @@ public class CameraOrbitControl : CameraControl
             desiredDistance -= zoomAmount;
             desiredDistance = Mathf.Clamp(desiredDistance, MinDistance, MaxDistance);
         }
+        horizontalInput = ClampAngle(horizontalInput, HorizontalMin, HorizontalMax);
+        verticalInput = ClampAngle(verticalInput, VerticalMin, VerticalMax);
     }
 
     protected override void CalculateNewPosition()

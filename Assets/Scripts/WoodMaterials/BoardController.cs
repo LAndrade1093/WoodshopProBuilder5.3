@@ -63,7 +63,7 @@ public class BoardController : MonoBehaviour
 
     private void CheckTouch(Gesture gesture, int expectedTouchCount)
     {
-        if (gesture.pickedObject != null && gesture.touchCount == expectedTouchCount && WoodObject != null)
+        if (gesture.pickedObject != null && gesture.touchCount == expectedTouchCount && WoodObject != null && gesture.pickedUIElement == null && !gesture.isOverGui)
         {
             if (Moveable && WoodObject.ContainsPiece(gesture.pickedObject))
             {
@@ -74,7 +74,7 @@ public class BoardController : MonoBehaviour
 
     public void OnDragStart(Gesture gesture)
     {
-        if (Moveable && selected && gesture.touchCount == 1)
+        if (Moveable && selected && gesture.touchCount == 1 && gesture.pickedUIElement == null && !gesture.isOverGui)
         {
             Vector3 position = gesture.GetTouchToWorldPoint(transform.position);
             previousPosition = position;
@@ -92,7 +92,7 @@ public class BoardController : MonoBehaviour
 
     public void MoveObject_SingleFingerTouch(Gesture gesture)
     {
-        if (Moveable && selected && gesture.touchCount == 1)
+        if (Moveable && selected && gesture.touchCount == 1 && gesture.pickedUIElement == null && !gesture.isOverGui)
         {
             MoveObject(gesture);            
         }
@@ -102,7 +102,7 @@ public class BoardController : MonoBehaviour
     {
         if(Application.isEditor)
         {
-            if (Moveable && selected && gesture.touchCount == 2)
+            if (Moveable && selected && gesture.touchCount == 2 && gesture.pickedUIElement == null && !gesture.isOverGui)
             {
                 Vector3 rotationPoint = gesture.GetTouchToWorldPoint(transform.position);
                 transform.RotateAround(rotationPoint, Vector3.up, -gesture.twistAngle);
@@ -110,7 +110,7 @@ public class BoardController : MonoBehaviour
         }
         else
         {
-            if (Moveable && selected && gesture.touchCount == 2 && isRotating)
+            if (Moveable && selected && gesture.touchCount == 2 && isRotating && gesture.pickedUIElement == null && !gesture.isOverGui)
             {
                 Vector3 rotationPoint = gesture.GetTouchToWorldPoint(transform.position);
                 transform.RotateAround(rotationPoint, Vector3.up, -gesture.twistAngle);
