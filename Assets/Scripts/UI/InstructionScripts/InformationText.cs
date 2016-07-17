@@ -8,7 +8,6 @@ public class InformationText : MonoBehaviour
     public Text InfoTextDisplay;
     public Button NextButton;
     public Button PreviousButton;
-    public Button BackButton;
     public Text PageNumber;
     [TextArea(3, 10)]
     public List<string> InformationList;
