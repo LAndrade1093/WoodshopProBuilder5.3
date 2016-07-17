@@ -8,15 +8,20 @@ public class CameraPanControl : CameraControl
     public float PanSensitivity = 5.0f;
     public float PanSmoothing = 0.5f;
 
+    [Header("Viewing Angle")]
+    public float HorizontalAngle = 0f;
+    public float VerticalAngle = 45f;
+
     [Header("Camera Pan Options")]
+    public bool EnableCameraBounds = false;
     public CameraBoundary bounds;
     public PanDirection MovementPlane = PanDirection.XZ_Plane;
-    public bool MaintainCameraBounds = false;
     
     private Vector2 previousFingerPosition;
     private Vector3 newPanningPosition;
     private Vector3 finalPannedPosition;
     private Vector3 pannedPositionVelocity;
+    
 
     void Awake()
     {
@@ -35,14 +40,14 @@ public class CameraPanControl : CameraControl
         float collidedDistance = CalculateWoodProjectCollision();
         if(collidedDistance != -1)
         {
-            newPosition = CalculatePosition(collidedDistance, LookAtPoint.position, 0f, 0f);
+            newPosition = CalculatePosition(collidedDistance, LookAtPoint.position, VerticalAngle, HorizontalAngle);
         }
         else
         {
             float distance = CalculateEnvironmentCollision();
             if(distance != -1.0f)
             {
-                newPosition = CalculatePosition(distance, LookAtPoint.position, 0f, 0f);
+                newPosition = CalculatePosition(distance, LookAtPoint.position, VerticalAngle, HorizontalAngle);
             }
         }
         UpdateCameraPosition();
@@ -99,7 +104,7 @@ public class CameraPanControl : CameraControl
     protected override void CalculateNewPosition()
     {
         Distance = Mathf.SmoothDamp(Distance, desiredDistance, ref distanceVelocity, ZoomSmoothing);
-        newPosition = CalculatePosition(Distance, LookAtPoint.position, 0f, 0f);
+        newPosition = CalculatePosition(Distance, LookAtPoint.position, VerticalAngle, HorizontalAngle);
     }
 
     protected override void UpdateCameraPosition()

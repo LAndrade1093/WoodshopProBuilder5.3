@@ -15,15 +15,19 @@ public class CameraOrbitControl : CameraControl
     [Header("Vertical(X) Rotation Limit")]
     public float VerticalMin = -60f;
     public float VerticalMax = 60f;
-    
+
+    [Header("Initial Viewing Angle")]
+    public float HorizontalAngle = 0f;
+    public float VerticalAngle = -45f;
+
     private float horizontalInput; //y rotation
     private float verticalInput; // x rotation
 
     void Awake()
     {
         Init();
-        horizontalInput = objTransform.rotation.eulerAngles.y;
-        verticalInput = objTransform.rotation.eulerAngles.x;
+        horizontalInput = HorizontalAngle;
+        verticalInput = VerticalAngle;
     }
 
     void Update()
