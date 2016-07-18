@@ -11,8 +11,7 @@ public class ChopSawUI : MonoBehaviour
     public Button PreviousButton;
     public Button StartSawButton;
     public Button StopSawButton;
-
-    public GameObject CameraControlsPanel;
+    
     public GameObject PlansPanel;
     public GameObject InfoPanel;
     public Text InfoText;
@@ -27,12 +26,6 @@ public class ChopSawUI : MonoBehaviour
         SelectedButton.GetComponent<Button>().interactable = false;
         PlansPanel.SetActive(false);
         InfoPanel.SetActive(false);
-        CameraControlsPanel.SetActive(false);
-    }
-
-    public void DisplayCameraInstructions(bool showControls)
-    {
-        CameraControlsPanel.SetActive(showControls);
     }
 
     public void DisplayPlans(bool showPlans)

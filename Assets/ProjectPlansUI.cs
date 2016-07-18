@@ -12,8 +12,10 @@ public class ProjectPlansUI : MonoBehaviour
     public Text StepInstructionsText;
     public Text StepNumberText;
 
-    void Start()
+    void Awake()
     {
+        ToolsControlsPanel.GetComponent<InformationText>().Initialize();
+        CameraControlsPanel.GetComponent<InformationText>().Initialize();
         OpenProjectPlans();
     }
 

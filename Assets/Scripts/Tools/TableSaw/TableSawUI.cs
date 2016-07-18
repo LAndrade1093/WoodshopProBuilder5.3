@@ -11,8 +11,7 @@ public class TableSawUI : MonoBehaviour
     public Button PreviousButton;
     public Button StartSawButton;
     public Button StopSawButton;
-
-    public GameObject CameraControls;
+    
     public GameObject PlansPanel;
     public GameObject InfoPanel;
     public Text InfoText;
@@ -27,14 +26,8 @@ public class TableSawUI : MonoBehaviour
         SelectedButton.GetComponent<Button>().interactable = false;
         PlansPanel.SetActive(false);
         InfoPanel.SetActive(false);
-        CameraControls.SetActive(false);
     }
-
-    public void DisplayCameraInstructions(bool showControls)
-    {
-        CameraControls.SetActive(showControls);
-    }
-
+    
     public void DisplayPlans(bool showPlans)
     {
         PlansPanel.SetActive(showPlans);

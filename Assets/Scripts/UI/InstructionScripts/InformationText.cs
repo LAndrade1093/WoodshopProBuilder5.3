@@ -14,18 +14,23 @@ public class InformationText : MonoBehaviour
 
     private int CurrentIndex = 0;
 
-    void Start ()
+    void Awake()
+    {
+        Initialize();
+    }
+
+    public void Initialize()
     {
         CurrentIndex = 0;
         if (InformationList != null)
         {
-            if(InformationList.Count > 0)
+            if (InformationList.Count > 0)
             {
-                InfoTextDisplay.text = InformationList[CurrentIndex];
+                SetText();
                 SetPaginationButtonsState();
             }
         }
-	}
+    }
 
     public void Next()
     {

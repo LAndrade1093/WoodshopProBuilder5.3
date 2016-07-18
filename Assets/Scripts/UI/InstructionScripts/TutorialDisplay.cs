@@ -7,7 +7,7 @@ public class TutorialDisplay : PaginatedDisplay
 {
     public List<TutorialHelpText> GestureTutorialsList;
 
-    void Start()
+    void Awake()
     {
         if (GestureTutorialsList == null)
         {
