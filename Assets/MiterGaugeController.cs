@@ -1,14 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 using HedgehogTeam.EasyTouch;
+using UnityEngine.UI;
 
 public class MiterGaugeController : MonoBehaviour
 {
+    [Header("Movement")]
     public float MinimumLimitZ;
     public float MaximumLimitZ;
-    public float MinRotation;
-    public float MaxRotation;
     public GameObject MiterGaugeObject;
+
+    [Header("Rotation")]
+    public Transform RotatingPiece;
+    public float MinRotation = 45f;
+    public float MaxRotation = 135f;
+    public Text AngleDisplay;
+    public Slider AngleSlider;
 
     private Vector3 previousPosition;
     private Transform objTransform;
@@ -17,6 +24,8 @@ public class MiterGaugeController : MonoBehaviour
     {
         previousPosition = Vector3.zero;
         objTransform = transform;
+        AngleSlider.onValueChanged.AddListener(delegate { RotateMiterGauge(); });
+        RotateMiterGauge();
     }
 
     void Update()
@@ -35,6 +44,15 @@ public class MiterGaugeController : MonoBehaviour
             objTransform.position = new Vector3(objTransform.position.x, objTransform.position.y, z);
             previousPosition = position;
         }
+    }
+
+    private void RotateMiterGauge()
+    {
+        float value = AngleSlider.value - 90f;
+        string sliderValue = value.ToString();
+        AngleDisplay.text = sliderValue;
+
+        RotatingPiece.localRotation = Quaternion.Euler(0f, AngleSlider.value, 0f);
     }
 
     private bool PlayerHasStartedDraggingObject(Gesture gesture)
