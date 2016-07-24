@@ -11,7 +11,10 @@ public class TableSawUI : MonoBehaviour
     public Button PreviousButton;
     public Button StartSawButton;
     public Button StopSawButton;
-    
+    public Button ShowMiterGaugeButton;
+    public Button HideMiterGaugeButton;
+    public Slider AngleSlider;
+
     public GameObject PlansPanel;
     public GameObject InfoPanel;
     public Text InfoText;
@@ -122,5 +125,20 @@ public class TableSawUI : MonoBehaviour
         StartSawButton.gameObject.SetActive(false);
         StopSawButton.gameObject.SetActive(false);
         SawButtonsActive = false;
+    }
+
+    public void ToggleMiterGaugeControls(bool enableControls)
+    {
+        AngleSlider.interactable = enableControls;
+        if(enableControls)
+        {
+            ShowMiterGaugeButton.gameObject.SetActive(false);
+            HideMiterGaugeButton.gameObject.SetActive(true);
+        }
+        else
+        {
+            ShowMiterGaugeButton.gameObject.SetActive(true);
+            HideMiterGaugeButton.gameObject.SetActive(false);
+        }
     }
 }

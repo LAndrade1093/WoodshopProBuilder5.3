@@ -24,6 +24,7 @@ public class TableSawManager : MonoBehaviour, IToolManager
     public Ruler GameRuler;
     public TableSawCut CutGameplay;
     public bool StillCutting { get; set; }
+    public MiterGaugeController MiterGauge;
 
     private int currentPieceIndex = 0;
     private Transform currentSpawnPoint;
@@ -34,6 +35,7 @@ public class TableSawManager : MonoBehaviour, IToolManager
     private float numberOfCuts;
     private CameraOrbitControl orbitCamera;
     private CameraPanControl panCamera;
+    private bool miterGaugeIsVisible = true;
 
 	void Start ()
     {
