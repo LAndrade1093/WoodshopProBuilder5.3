@@ -5,6 +5,11 @@ using UnityEngine.UI;
 
 public class MiterGaugeController : MonoBehaviour
 {
+    public Rigidbody WoodMaterial;
+    public Transform Front;
+    public LayerMask ToolLayer;
+    public LayerMask WoodLayer;
+
     [Header("Movement")]
     public float MinimumLimitZ;
     public float MaximumLimitZ;
@@ -40,7 +45,7 @@ public class MiterGaugeController : MonoBehaviour
 
     void Update()
     {
-        if (movementEnabled)
+        if (movementEnabled && visible)
         {
             Gesture gesture = EasyTouch.current;
             if (PlayerHasStartedDraggingObject(gesture))
@@ -56,6 +61,14 @@ public class MiterGaugeController : MonoBehaviour
                 objTransform.position = new Vector3(objTransform.position.x, objTransform.position.y, z);
                 previousPosition = position;
             }
+        }
+    }
+
+    void LateUpdate()
+    {
+        if (visible)
+        {
+
         }
     }
 
@@ -85,6 +98,7 @@ public class MiterGaugeController : MonoBehaviour
 
     public void HideMiterGauge()
     {
+        WoodMaterial.gameObject.transform.parent = null;
         visible = false;
         AngleSlider.interactable = false;
         SetAngle(90.0f);
@@ -92,6 +106,38 @@ public class MiterGaugeController : MonoBehaviour
         gameObject.SetActive(false);
         ShowButton.gameObject.SetActive(true);
         HideButton.gameObject.SetActive(false);
+    }
+
+    public void SetupMiterGauge()
+    {
+        Rigidbody woodObject = WoodMaterial;
+        woodObject.position = new Vector3(0.8f, woodObject.position.y, transform.position.z);
+        RaycastHit hit;
+        Ray ray = new Ray(woodObject.position, Vector3.left);
+        if (Physics.Raycast(ray, out hit, 100f, ToolLayer))
+        {
+            RaycastHit hit2;
+            Ray ray2 = new Ray(hit.point, Vector3.right);
+            if (Physics.Raycast(ray2, out hit2, 100f, WoodLayer))
+            {
+                Vector3 gap = hit.point - hit2.point;
+                woodObject.position += gap;
+                woodObject.position = new Vector3(woodObject.position.x, woodObject.position.y, -1.2f);
+                RaycastHit hit3;
+                Ray ray3 = new Ray(Front.position, Vector3.back);
+                if(Physics.Raycast(ray3, out hit3, 100f, WoodLayer))
+                {
+                    Vector3 fGap = Front.position - hit3.point;
+                    woodObject.position += fGap;
+                    woodObject.gameObject.transform.parent = transform;
+                }
+            }
+        }
+    }
+
+    public bool IsVisible()
+    {
+        return visible;
     }
 
     private void SetAngleText(float angle)

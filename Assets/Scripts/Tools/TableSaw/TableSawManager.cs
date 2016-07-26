@@ -54,7 +54,8 @@ public class TableSawManager : MonoBehaviour, IToolManager
         currentBoardController = AvailableWoodMaterial[currentPieceIndex].GetComponent<BoardController>();
         UI_Manager.UpdateSelectionButtons(currentPieceIndex, AvailableWoodMaterial.Count);
         SetupForCutting();
-	}
+        MiterGauge.WoodMaterial = AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>();
+    }
 
     public void StopGameDueToLowScore(string message)
     {
@@ -241,7 +242,16 @@ public class TableSawManager : MonoBehaviour, IToolManager
         {
             EnableCurrentBoardMovement(false);
         }
-        PlacePiece();
+
+        MiterGauge.WoodMaterial = AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>();
+        //if (MiterGauge.IsVisible())
+        //{
+
+        //}
+        //else
+        //{
+            PlacePiece();
+        //}
     }
 
     public void SwitchAction(ActionState actionState)
