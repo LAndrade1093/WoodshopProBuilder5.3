@@ -25,6 +25,7 @@ public class TableSawManager : MonoBehaviour, IToolManager
     public TableSawCut CutGameplay;
     public bool StillCutting { get; set; }
     public MiterGaugeController MiterGauge;
+    public FenceController Fence;
 
     private int currentPieceIndex = 0;
     private Transform currentSpawnPoint;
@@ -94,6 +95,9 @@ public class TableSawManager : MonoBehaviour, IToolManager
 
     public void SplitMaterial(CutLine lineToRemove)
     {
+        bool miterGaugeVisible = MiterGauge.IsVisible();
+        MiterGauge.HideMiterGauge();
+        Fence.ResetPosition();
         WoodMaterialObject board = AvailableWoodMaterial[currentPieceIndex].GetComponent<WoodMaterialObject>();
         BoardController previousBoardController = AvailableWoodMaterial[currentPieceIndex].GetComponent<BoardController>();
         LinesToCut.Remove(lineToRemove);
@@ -130,6 +134,7 @@ public class TableSawManager : MonoBehaviour, IToolManager
                         currentPieceIndex = index;
                         AvailableWoodMaterial[currentPieceIndex].SetActive(true);
                         currentBoardController = AvailableWoodMaterial[currentPieceIndex].GetComponent<BoardController>();
+                        MiterGauge.WoodMaterial = AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>();
                     }
                     else
                     {
@@ -150,8 +155,25 @@ public class TableSawManager : MonoBehaviour, IToolManager
             currentPieceIndex = 0;
             AvailableWoodMaterial[currentPieceIndex].SetActive(true);
             currentBoardController = AvailableWoodMaterial[currentPieceIndex].GetComponent<BoardController>();
+            MiterGauge.WoodMaterial = AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>();
             SetupForCutting();
-            PlacePiece();
+            if (miterGaugeVisible)
+            {
+                MiterGauge.DisplayMiterGauge();
+                MiterGauge.SetupMiterGauge();
+            }
+            else
+            {
+                PlacePiece();
+            }
+        }
+        else
+        {
+            if (miterGaugeVisible)
+            {
+                MiterGauge.DisplayMiterGauge();
+                MiterGauge.SetupMiterGauge();
+            }
         }
         SawBlade.TurnOff();
         UI_Manager.ChangeSawButtons(false);
@@ -226,6 +248,7 @@ public class TableSawManager : MonoBehaviour, IToolManager
 
     private void SwitchPiece(int indexToSwitchTo)
     {
+        MiterGauge.HideMiterGauge();
         AvailableWoodMaterial[currentPieceIndex].transform.position = Vector3.zero;
         AvailableWoodMaterial[currentPieceIndex].transform.rotation = Quaternion.identity;
         AvailableWoodMaterial[currentPieceIndex].SetActive(false);
@@ -244,14 +267,7 @@ public class TableSawManager : MonoBehaviour, IToolManager
         }
 
         MiterGauge.WoodMaterial = AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>();
-        //if (MiterGauge.IsVisible())
-        //{
-
-        //}
-        //else
-        //{
-            PlacePiece();
-        //}
+        PlacePiece();
     }
 
     public void SwitchAction(ActionState actionState)
@@ -287,6 +303,7 @@ public class TableSawManager : MonoBehaviour, IToolManager
 
     public void SetupForCutting()
     {
+        MiterGauge.HideMiterGauge();
         currentSpawnPoint = FromSawSpawnPoint;
         if (previousAction == ActionState.None || previousAction == ActionState.UsingRuler || currentAction == ActionState.UsingRuler)
         {
@@ -309,6 +326,7 @@ public class TableSawManager : MonoBehaviour, IToolManager
 
     public void SetupForMeasuring()
     {
+        MiterGauge.HideMiterGauge();
         currentSpawnPoint = FromRulerSpawnPoint;
         if (previousAction == ActionState.None || previousAction == ActionState.OnSaw || currentAction == ActionState.OnSaw)
         {

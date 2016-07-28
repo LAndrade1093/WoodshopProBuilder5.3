@@ -129,7 +129,8 @@ public class WoodManagerHelper : MonoBehaviour
         {
             line.gameObject.transform.parent = board.transform;
         }
-
+        Rigidbody r = board.AddComponent<Rigidbody>();
+        r.useGravity = true;
         return board;
     }
 }

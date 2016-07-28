@@ -6,6 +6,7 @@ public class FenceController : MonoBehaviour
 {
     public float MinimumLimitX;
     public float MaximumLimitX;
+    public float InitialPositionX;
 
     private Vector3 previousPosition;
     private Transform objTransform;
@@ -33,6 +34,11 @@ public class FenceController : MonoBehaviour
             previousPosition = position;
         }
 	}
+
+    public void ResetPosition()
+    {
+        objTransform.position = new Vector3(InitialPositionX, objTransform.position.y, objTransform.position.z);
+    }
 
     private bool PlayerHasTouchedObject(Gesture gesture)
     {

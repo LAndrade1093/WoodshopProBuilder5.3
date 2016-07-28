@@ -33,7 +33,7 @@ public class MiterGaugeController : MonoBehaviour
     private bool visible;
     private bool movementEnabled;
 
-    void Start()
+    void Awake()
     {
         previousPosition = Vector3.zero;
         objTransform = transform;
@@ -66,10 +66,34 @@ public class MiterGaugeController : MonoBehaviour
 
     void LateUpdate()
     {
-        if (visible)
-        {
-
-        }
+        //if (visible)
+        //{
+        //    if (woodMatLocalPositionX == -100f && woodMatLocalPositionZ == -100f)
+        //    {
+        //        woodMatLocalPositionX = WoodMaterial.gameObject.transform.localPosition.x;
+        //        woodMatLocalPositionZ = WoodMaterial.gameObject.transform.localPosition.z;
+        //    }
+        //    else
+        //    {
+        //        float z = 0f;
+        //        Debug.Log("WoodMaterial.gameObject.transform.localPosition.z: " + WoodMaterial.gameObject.transform.localPosition.z);
+        //        Debug.Log("woodMatLocalPositionZ: " + woodMatLocalPositionZ);
+        //        if (WoodMaterial.gameObject.transform.localPosition.z > woodMatLocalPositionZ)
+        //        {
+        //            z = WoodMaterial.gameObject.transform.localPosition.z - woodMatLocalPositionZ;
+        //        }
+        //        float x = 0f;
+        //        if (WoodMaterial.gameObject.transform.localPosition.x > woodMatLocalPositionX)
+        //        {
+        //            x = WoodMaterial.gameObject.transform.localPosition.z - woodMatLocalPositionZ;
+        //        }
+        //        if (WoodMaterial.gameObject.transform.localPosition.x < woodMatLocalPositionX)
+        //        {
+        //            x = WoodMaterial.gameObject.transform.localPosition.z + woodMatLocalPositionZ;
+        //        }
+        //        WoodMaterial.position = new Vector3(WoodMaterial.position.x - x, WoodMaterial.position.y, WoodMaterial.position.z - z);
+        //    }
+        //}
     }
 
     public void EnableMovement(bool enable)
@@ -90,6 +114,9 @@ public class MiterGaugeController : MonoBehaviour
     public void DisplayMiterGauge()
     {
         gameObject.SetActive(true);
+        AngleSlider.value = 90f;
+        SetAngle(90.0f);
+        transform.position = InitialPosition.position;
         visible = true;
         AngleSlider.interactable = true;
         ShowButton.gameObject.SetActive(false);
@@ -99,8 +126,10 @@ public class MiterGaugeController : MonoBehaviour
     public void HideMiterGauge()
     {
         WoodMaterial.gameObject.transform.parent = null;
+        WoodMaterial.gameObject.GetComponent<BoardController>().enabled = true;
         visible = false;
         AngleSlider.interactable = false;
+        AngleSlider.value = 90f;
         SetAngle(90.0f);
         transform.position = InitialPosition.position;
         gameObject.SetActive(false);
@@ -110,26 +139,32 @@ public class MiterGaugeController : MonoBehaviour
 
     public void SetupMiterGauge()
     {
-        Rigidbody woodObject = WoodMaterial;
-        woodObject.position = new Vector3(0.8f, woodObject.position.y, transform.position.z);
-        RaycastHit hit;
-        Ray ray = new Ray(woodObject.position, Vector3.left);
-        if (Physics.Raycast(ray, out hit, 100f, ToolLayer))
+        if (visible)
         {
-            RaycastHit hit2;
-            Ray ray2 = new Ray(hit.point, Vector3.right);
-            if (Physics.Raycast(ray2, out hit2, 100f, WoodLayer))
+            WoodMaterial.rotation = Quaternion.Euler(0f, 0f, 0f);
+            WoodMaterial.gameObject.transform.rotation = Quaternion.Euler(0f, 0f, 0f);
+            WoodMaterial.gameObject.transform.parent = MiterGaugeObject.transform;
+            WoodMaterial.gameObject.GetComponent<BoardController>().enabled = false;
+            WoodMaterial.position = new Vector3(0.8f, transform.position.y, transform.position.z);
+            RaycastHit hit;
+            Ray ray = new Ray(WoodMaterial.position, Vector3.left);
+            if (Physics.Raycast(ray, out hit, 100f, ToolLayer))
             {
-                Vector3 gap = hit.point - hit2.point;
-                woodObject.position += gap;
-                woodObject.position = new Vector3(woodObject.position.x, woodObject.position.y, -1.2f);
-                RaycastHit hit3;
-                Ray ray3 = new Ray(Front.position, Vector3.back);
-                if(Physics.Raycast(ray3, out hit3, 100f, WoodLayer))
+                RaycastHit hit2;
+                Ray ray2 = new Ray(hit.point, Vector3.right);
+                if (Physics.Raycast(ray2, out hit2, 100f, WoodLayer))
                 {
-                    Vector3 fGap = Front.position - hit3.point;
-                    woodObject.position += fGap;
-                    woodObject.gameObject.transform.parent = transform;
+                    Vector3 gap = hit.point - hit2.point;
+                    WoodMaterial.position += gap;
+                    WoodMaterial.position = new Vector3(WoodMaterial.position.x, WoodMaterial.position.y, -1.2f);
+                    RaycastHit hit3;
+                    Ray ray3 = new Ray(Front.position, Vector3.back);
+                    if (Physics.Raycast(ray3, out hit3, 100f, WoodLayer))
+                    {
+                        Vector3 fGap = Front.position - hit3.point;
+                        WoodMaterial.position += fGap;
+                        WoodMaterial.position = new Vector3(WoodMaterial.position.x, 1.1f, WoodMaterial.position.z);
+                    }
                 }
             }
         }
