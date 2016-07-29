@@ -16,6 +16,7 @@ public class BoardController : MonoBehaviour
     public float MaxLimit_Z;
     public float MinLimit_Z;
     public bool UseRigidbody = true;
+    public bool IsADadoCutPiece = false;
 
     private bool selected = false;
     private bool isRotating = false;
@@ -129,7 +130,14 @@ public class BoardController : MonoBehaviour
 
     public void ResetRotation()
     {
-        transform.rotation = Quaternion.identity;
+        if (IsADadoCutPiece)
+        {
+            transform.rotation = Quaternion.Euler(0f, 90f, 0f);
+        }
+        else
+        {
+            transform.rotation = Quaternion.identity;
+        }
     }
 
     public void ApplyRotation(Vector3 axis, float angle)

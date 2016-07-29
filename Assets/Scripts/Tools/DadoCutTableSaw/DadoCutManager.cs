@@ -24,6 +24,8 @@ public class DadoCutManager : MonoBehaviour
     public DadoCutting CutGameplay;
     public BladeController BladeControl;
     public bool StillCutting { get; set; }
+    public MiterGaugeController MiterGauge;
+    public FenceController Fence;
 
     private int currentPieceIndex = 0;
     private Transform currentSpawnPoint;
@@ -55,7 +57,8 @@ public class DadoCutManager : MonoBehaviour
         currentBoardController = AvailableWoodMaterial[currentPieceIndex].GetComponent<BoardController>();
         UI_Manager.UpdateSelectionButtons(currentPieceIndex, AvailableWoodMaterial.Count);
         SetupForCutting();
-	}
+        MiterGauge.WoodMaterial = AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>();
+    }
 
     public void StopGameDueToLowScore(string message)
     {
@@ -94,6 +97,8 @@ public class DadoCutManager : MonoBehaviour
 
     public void SplitMaterial(DadoBlock dadoToRemove)
     {
+        bool miterGaugeVisible = MiterGauge.IsVisible();
+        MiterGauge.HideMiterGauge();
         if (!dadoToRemove.AnyCutsLeft())
         {
             WoodMaterialObject board = AvailableWoodMaterial[currentPieceIndex].GetComponent<WoodMaterialObject>();
@@ -112,12 +117,21 @@ public class DadoCutManager : MonoBehaviour
                     currentBoardController = AvailableWoodMaterial[currentPieceIndex].GetComponent<BoardController>();
                     UI_Manager.UpdateSelectionButtons(currentPieceIndex, AvailableWoodMaterial.Count);
                     SetupForCutting();
-                    PlacePiece();
+                    if (miterGaugeVisible)
+                    {
+                        MiterGauge.DisplayMiterGauge();
+                        MiterGauge.SetupMiterGaugeForDadoCut();
+                    }
+                    else
+                    {
+                        PlacePiece();
+                    }
                 }
             }
         }
         SawBlade.TurnOff();
         UI_Manager.ChangeSawButtons(false);
+        MiterGauge.EnableMovement(false);
 
         if (DadosToCut.Count > 0)
         {
@@ -173,6 +187,7 @@ public class DadoCutManager : MonoBehaviour
 
     private void SwitchPiece(int indexToSwitchTo)
     {
+        MiterGauge.HideMiterGauge();
         AvailableWoodMaterial[currentPieceIndex].transform.position = Vector3.zero;
         AvailableWoodMaterial[currentPieceIndex].transform.rotation = Quaternion.Euler(0.0f, 90.0f, 0.0f);
         AvailableWoodMaterial[currentPieceIndex].SetActive(false);
@@ -189,6 +204,7 @@ public class DadoCutManager : MonoBehaviour
         {
             EnableCurrentBoardMovement(false);
         }
+        MiterGauge.WoodMaterial = AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>();
         PlacePiece();
     }
 
@@ -231,6 +247,7 @@ public class DadoCutManager : MonoBehaviour
 
     public void SetupForCutting()
     {
+        MiterGauge.HideMiterGauge();
         currentSpawnPoint = FromSawSpawnPoint;
         if (previousAction == ActionState.None || previousAction == ActionState.UsingRuler || currentAction == ActionState.UsingRuler)
         {
@@ -256,6 +273,7 @@ public class DadoCutManager : MonoBehaviour
 
     public void SetupForMeasuring()
     {
+        MiterGauge.HideMiterGauge();
         if (previousAction == ActionState.None || previousAction == ActionState.OnSaw || currentAction == ActionState.OnSaw)
         {
             orbitCamera.EnableZoom = false;

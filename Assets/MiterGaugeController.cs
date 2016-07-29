@@ -9,6 +9,7 @@ public class MiterGaugeController : MonoBehaviour
     public Transform Front;
     public LayerMask ToolLayer;
     public LayerMask WoodLayer;
+    public Transform DadoCutSpawnPoint;
 
     [Header("Movement")]
     public float MinimumLimitZ;
@@ -164,6 +165,39 @@ public class MiterGaugeController : MonoBehaviour
                         Vector3 fGap = Front.position - hit3.point;
                         WoodMaterial.position += fGap;
                         WoodMaterial.position = new Vector3(WoodMaterial.position.x, 1.1f, WoodMaterial.position.z);
+                    }
+                }
+            }
+        }
+    }
+
+    public void SetupMiterGaugeForDadoCut()
+    {
+        if (visible)
+        {
+            Transform dadoBlockTransform = WoodMaterial.gameObject.transform;
+            dadoBlockTransform.rotation = Quaternion.Euler(0f, 90f, 0f);
+            dadoBlockTransform.parent = MiterGaugeObject.transform;
+            dadoBlockTransform.gameObject.GetComponent<BoardController>().enabled = false;
+            dadoBlockTransform.position = new Vector3(0.8f, transform.position.y, transform.position.z);
+            RaycastHit hit;
+            Ray ray = new Ray(dadoBlockTransform.position, Vector3.left);
+            if (Physics.Raycast(ray, out hit, 100f, ToolLayer))
+            {
+                RaycastHit hit2;
+                Ray ray2 = new Ray(hit.point, Vector3.right);
+                if (Physics.Raycast(ray2, out hit2, 100f, WoodLayer))
+                {
+                    Vector3 gap = hit.point - hit2.point;
+                    dadoBlockTransform.position += gap;
+                    dadoBlockTransform.position = new Vector3(dadoBlockTransform.position.x, dadoBlockTransform.position.y, -1.2f);
+                    RaycastHit hit3;
+                    Ray ray3 = new Ray(Front.position, Vector3.back);
+                    if (Physics.Raycast(ray3, out hit3, 100f, WoodLayer))
+                    {
+                        Vector3 fGap = Front.position - hit3.point;
+                        dadoBlockTransform.position += fGap;
+                        dadoBlockTransform.position = new Vector3(dadoBlockTransform.position.x, DadoCutSpawnPoint.position.y, dadoBlockTransform.position.z);
                     }
                 }
             }
