@@ -8,6 +8,7 @@ public class MainMenuUIController : MonoBehaviour
     public GameObject ToolsMenu;
     public GameObject MaterialsMenu;
     public GameObject SettingMenu;
+    public GameObject ProjectsMenu;
 
     public void Start()
     {
@@ -20,6 +21,7 @@ public class MainMenuUIController : MonoBehaviour
         ToolsMenu.SetActive(false);
         MaterialsMenu.SetActive(false);
         SettingMenu.SetActive(false);
+        ProjectsMenu.SetActive(false);
     }
 
     public void OpenNavigationWindow()
@@ -44,5 +46,11 @@ public class MainMenuUIController : MonoBehaviour
     {
         CloseWindows();
         SettingMenu.SetActive(true);
+    }
+
+    public void OpenProjectsWindow()
+    {
+        CloseWindows();
+        ProjectsMenu.SetActive(true);
     }
 }
