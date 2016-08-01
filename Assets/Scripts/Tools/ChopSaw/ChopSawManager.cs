@@ -25,12 +25,12 @@ public class ChopSawManager : MonoBehaviour, IToolManager
     private BoardController currentBoardController;
     private float cumulativeLineScore = 0.0f;
     private float numberOfCuts;
-    private OrbitCamera orbitCamera;
+    private CameraOrbitControl orbitCamera;
     private PanCamera panCamera;
 
 	void Start () 
     {
-        orbitCamera = GameCamera.GetComponent<OrbitCamera>();
+        orbitCamera = GameCamera.GetComponent<CameraOrbitControl>();
         panCamera = GameCamera.GetComponent<PanCamera>();
 
         numberOfCuts = LinesToCut.Count;
@@ -148,14 +148,14 @@ public class ChopSawManager : MonoBehaviour, IToolManager
                 SetupForCutting();
                 EnableCurrentBoardMovement(true);
                 RestrictCurrentBoardMovement(false, false);
-                AvailableWoodMaterial[currentPieceIndex].transform.position = currentSpawnPoint.position + new Vector3(0.0f, 0.0f, -1.0f);
-                Vector3 directionToPiece = (AvailableWoodMaterial[currentPieceIndex].transform.position - currentSpawnPoint.position).normalized;
+                AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>().position = currentSpawnPoint.position + new Vector3(0.0f, 0.0f, -1.0f);
+                Vector3 directionToPiece = (AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>().position - currentSpawnPoint.position).normalized;
                 Ray ray = new Ray(currentSpawnPoint.position, directionToPiece);
                 RaycastHit hit;
                 if (Physics.Raycast(ray, out hit, Mathf.Infinity))
                 {
                     float distance = (hit.point - currentSpawnPoint.position).magnitude;
-                    AvailableWoodMaterial[currentPieceIndex].transform.position += (distance * -directionToPiece);
+                    AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>().position += (distance * -directionToPiece);
                 }
             }
             SawBlade.TurnOff();
@@ -249,6 +249,7 @@ public class ChopSawManager : MonoBehaviour, IToolManager
     private void SwitchPiece(int indexToSwitchTo)
     {
         AvailableWoodMaterial[currentPieceIndex].transform.position = Vector3.zero;
+        AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>().position = Vector3.zero;
         AvailableWoodMaterial[currentPieceIndex].transform.rotation = Quaternion.identity;
         AvailableWoodMaterial[currentPieceIndex].SetActive(false);
         currentPieceIndex = indexToSwitchTo;
@@ -259,12 +260,12 @@ public class ChopSawManager : MonoBehaviour, IToolManager
         {
             EnableCurrentBoardMovement(true);
             RestrictCurrentBoardMovement(false, false);
-            PlacePieceAtSpawnPoint(new Vector3(0.0f, 0.0f, -3.0f));
+            PlacePieceAtSpawnPoint(new Vector3(0.0f, 0.0f, -1.0f));
         }
         else if (currentAction == ActionState.UsingRuler || (previousAction == ActionState.UsingRuler && currentAction == ActionState.ChangingCamera))
         {
             EnableCurrentBoardMovement(false);
-            PlacePieceAtSpawnPoint(new Vector3(-3.0f, 0.0f, 0.0f));
+            PlacePieceAtSpawnPoint(new Vector3(-1.0f, 0.0f, 0.0f));
         }
     }
 
@@ -279,15 +280,18 @@ public class ChopSawManager : MonoBehaviour, IToolManager
 
     public void PlacePieceAtSpawnPoint(Vector3 distanceFromPoint)
     {
-        AvailableWoodMaterial[currentPieceIndex].transform.position = currentSpawnPoint.position + distanceFromPoint;
-        Vector3 directionToPiece = (AvailableWoodMaterial[currentPieceIndex].transform.position - currentSpawnPoint.position).normalized;
+        AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>().useGravity = false;
+        AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>().velocity = Vector3.zero;
+        AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>().position = currentSpawnPoint.position + distanceFromPoint;
+        Vector3 directionToPiece = (AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>().position - currentSpawnPoint.position).normalized;
         Ray ray = new Ray(currentSpawnPoint.position, directionToPiece);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit, Mathf.Infinity))
         {
             float distance = (hit.point - currentSpawnPoint.position).magnitude;
-            AvailableWoodMaterial[currentPieceIndex].transform.position += (distance * -directionToPiece);
+            AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>().position += (distance * -directionToPiece);
         }
+        AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>().useGravity = true;
     }
 
     public bool AreAllLinesCut()
@@ -306,12 +310,12 @@ public class ChopSawManager : MonoBehaviour, IToolManager
         if (previousAction == ActionState.None || previousAction == ActionState.UsingRuler || currentAction == ActionState.UsingRuler)
         {
             AvailableWoodMaterial[currentPieceIndex].transform.rotation = Quaternion.identity;
-            PlacePieceAtSpawnPoint(new Vector3(0.0f, 0.0f, -3.0f));
+            PlacePieceAtSpawnPoint(new Vector3(0.0f, 0.0f, -1.0f));
 
             orbitCamera.enabled = true;
             panCamera.enabled = false;
-            orbitCamera.ChangeAngle(90.0f, 45.0f);
-            orbitCamera.ChangeDistanceConstraints(1.5f, 0.8f, 2.0f);
+            //orbitCamera.ChangeAngle(90.0f, 45.0f);
+            //orbitCamera.ChangeDistanceConstraints(1.5f, 0.8f, 2.0f);
         }
         SawBlade.TurnOff();
         SawController.EnableMovement(false);
@@ -330,11 +334,11 @@ public class ChopSawManager : MonoBehaviour, IToolManager
         if (previousAction == ActionState.None || previousAction == ActionState.OnSaw || currentAction == ActionState.OnSaw)
         {
             AvailableWoodMaterial[currentPieceIndex].transform.rotation = Quaternion.identity;
-            PlacePieceAtSpawnPoint(new Vector3(-3.0f, 0.0f, 0.0f));
+            PlacePieceAtSpawnPoint(new Vector3(-1.0f, 0.0f, 0.0f));
 
             orbitCamera.enabled = false;
             panCamera.enabled = true;
-            panCamera.ChangeDistanceConstraints(0.5f, 0.1f, 2.0f);
+            panCamera.ChangeDistanceConstraints(0.2f, 0.2f, 0.5f);
             panCamera.ChangeAngle(90.0f, 89.9f);
         }
         EnableCurrentBoardMovement(false);

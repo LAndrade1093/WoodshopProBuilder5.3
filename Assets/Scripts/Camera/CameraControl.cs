@@ -7,6 +7,7 @@ public abstract class CameraControl : MonoBehaviour
     public Transform LookAtPoint;
     public LayerMask WoodProjectCollisionMask;
     public LayerMask EnvironmentCollisionMask;
+    public bool EnableCollision = true;
 
     [Header("Distance Variables")]
     public float Distance = 2.0f;
@@ -16,6 +17,7 @@ public abstract class CameraControl : MonoBehaviour
     [Header("Controls")]
     public float ZoomSensitivity = 10.0f;
     public float ZoomSmoothing = 0.5f;
+    public bool EnableZoom = true;
 
     protected Transform objTransform;
     protected float desiredDistance;
@@ -58,8 +60,10 @@ public abstract class CameraControl : MonoBehaviour
         float intersectingDistance = -1.0f;
         for (int i = 0; i < collisionPoints.Length; i++)
         {
+            //Debug.DrawLine(transform.position, collisionPoints[i], Color.black);
             if (Physics.Linecast(transform.position, collisionPoints[i], out hitInfo, WoodProjectCollisionMask))
             {
+                //Debug.Log("Wood Object Hit: " + hitInfo.collider.gameObject);
                 float distance = (transform.position - collisionPoints[i]).magnitude - hitInfo.distance;
                 if (intersectingDistance < distance || intersectingDistance == -1)
                 {
@@ -84,9 +88,10 @@ public abstract class CameraControl : MonoBehaviour
         float smallestDistance = -1.0f;
         for (int i = 0; i < collisionPoints.Length; i++)
         {
-            Debug.DrawLine(LookAtPoint.position, collisionPoints[i]);
+            //Debug.DrawLine(LookAtPoint.position, collisionPoints[i]);
             if (Physics.Linecast(LookAtPoint.position, collisionPoints[i], out hitInfo, EnvironmentCollisionMask))
             {
+                //Debug.Log("Environment Hit: "+ hitInfo.collider.gameObject);
                 if (hitInfo.distance < smallestDistance || smallestDistance == -1.0f)
                 {
                     smallestDistance = hitInfo.distance;

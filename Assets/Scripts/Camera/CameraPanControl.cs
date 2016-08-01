@@ -7,6 +7,7 @@ public class CameraPanControl : CameraControl
 {
     public float PanSensitivity = 5.0f;
     public float PanSmoothing = 0.5f;
+    public bool EnablePan = true;
 
     [Header("Viewing Angle")]
     public float HorizontalAngle = 0f;
@@ -36,18 +37,21 @@ public class CameraPanControl : CameraControl
     {
         HandleInput();
         CalculateNewPosition();
-        planeCoordinates = CameraHelper.getNearClipPlanePoints(newPosition);
-        float collidedDistance = CalculateWoodProjectCollision();
-        if(collidedDistance != -1)
+        if (EnableCollision)
         {
-            newPosition = CalculatePosition(collidedDistance, LookAtPoint.position, VerticalAngle, HorizontalAngle);
-        }
-        else
-        {
-            float distance = CalculateEnvironmentCollision();
-            if(distance != -1.0f)
+            planeCoordinates = CameraHelper.getNearClipPlanePoints(newPosition);
+            float collidedDistance = CalculateWoodProjectCollision();
+            if (collidedDistance != -1)
             {
-                newPosition = CalculatePosition(distance, LookAtPoint.position, VerticalAngle, HorizontalAngle);
+                newPosition = CalculatePosition(collidedDistance, LookAtPoint.position, VerticalAngle, HorizontalAngle);
+            }
+            else
+            {
+                float distance = CalculateEnvironmentCollision();
+                if (distance != -1.0f)
+                {
+                    newPosition = CalculatePosition(distance, LookAtPoint.position, VerticalAngle, HorizontalAngle);
+                }
             }
         }
         UpdateCameraPosition();
@@ -56,11 +60,11 @@ public class CameraPanControl : CameraControl
     protected override void HandleInput()
     {
         Gesture gesture = EasyTouch.current;
-        if(PlayerStartedTouchingScreen(gesture))
+        if(PlayerStartedTouchingScreen(gesture) && EnablePan)
         {
             previousFingerPosition = gesture.position;
         }
-        else if (PlayerIsSwipingCamera(gesture))
+        else if (PlayerIsSwipingCamera(gesture) && EnablePan)
         {
             Vector2 currentFingerPosition = gesture.position;
             if (currentFingerPosition != previousFingerPosition)
@@ -78,22 +82,22 @@ public class CameraPanControl : CameraControl
                     movement = transform.rotation * new Vector3(x, y, 0.0f);
                 }
                 newPanningPosition += movement;
-                //if (MaintainCameraBounds)
-                //{
-                //    panOffset = AdjustToBoundary(panOffset);
-                //}
+                if (EnableCameraBounds)
+                {
+                    newPanningPosition = AdjustToBoundary(newPanningPosition);
+                }
                 previousFingerPosition = currentFingerPosition;
             }
         }
-        else if (PlayerIsPinchingIn(gesture))
+        else if (PlayerIsPinchingIn(gesture) && EnableZoom)
         {
-            float zoomAmount = gesture.deltaPinch * ZoomSensitivity;
+            float zoomAmount = gesture.deltaPinch * (ZoomSensitivity * Time.deltaTime);
             desiredDistance += zoomAmount;
             desiredDistance = Mathf.Clamp(desiredDistance, MinDistance, MaxDistance);
         }
-        else if (PlayerIsPinchingOut(gesture))
+        else if (PlayerIsPinchingOut(gesture) && EnableZoom)
         {
-            float zoomAmount = gesture.deltaPinch * ZoomSensitivity;
+            float zoomAmount = gesture.deltaPinch * (ZoomSensitivity * Time.deltaTime);
             desiredDistance -= zoomAmount;
             desiredDistance = Mathf.Clamp(desiredDistance, MinDistance, MaxDistance);
         }

@@ -7,6 +7,7 @@ public class CameraOrbitControl : CameraControl
 {
     public float OrbitSensitivity = 5.0f;
     public float OrbitSmoothing = 0.5f;
+    public bool EnableOrbit = true;
 
     [Header("Horizontal(Y) Rotation Clamp")]
     public float HorizontalMin = -60f;
@@ -17,6 +18,7 @@ public class CameraOrbitControl : CameraControl
     public float VerticalMax = 60f;
 
     [Header("Initial Viewing Angle")]
+    public bool EnableAngleClamp = true;
     public float HorizontalAngle = 0f;
     public float VerticalAngle = -45f;
 
@@ -34,18 +36,21 @@ public class CameraOrbitControl : CameraControl
     {
         HandleInput();
         CalculateNewPosition();
-        planeCoordinates = CameraHelper.getNearClipPlanePoints(newPosition);
-        float collidedDistance = CalculateWoodProjectCollision();
-        if (collidedDistance != -1)
+        if (EnableCollision)
         {
-            newPosition = CalculatePosition(collidedDistance, LookAtPoint.position, verticalInput, horizontalInput);
-        }
-        else
-        {
-            float distance = CalculateEnvironmentCollision();
-            if (distance != -1.0f)
+            planeCoordinates = CameraHelper.getNearClipPlanePoints(newPosition);
+            float collidedDistance = CalculateWoodProjectCollision();
+            if (collidedDistance != -1)
             {
-                newPosition = CalculatePosition(distance, LookAtPoint.position, verticalInput, horizontalInput);
+                newPosition = CalculatePosition(collidedDistance, LookAtPoint.position, verticalInput, horizontalInput);
+            }
+            else
+            {
+                float distance = CalculateEnvironmentCollision();
+                if (distance != -1.0f)
+                {
+                    newPosition = CalculatePosition(distance, LookAtPoint.position, verticalInput, horizontalInput);
+                }
             }
         }
         UpdateCameraPosition();
@@ -54,25 +59,28 @@ public class CameraOrbitControl : CameraControl
     protected override void HandleInput()
     {
         Gesture gesture = EasyTouch.current;
-        if (PlayerIsSwipingCamera(gesture))
+        if (PlayerIsSwipingCamera(gesture) && EnableOrbit)
         {
             horizontalInput += gesture.deltaPosition.x * OrbitSensitivity;
             verticalInput -= gesture.deltaPosition.y * OrbitSensitivity;
         }
-        else if (PlayerIsPinchingIn(gesture))
+        else if (PlayerIsPinchingIn(gesture) && EnableZoom)
         {
-            float zoomAmount = gesture.deltaPinch * ZoomSensitivity;
+            float zoomAmount = gesture.deltaPinch * ZoomSensitivity * Time.deltaTime;
             desiredDistance += zoomAmount;
             desiredDistance = Mathf.Clamp(desiredDistance, MinDistance, MaxDistance);
         }
-        else if (PlayerIsPinchingOut(gesture))
+        else if (PlayerIsPinchingOut(gesture) && EnableZoom)
         {
-            float zoomAmount = gesture.deltaPinch * ZoomSensitivity;
+            float zoomAmount = gesture.deltaPinch * ZoomSensitivity * Time.deltaTime;
             desiredDistance -= zoomAmount;
             desiredDistance = Mathf.Clamp(desiredDistance, MinDistance, MaxDistance);
         }
-        horizontalInput = ClampAngle(horizontalInput, HorizontalMin, HorizontalMax);
-        verticalInput = ClampAngle(verticalInput, VerticalMin, VerticalMax);
+        if (EnableAngleClamp)
+        {
+            horizontalInput = ClampAngle(horizontalInput, HorizontalMin, HorizontalMax);
+            verticalInput = ClampAngle(verticalInput, VerticalMin, VerticalMax);
+        }
     }
 
     protected override void CalculateNewPosition()
@@ -108,5 +116,25 @@ public class CameraOrbitControl : CameraControl
         float finalAngle = Mathf.Clamp(adjustedAngle, minAngle, maxAngle);
 
         return finalAngle;
+    }
+
+    public void ChangeAngle(float v, float h)
+    {
+        verticalInput = v;
+        horizontalInput = h;
+    }
+
+    public void ChangeDistanceConstraints(float min, float max)
+    {
+        MinDistance = min;
+        MaxDistance = max;
+    }
+
+    public void ChangeDistanceConstraints(float distance, float min, float max)
+    {
+        desiredDistance = distance;
+        Distance = distance;
+        MinDistance = min;
+        MaxDistance = max;
     }
 }

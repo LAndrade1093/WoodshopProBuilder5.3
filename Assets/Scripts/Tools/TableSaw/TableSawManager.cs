@@ -36,12 +36,14 @@ public class TableSawManager : MonoBehaviour, IToolManager
     private float numberOfCuts;
     private CameraOrbitControl orbitCamera;
     private CameraPanControl panCamera;
+    private PanCamera oldPanCamera;
     private bool miterGaugeIsVisible = true;
 
 	void Start ()
     {
         orbitCamera = GameCamera.GetComponent<CameraOrbitControl>();
-        panCamera = GameCamera.GetComponent<CameraPanControl>();
+        //panCamera = GameCamera.GetComponent<CameraPanControl>();
+        oldPanCamera = GameCamera.GetComponent<PanCamera>();
 
         numberOfCuts = LinesToCut.Count;
         UI_Manager.DisplayPlans(true);
@@ -250,6 +252,7 @@ public class TableSawManager : MonoBehaviour, IToolManager
     {
         MiterGauge.HideMiterGauge();
         AvailableWoodMaterial[currentPieceIndex].transform.position = Vector3.zero;
+        AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>().position = Vector3.zero;
         AvailableWoodMaterial[currentPieceIndex].transform.rotation = Quaternion.identity;
         AvailableWoodMaterial[currentPieceIndex].SetActive(false);
         currentPieceIndex = indexToSwitchTo;
@@ -281,13 +284,13 @@ public class TableSawManager : MonoBehaviour, IToolManager
 
     public void PlacePiece()
     {
-        AvailableWoodMaterial[currentPieceIndex].transform.position = currentSpawnPoint.position + new Vector3(0.0f, 0.0f, -3.0f);
+        AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>().position = currentSpawnPoint.position + new Vector3(0.0f, 0.0f, -3.0f);
         Ray ray = new Ray(currentSpawnPoint.position, -Vector3.forward);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))
         {
             float distance = (hit.point - currentSpawnPoint.position).magnitude;
-            AvailableWoodMaterial[currentPieceIndex].transform.position += (distance * Vector3.forward);
+            AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>().position += (distance * Vector3.forward);
         }
     }
 
@@ -310,7 +313,8 @@ public class TableSawManager : MonoBehaviour, IToolManager
             AvailableWoodMaterial[currentPieceIndex].transform.rotation = Quaternion.identity;
             PlacePiece();
             orbitCamera.enabled = true;
-            panCamera.enabled = false;
+            //panCamera.enabled = false;
+            oldPanCamera.enabled = false;
             //orbitCamera.ChangeAngle(0f, 50f);
             orbitCamera.Distance = 1.5f;
         }
@@ -333,9 +337,12 @@ public class TableSawManager : MonoBehaviour, IToolManager
             AvailableWoodMaterial[currentPieceIndex].transform.rotation = Quaternion.identity;
             PlacePiece();
             orbitCamera.enabled = false;
-            panCamera.enabled = true;
-            panCamera.Distance = 0.5f;
+            //panCamera.enabled = true;
+            //panCamera.Distance = 0.5f;
             //panCamera.ChangeAngle(0.0f, 89.5f);
+            oldPanCamera.enabled = true;
+            oldPanCamera.Distance = 0.5f;
+            oldPanCamera.ChangeAngle(0.0f, 89.5f);
         }
         EnableCurrentBoardMovement(false);
         SwitchAction(ActionState.UsingRuler);

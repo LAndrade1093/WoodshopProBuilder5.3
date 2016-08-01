@@ -34,11 +34,11 @@ public class DadoCutManager : MonoBehaviour
     private BoardController currentBoardController;
     private float cumulativeLineScore = 0.0f;
     private float numberOfCuts;
-    private OrbitCamera orbitCamera;
+    private CameraOrbitControl orbitCamera;
 
 	void Start () 
     {
-        orbitCamera = GameCamera.GetComponent<OrbitCamera>();
+        orbitCamera = GameCamera.GetComponent<CameraOrbitControl>();
 
         numberOfCuts = DadosToCut.Count;
         UI_Manager.DisplayPlans(true);
@@ -256,9 +256,11 @@ public class DadoCutManager : MonoBehaviour
 
             orbitCamera.EnableZoom = true;
             orbitCamera.EnableOrbit = true;
+            orbitCamera.EnableCollision = true;
+            orbitCamera.EnableAngleClamp = true;
             orbitCamera.LookAtPoint = CameraSawLookAtPoint;
-            orbitCamera.ChangeAngle(0.0f, 45.0f);
-            orbitCamera.ChangeDistanceConstraints(1.5f, 0.5f, 5.0f);
+            orbitCamera.ChangeAngle(45.0f, 0.0f);
+            orbitCamera.ChangeDistanceConstraints(1.5f, 0.5f, 2.0f);
         }
         SawBlade.TurnOff();
         SawBlade.BladeCollider.convex = true;
@@ -278,9 +280,11 @@ public class DadoCutManager : MonoBehaviour
         {
             orbitCamera.EnableZoom = false;
             orbitCamera.EnableOrbit = false;
+            orbitCamera.EnableAngleClamp = false;
+            orbitCamera.EnableCollision = false;
             orbitCamera.LookAtPoint = CameraRulerLookAtPoint;
             orbitCamera.ChangeDistanceConstraints(0.1f, 0.1f, 0.5f);
-            orbitCamera.ChangeAngle(90.0f, 0.0f);
+            orbitCamera.ChangeAngle(0.0f, 90.0f);
         }
         EnableCurrentBoardMovement(false);
         SwitchAction(ActionState.UsingRuler);
