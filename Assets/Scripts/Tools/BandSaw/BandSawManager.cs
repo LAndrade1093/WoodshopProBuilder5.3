@@ -93,7 +93,11 @@ public class BandSawManager : MonoBehaviour
                 }
                 else
                 {
-                    Rigidbody physics = piece.AddComponent<Rigidbody>();
+                    Rigidbody physics = piece.GetComponent<Rigidbody>();
+                    if (physics == null)
+                    {
+                        physics = piece.AddComponent<Rigidbody>();
+                    }
                     physics.useGravity = true;
                     BandSawPieceController controller = piece.AddComponent<BandSawPieceController>();
                     controller.Moveable = true;

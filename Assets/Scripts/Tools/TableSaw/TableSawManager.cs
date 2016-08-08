@@ -284,7 +284,8 @@ public class TableSawManager : MonoBehaviour, IToolManager
 
     public void PlacePiece()
     {
-        AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>().position = currentSpawnPoint.position + new Vector3(0.0f, 0.0f, -3.0f);
+        AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>().velocity = Vector3.zero;
+        AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>().position = currentSpawnPoint.position + new Vector3(0.0f, 0.0f, -0.5f);
         Ray ray = new Ray(currentSpawnPoint.position, -Vector3.forward);
         RaycastHit hit;
         if (Physics.Raycast(ray, out hit))

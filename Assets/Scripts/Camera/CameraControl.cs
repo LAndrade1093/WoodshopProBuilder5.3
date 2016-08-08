@@ -113,17 +113,19 @@ public abstract class CameraControl : MonoBehaviour
 
     protected bool PlayerIsSwipingCamera(Gesture gesture)
     {
+        bool objectPicked = (gesture.pickedObject == null) ? true : gesture.pickedObject.name == "Blade";
         return gesture.touchCount == 1
-            && gesture.pickedObject == null
+            && objectPicked
             && gesture.pickedUIElement == null
             && !gesture.isOverGui
-            && gesture.type == EasyTouch.EvtType.On_Swipe;
+            && (gesture.type == EasyTouch.EvtType.On_Swipe || (objectPicked && (gesture.type == EasyTouch.EvtType.On_Drag)));
     }
 
     protected bool PlayerIsPinchingIn(Gesture gesture)
     {
+        bool objectPicked = (gesture.pickedObject == null) ? true : gesture.pickedObject.name == "Blade";
         return gesture.touchCount == 2
-            && gesture.pickedObject == null
+            && objectPicked
             && gesture.pickedUIElement == null
             && !gesture.isOverGui
             && gesture.type == EasyTouch.EvtType.On_PinchIn;
@@ -131,8 +133,9 @@ public abstract class CameraControl : MonoBehaviour
 
     protected bool PlayerIsPinchingOut(Gesture gesture)
     {
+        bool objectPicked = (gesture.pickedObject == null) ? true : gesture.pickedObject.name == "Blade";
         return gesture.touchCount == 2
-            && gesture.pickedObject == null
+            && objectPicked
             && gesture.pickedUIElement == null
             && !gesture.isOverGui
             && gesture.type == EasyTouch.EvtType.On_PinchOut;

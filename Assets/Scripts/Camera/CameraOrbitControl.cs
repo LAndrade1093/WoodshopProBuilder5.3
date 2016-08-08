@@ -59,7 +59,9 @@ public class CameraOrbitControl : CameraControl
     protected override void HandleInput()
     {
         Gesture gesture = EasyTouch.current;
-        if (PlayerIsSwipingCamera(gesture) && EnableOrbit)
+        bool o = PlayerIsSwipingCamera(gesture);
+        //Debug.Log("PlayerIsSwipingCamera: " + o);
+        if (o && EnableOrbit)
         {
             horizontalInput += gesture.deltaPosition.x * OrbitSensitivity;
             verticalInput -= gesture.deltaPosition.y * OrbitSensitivity;

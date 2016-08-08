@@ -108,11 +108,12 @@ public class BandSawCutting : MonoBehaviour
                     }
                     else if (Blade.NoInteractionWithBoard)
                     {
-                        CurrentState = CutState.ReadyToCut;
+                        CurrentState = CutState.None;
                         Blade.ResetEdgePosition();
                         currentLine.Reset();
                         currentLine = null;
                         manager.SetUpBoardForCutting(false);
+                        CurrentState = CutState.ReadyToCut;
                     }
                 }
             }
@@ -120,6 +121,7 @@ public class BandSawCutting : MonoBehaviour
             {
                 if (!Blade.CuttingWoodBoard && Blade.NoInteractionWithBoard)
                 {
+                    CurrentState = CutState.None;
                     manager.DisplayScore(lineScore);
                     lineScore = 100.0f;
                     manager.SetUpBoardForCutting(false);

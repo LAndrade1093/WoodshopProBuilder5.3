@@ -136,6 +136,7 @@ public class DadoCutManager : MonoBehaviour
         if (DadosToCut.Count > 0)
         {
             UI_Manager.UpdateSelectionButtons(currentPieceIndex, AvailableWoodMaterial.Count);
+            MiterGauge.WoodMaterial = AvailableWoodMaterial[currentPieceIndex].GetComponent<Rigidbody>();
         }
         else
         {
