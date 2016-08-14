@@ -5,11 +5,17 @@ using UnityEngine;
 [System.Serializable]
 public class Project 
 {
+    [SerializeField]
     private float nextID = 0;
+    [SerializeField]
     private float _id;
+    [SerializeField]
     private string _name;
+    [SerializeField]
     private float _salePrice;
+    [SerializeField]
     private ProjectRequirements _materialRequirements;
+    [SerializeField]
     private ProjectCompletionRequirements _completionRequirements;
 
     public float ID
