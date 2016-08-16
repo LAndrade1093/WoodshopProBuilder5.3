@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using Woodshop.Utility.Exceptions;
 
-public abstract class AbstractDatabase<T> : ScriptableObject, IDal<T> where T : AbstractAsset
+public abstract class AbstractDatabase<T> : ScriptableObject, IDal<T> where T : IDalAsset
 {
     private List<T> _assets;
 
