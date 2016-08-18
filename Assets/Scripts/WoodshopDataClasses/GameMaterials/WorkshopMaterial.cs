@@ -1,20 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
 
-public class WorkshopMaterial 
+[System.Serializable]
+public class WorkshopMaterial : AbstractAsset
 {
-    private float _id;
-    private static float nextID = 0f;
-
+    [SerializeField]
     private string _name;
+    [SerializeField]
     private WorkshopMaterialType _type;
+    [SerializeField]
     private Sprite _icon;
-
-    public float ID
-    {
-        get { return _id; }
-        private set { _id = value; }
-    }
 
     public string Name
     {
@@ -34,17 +30,16 @@ public class WorkshopMaterial
         set { _icon = value; }
     }
 
-    public WorkshopMaterial()
+    public WorkshopMaterial() : base()
     {
-        this.ID = nextID++;
         this.Name = string.Empty;
         this.Type = WorkshopMaterialType.None;
         this.Icon = null;
     }
 
-    public WorkshopMaterial(string name, WorkshopMaterialType type, Sprite icon)
+    public WorkshopMaterial(float id, string name, WorkshopMaterialType type, Sprite icon) 
+        : base(id)
     {
-        this.ID = nextID++;
         this.Name = name;
         this.Type = type;
         this.Icon = icon;
@@ -73,10 +68,5 @@ public class WorkshopMaterial
     public override int GetHashCode()
     {
         return base.GetHashCode();
-    }
-
-    public override string ToString()
-    {
-        return Name;
     }
 }

@@ -1,10 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[System.Serializable]
 public class Softwood : WorkshopMaterial
 {
+    [SerializeField]
     private string _nomimalInches;
+    [SerializeField]
     private string _actualInches;
+    [SerializeField]
     private string _lengthInFeet;
 
     public string NomimalInches
@@ -33,8 +37,8 @@ public class Softwood : WorkshopMaterial
         this.LengthInFeet = string.Empty;
     }
 
-    public Softwood(string name, WorkshopMaterialType type, Sprite icon, string nominal, string actual, string length)
-        : base(name, type, icon)
+    public Softwood(float id, string name, WorkshopMaterialType type, Sprite icon, string nominal, string actual, string length)
+        : base(id, name, type, icon)
     {
         this.NomimalInches = nominal;
         this.ActualInches = actual;

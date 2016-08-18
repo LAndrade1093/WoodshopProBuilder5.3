@@ -1,9 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[System.Serializable]
 public class Dowel : WorkshopMaterial 
 {
+    [SerializeField]
     private string _diameterInInches;
+    [SerializeField]
     private string _lengthInInches;
 
     public string DiameterInInches
@@ -25,8 +28,8 @@ public class Dowel : WorkshopMaterial
         this.LengthInInches = string.Empty;
     }
 
-    public Dowel(string name, WorkshopMaterialType type, Sprite icon, string diameter, string length)
-        : base(name, type, icon)
+    public Dowel(float id, string name, WorkshopMaterialType type, Sprite icon, string diameter, string length)
+        : base(id, name, type, icon)
     {
         this.DiameterInInches = diameter;
         this.LengthInInches = length;

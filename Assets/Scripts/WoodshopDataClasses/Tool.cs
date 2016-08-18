@@ -2,19 +2,14 @@
 using System.Collections;
 
 [System.Serializable]
-public class Tool 
+public class Tool : AbstractAsset
 {
-    private float _id;
-    private static float nextID = 0f;
-
+    [SerializeField]
     private string _displayName;
+    [SerializeField]
     private ToolType _type;
+    [SerializeField]
     private Sprite _icon;
-
-    public float ID
-    {
-        get { return _id; }
-    }
 
     public string DisplayName
     {
@@ -34,9 +29,17 @@ public class Tool
         private set { _icon = value; }
     }
 
-    public Tool(string name, ToolType tool, Sprite icon)
+    public Tool()
+        : base()
     {
-        this._id = nextID++;
+        this.DisplayName = string.Empty;
+        this.Type = ToolType.None;
+        this.Icon = null;
+    }
+
+    public Tool(float id, string name, ToolType tool, Sprite icon) 
+        : base(id)
+    {
         this.DisplayName = name;
         this.Type = tool;
         this.Icon = icon;
