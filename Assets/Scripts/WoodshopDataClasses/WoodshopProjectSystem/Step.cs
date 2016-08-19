@@ -3,23 +3,18 @@ using System;
 using UnityEngine;
 
 [System.Serializable]
-public class Step 
+public class Step : AbstractAsset
 {
-    private float _id;
+    [SerializeField]
     private float _associatedProjectID;
+    [SerializeField]
     private int _stepNumber;
-    private float _pointsToScore;
+    [SerializeField]
     private Sprite _planDrawing;
+    [SerializeField]
     private string _stepInstructions;
-    private string _specificInstructions;
-    private string _toolGameplayInstructions;
-    private StepCompletionRequirements _completionRequirements;
-
-    public float ID
-    {
-        get { return _id; }
-        private set { _id = value; }
-    }
+    [SerializeField]
+    private float _stepCompletionRequirementsID;
 
     public float AssociatedProjectID
     {
@@ -31,12 +26,6 @@ public class Step
     {
         get { return _stepNumber; }
         set { _stepNumber = value; }
-    }
-
-    public float PointsToScore
-    {
-        get { return _pointsToScore; }
-        private set { _pointsToScore = value; }
     }
 
     public Sprite PlanDrawing
@@ -51,34 +40,30 @@ public class Step
         private set { _stepInstructions = value; }
     }
 
-    public string SpecificInstructions
+    public float StepCompletionRequirementsID
     {
-        get { return _specificInstructions; }
-        set { _specificInstructions = value; }
+        get { return _stepCompletionRequirementsID; }
+        private set { _stepCompletionRequirementsID = value; }
     }
 
-    public string ToolGameplayInstructions
+    public Step()
+        : base()
     {
-        get { return _toolGameplayInstructions; }
-        set { _toolGameplayInstructions = value; }
+        this.AssociatedProjectID = -1f;
+        this.StepNumber = -1;
+        this.PlanDrawing = null;
+        this.StepInstructions = string.Empty;
+        StepCompletionRequirementsID = -1f;
     }
 
-    public StepCompletionRequirements CompletionRequirements
+    public Step(float id, float projectID, int stepNumber, Sprite planDrawing, string instructions, float stepCompletionId)
+        : base(id)
     {
-        get { return _completionRequirements; }
-        private set { _completionRequirements = value; }
-    }
-
-    
-
-    public Step(float id, float projectID, float pointsPossible, Sprite planDrawing, string instructions, StepCompletionRequirements completionRequirements)
-    {
-        this.ID = id;
         this.AssociatedProjectID = projectID;
-        this.PointsToScore = pointsPossible;
+        this.StepNumber = stepNumber;
         this.PlanDrawing = planDrawing;
         this.StepInstructions = instructions;
-        this.CompletionRequirements = completionRequirements;
+        this.StepCompletionRequirementsID = stepCompletionId;
     }
 
     public override bool Equals(object obj)
@@ -90,10 +75,8 @@ public class Step
         if (this.ID != otherStep.ID) return false;
         if (this.AssociatedProjectID != otherStep.AssociatedProjectID) return false;
         if (this.StepNumber != otherStep.StepNumber) return false;
-        if (this.PointsToScore != otherStep.PointsToScore) return false;
         if (this.PlanDrawing != otherStep.PlanDrawing) return false;
         if (this.StepInstructions != otherStep.StepInstructions) return false;
-        if (this.CompletionRequirements != otherStep.CompletionRequirements) return false;
 
         return true;
     }

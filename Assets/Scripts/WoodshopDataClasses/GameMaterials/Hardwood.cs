@@ -1,11 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[System.Serializable]
 public class Hardwood : WorkshopMaterial
 {
+    [SerializeField]
     private string _roughSizeInInches;
+    [SerializeField]
     private string _nominalSize;
+    [SerializeField]
     private string _actualDimensionSurfacedOneSide;
+    [SerializeField]
     private string _actualDimensionSurfacedTwoSides;
 
     public string RoughSizeInInches
@@ -41,8 +46,8 @@ public class Hardwood : WorkshopMaterial
         this.ActualDimensionSurfacedTwoSides = string.Empty;
     }
 
-    public Hardwood(string name, WorkshopMaterialType type, Sprite icon, string roughSize, string nominalSize, string actualDimensionS1S, string actualDimensionS2S)
-        : base(name, type, icon)
+    public Hardwood(float id, string name, WorkshopMaterialType type, Sprite icon, string roughSize, string nominalSize, string actualDimensionS1S, string actualDimensionS2S)
+        : base(id, name, type, icon)
     {
         this.RoughSizeInInches = roughSize;
         this.NominalSize = nominalSize;

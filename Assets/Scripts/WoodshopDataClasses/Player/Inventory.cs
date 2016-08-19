@@ -4,11 +4,15 @@ using System.Collections.Generic;
 using System;
 
 [System.Serializable]
-public class Inventory 
+public class Inventory : AbstractAsset
 {
+    [SerializeField]
     private float _associatedProfileID;
-    private Dictionary<WorkshopMaterial, int> _availableMaterials;
+    [SerializeField]
+    private List<WoodshopMaterialCount> _availableMaterials;
+    [SerializeField]
     private List<Tool> _availableTools;
+    [SerializeField]
     private float _cash;
 
     public float AssociatedProfileID
@@ -17,7 +21,7 @@ public class Inventory
         private set { _associatedProfileID = value; }
     }
 
-    public Dictionary<WorkshopMaterial, int> AvailableMaterials
+    public List<WoodshopMaterialCount> AvailableMaterials
     {
         get { return _availableMaterials; }
         private set { _availableMaterials = value; }
@@ -34,20 +38,40 @@ public class Inventory
         get { return _cash; }
     }
 
-    public Inventory(float associatedProfileID)
+    public Inventory() 
+        : base()
     {
-        this.AssociatedProfileID = associatedProfileID;
-        this.AvailableMaterials = new Dictionary<WorkshopMaterial, int>();
+        this.AssociatedProfileID = -1f;
+        this.AvailableMaterials = new List<WoodshopMaterialCount>();
         this.AvailableTools = new List<Tool>();
-        this._cash = 0f;
+        this._cash = -100f;
     }
 
-    public Inventory(float associatedProfileID, Dictionary<WorkshopMaterial, int> availableMaterials, List<Tool> tools)
+    public Inventory(float id, float associatedProfileID)
+        : base(id)
+    {
+        this.AssociatedProfileID = associatedProfileID;
+        this.AvailableMaterials = new List<WoodshopMaterialCount>();
+        this.AvailableTools = new List<Tool>();
+        this._cash = -100f;
+    }
+
+    public Inventory(float id, float associatedProfileID, List<WoodshopMaterialCount> availableMaterials, List<Tool> tools)
+        : base(id)
     {
         this.AssociatedProfileID = associatedProfileID;
         this.AvailableMaterials = availableMaterials;
         this.AvailableTools = tools;
-        this._cash = 0f;
+        this._cash = -100f;
+    }
+
+    public Inventory(float id, float associatedProfileID, List<WoodshopMaterialCount> availableMaterials, List<Tool> tools, float cash)
+        : base(id)
+    {
+        this.AssociatedProfileID = associatedProfileID;
+        this.AvailableMaterials = availableMaterials;
+        this.AvailableTools = tools;
+        this._cash = cash;
     }
 
     #region Cash Methods
@@ -74,91 +98,91 @@ public class Inventory
     #region Material Methods
     public MethodResult AddMaterials(WorkshopMaterial material, int amountToAdd = 1)
     {
-        MethodResult result;
-        if (amountToAdd < 0)
-        {
-            result = new MethodResult(successful: false, error: ErrorType.NegativeCashAmountResult);
-            Debug.LogError("Amount of materials to add cannot be negative.");
-        }
-        else
-        {
-            if (AvailableMaterials.ContainsKey(material))
-            {
-                AvailableMaterials[material] = AvailableMaterials[material] + amountToAdd;
-            }
-            else
-            {
-                AvailableMaterials.Add(material, amountToAdd);
-            }
-            result = new MethodResult(successful: true);
-            return result;
-        }
+        MethodResult result = new MethodResult();
+        //if (amountToAdd < 0)
+        //{
+        //    result = new MethodResult(successful: false, error: ErrorType.NegativeCashAmountResult);
+        //    Debug.LogError("Amount of materials to add cannot be negative.");
+        //}
+        //else
+        //{
+        //    if (AvailableMaterials.ContainsKey(material))
+        //    {
+        //        AvailableMaterials[material] = AvailableMaterials[material] + amountToAdd;
+        //    }
+        //    else
+        //    {
+        //        AvailableMaterials.Add(material, amountToAdd);
+        //    }
+        //    result = new MethodResult(successful: true);
+        //    return result;
+        //}
         return result;
     }
 
     public MethodResult RemoveMaterial(WorkshopMaterial material, int amountToRemove = 1)
     {
-        MethodResult result;
-        if (amountToRemove < 0)
-        {
-            result = new MethodResult(successful: false, error: ErrorType.NegativeCashAmountResult);
-            Debug.LogError("Technically, the amount of materials to remove cannot be negative.");
-        }
-        else
-        {
-            if (AvailableMaterials.ContainsKey(material))
-            {
-                if (AvailableMaterials[material] - amountToRemove < 0)
-                {
-                    result = new MethodResult(message: "You don't have enough of this item (" + material.Name + ")", successful: false, error: ErrorType.NotEnoughMaterialsAvailable);
-                }
-                else
-                {
-                    AvailableMaterials[material] = AvailableMaterials[material] - amountToRemove;
-                    if (AvailableMaterials[material] == 0)
-                    {
-                        AvailableMaterials.Remove(material);
-                        result = new MethodResult(message:"You're now out of "+material.Name+". Get some more at the store.", successful: true);
-                    }
-                    else
-                    {
-                        result = new MethodResult(message: material.Name + " remaining: " + AvailableMaterials[material]);
-                    }
-                }
-            }
-            else
-            {
-                result = new MethodResult(message: "You don't have this item (" + material.Name + ")", successful: false, error: ErrorType.MaterialNotAvailable);
-            }
-        }
+        MethodResult result = new MethodResult();
+        //if (amountToRemove < 0)
+        //{
+        //    result = new MethodResult(successful: false, error: ErrorType.NegativeCashAmountResult);
+        //    Debug.LogError("Technically, the amount of materials to remove cannot be negative.");
+        //}
+        //else
+        //{
+        //    if (AvailableMaterials.ContainsKey(material))
+        //    {
+        //        if (AvailableMaterials[material] - amountToRemove < 0)
+        //        {
+        //            result = new MethodResult(message: "You don't have enough of this item (" + material.Name + ")", successful: false, error: ErrorType.NotEnoughMaterialsAvailable);
+        //        }
+        //        else
+        //        {
+        //            AvailableMaterials[material] = AvailableMaterials[material] - amountToRemove;
+        //            if (AvailableMaterials[material] == 0)
+        //            {
+        //                AvailableMaterials.Remove(material);
+        //                result = new MethodResult(message:"You're now out of "+material.Name+". Get some more at the store.", successful: true);
+        //            }
+        //            else
+        //            {
+        //                result = new MethodResult(message: material.Name + " remaining: " + AvailableMaterials[material]);
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        result = new MethodResult(message: "You don't have this item (" + material.Name + ")", successful: false, error: ErrorType.MaterialNotAvailable);
+        //    }
+        //}
         return result;
     }
 
     public int GetMaterialCount(WorkshopMaterial material)
     {
-        if (AvailableMaterials.ContainsKey(material))
-        {
-            return AvailableMaterials[material];
-        }
-        else
-        {
+        //if (AvailableMaterials.ContainsKey(material))
+        //{
+        //    return AvailableMaterials[material];
+        //}
+        //else
+        //{
             return 0;
-        }
+        //}
     }
 
-    public List<GameMaterialStorage> GetAllAvailableMaterials()
+    public List<WoodshopMaterialCount> GetAllAvailableMaterials()
     {
-        List<GameMaterialStorage> materials = new List<GameMaterialStorage>();
-        foreach (KeyValuePair<WorkshopMaterial, int> materialCount in AvailableMaterials)
-        {
-            materials.Add(new GameMaterialStorage(materialCount.Key, materialCount.Value));
-        }
+        List<WoodshopMaterialCount> materials = new List<WoodshopMaterialCount>();
+        //foreach (KeyValuePair<WorkshopMaterial, int> materialCount in AvailableMaterials)
+        //{
+        //    materials.Add(new GameMaterialStorage(materialCount.Key, materialCount.Value));
+        //}
         return materials;
     }
 
     public bool MaterialIsAvailable(WorkshopMaterial material)
     {
-        return AvailableMaterials.ContainsKey(material);
+        return true;// AvailableMaterials.ContainsKey(material);
     }
     #endregion
 
@@ -198,26 +222,4 @@ public class Inventory
         return AvailableTools.Contains(tool);
     }
     #endregion
-}
-
-public class GameMaterialStorage
-{
-    private WorkshopMaterial _workshopMaterial;
-    private int _materialCount;
-
-    public WorkshopMaterial WorkshopMaterial
-    {
-        get { return _workshopMaterial; }
-    }
-
-    public int MaterialCount
-    {
-        get { return _materialCount; }
-    }
-
-    public GameMaterialStorage(WorkshopMaterial material, int count)
-    {
-        this._workshopMaterial = material;
-        this._materialCount = count;
-    }
 }

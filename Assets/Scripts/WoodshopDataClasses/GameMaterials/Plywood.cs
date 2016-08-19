@@ -1,10 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[System.Serializable]
 public class Plywood : WorkshopMaterial
 {
+    [SerializeField]
     private string _thicknessInInches;
+    [SerializeField]
     private string _widthInFeet;
+    [SerializeField]
     private string _lengthInFeet;
 
     public string ThicknessInInches
@@ -33,8 +37,8 @@ public class Plywood : WorkshopMaterial
         this.LengthInFeet = string.Empty;
     }
 
-    public Plywood(string name, WorkshopMaterialType type, Sprite icon, string thickness, string width, string length)
-        : base(name, type, icon)
+    public Plywood(float id, string name, WorkshopMaterialType type, Sprite icon, string thickness, string width, string length)
+        : base(id, name, type, icon)
     {
         this.ThicknessInInches = thickness;
         this.WidthInFeet = width;

@@ -3,26 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Project 
+public class Project : AbstractAsset
 {
-    [SerializeField]
-    private float nextID = 0;
-    [SerializeField]
-    private float _id;
     [SerializeField]
     private string _name;
     [SerializeField]
     private float _salePrice;
     [SerializeField]
-    private ProjectRequirements _materialRequirements;
+    private float _materialRequirementsID;
     [SerializeField]
-    private ProjectCompletionRequirements _completionRequirements;
-
-    public float ID
-    {
-        get { return _id; }
-        private set { _id = value; }
-    }
+    private float _completionRequirementsID;
 
     public string Name
     {
@@ -36,25 +26,34 @@ public class Project
         private set { _salePrice = value; }
     }
 
-    public ProjectRequirements MaterialRequirements
+    public float MaterialRequirements
     {
-        get { return _materialRequirements; }
-        private set { _materialRequirements = value; }
+        get { return _materialRequirementsID; }
+        private set { _materialRequirementsID = value; }
     }
 
-    public ProjectCompletionRequirements CompletionRequirements
+    public float CompletionRequirements
     {
-        get { return _completionRequirements; }
-        private set { _completionRequirements = value; }
+        get { return _completionRequirementsID; }
+        private set { _completionRequirementsID = value; }
     }
 
-    public Project(string name, float salePrice, ProjectRequirements requirements, ProjectCompletionRequirements completion)
+    public Project()
+        : base()
     {
-        this.ID = nextID++;
+        this.Name = string.Empty;
+        this.SalePrice = -100f;
+        this.MaterialRequirements = -1f;
+        this.CompletionRequirements = -1f;
+    }
+
+    public Project(float id, string name, float salePrice, float requirementsID, float completionID)
+        : base(id)
+    {
         this.Name = name;
         this.SalePrice = salePrice;
-        this.MaterialRequirements = requirements;
-        this.CompletionRequirements = completion;
+        this.MaterialRequirements = requirementsID;
+        this.CompletionRequirements = completionID;
     }
 
     public override bool Equals(object obj)
