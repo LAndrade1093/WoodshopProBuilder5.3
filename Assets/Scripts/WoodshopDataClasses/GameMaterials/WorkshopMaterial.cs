@@ -37,6 +37,14 @@ public class WorkshopMaterial : AbstractAsset
         this.Icon = null;
     }
 
+    public WorkshopMaterial(float id, string name, WorkshopMaterialType type)
+        : base(id)
+    {
+        this.Name = name;
+        this.Type = type;
+        this.Icon = null;
+    }
+
     public WorkshopMaterial(float id, string name, WorkshopMaterialType type, Sprite icon) 
         : base(id)
     {
