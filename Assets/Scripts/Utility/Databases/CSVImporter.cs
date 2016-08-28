@@ -5,40 +5,55 @@ using System.IO;
 
 public static class CSVImporter
 {
-    public static List<string> LoadStringDataFromCSV(string fileName, string path = null)
-    {
-        List<string> loadedData = new List<string>();
+    private const char CommaDataSeparator = ',';
 
-        TextAsset t = Resources.Load("GameCSVData/testingImport") as TextAsset;
+    public static List<Dictionary<string, string>> LoadStringDataFromCSV(string csvFileName, string pathFromResources = null)
+    {
+        string fullPath = (string.IsNullOrEmpty(pathFromResources)) ? csvFileName : pathFromResources + csvFileName;
+        List<string> headers = new List<string>();
+        List<Dictionary<string, string>> loadedData = new List<Dictionary<string, string>>();
+        TextAsset t = Resources.Load(fullPath) as TextAsset;
         if (t == null)
         {
-            Debug.Log("\"GameCSVData/testingImport\" was not found");
+            throw new FileNotFoundException("CSV file \"Assets/Resources/" + fullPath + "\" could not be found.");
         }
         else
         {
             StreamReader sr = new StreamReader(new MemoryStream(t.bytes));
+            bool headersStored = false;
+            int rowNumber = 0;
             while (!sr.EndOfStream)
             {
-                string[] line = sr.ReadLine().Split(',');
-                string loadedText = "";
-                foreach (string data in line)
+                string line = sr.ReadLine();
+                if(headersStored)
                 {
-                    loadedText += data + " | ";
+                    string[] columnData = line.Split(CommaDataSeparator);
+                    if(columnData.Length == headers.Count)
+                    {
+                        Dictionary<string, string> row = new Dictionary<string, string>();
+                        for (int i = 0; i < columnData.Length; i++)
+                        {
+                            row.Add(headers[i], columnData[i]);
+                        }
+                        loadedData.Add(row);
+                    }
+                    else
+                    {
+                        throw new System.Exception("The number of columns in row "+ rowNumber + " does not match the number of headers in the CSV file \"Assets/Resources/" + fullPath + ".csv\"");
+                    }
                 }
-                Debug.Log(loadedText + "\n");
+                else
+                {
+                    headersStored = true;
+                    string[] headerData = line.Split(CommaDataSeparator);
+                    foreach (string header in headerData)
+                    {
+                        headers.Add(header);
+                    }
+                }
+                rowNumber++;
             }
         }
-        return new List<string>();
-    }
-
-    /// <summary>
-    /// Saves data to the specified CSV file at the next available row
-    /// </summary>
-    /// <param name="data">The list of data to save as strings to the CSV</param>
-    /// <param name="fileName">The name of the file (Do not include extension)</param>
-    /// <param name="pathInResources">The path to the file within the Resources folder (Do not include /Resources/ in the path)</param>
-    public static void SaveAssetToCSV(List<string> data, string fileName, string pathInResources = null)
-    {
-
+        return loadedData;
     }
 }

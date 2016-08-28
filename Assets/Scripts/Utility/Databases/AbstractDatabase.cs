@@ -3,77 +3,107 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 using Woodshop.Utility.Exceptions;
+using System.Linq;
 
 public abstract class AbstractDatabase<T> : ScriptableObject, IDal<T> where T : IDalAsset
 {
-    private List<T> _assets;
+    private List<T> _entities;
 
-    protected List<T> Assets
+    protected List<T> Entities
     {
         get
         {
-            if (_assets == null)
-                _assets = new List<T>();
-            return _assets;
+            if (_entities == null)
+                _entities = new List<T>();
+            return _entities;
         }
 
         set
         {
-            _assets = value;
+            _entities = value;
         }
     }
 
     protected abstract string DBFilePath { get; }
     protected abstract string DBFileName { get; }
-    protected bool ValidateAsset() { return false; }
+    protected bool ValidateEntity() { return false; }
 
-    public T CreateAsset(T asset)
+    public T CreateEntity(T entity)
     {
-        throw new NotImplementedException();
+        if(entity.ID <= -1)
+        {
+            entity.ID = GetNextID();
+        }
+        Entities.Add(entity);
+        return entity;
     }
 
-    public T RetrieveAsset(float id)
+    public T RetrieveEntity(float id)
     {
-        throw new NotImplementedException();
+        if(!Contains(id))
+        {
+            throw new AssetNotFoundException("Could not find "+GetType().ToString()+" entity with an id of "+id);
+        }
+        T retrievedEntity = Entities.Find(x => x.ID == id);
+        return retrievedEntity;
     }
 
-    public IEnumerable<T> RetrieveAllAssets()
+    public List<T> RetrieveAllEntities()
     {
-        throw new NotImplementedException();
+        List<T> listCopy = Entities;
+        return listCopy;
     }
 
-    public T UpdateAsset(T asset)
+    public T UpdateEntity(T entity)
     {
-        throw new NotImplementedException();
+        if(Contains(entity.ID))
+        {
+            T asset = RetrieveEntity(entity.ID);
+            int index = Entities.IndexOf(asset);
+            Entities.Insert(index, entity);
+        }
+        else
+        {
+            CreateEntity(entity);
+        }
+        return entity;
     }
 
-    public void DeleteAsset(float id)
+    public void DeleteEntity(float id)
     {
-        throw new NotImplementedException();
+        if(Contains(id))
+        {
+            T asset = RetrieveEntity(id);
+            int index = Entities.IndexOf(asset);
+            Entities.RemoveAt(index);
+        }
     }
 
-    public void DeleteAsset(T asset)
+    public void DeleteEntity(T entity)
     {
-        DeleteAsset(asset.ID);
+        DeleteEntity(entity.ID);
     }
 
     public int Count()
     {
-        throw new NotImplementedException();
+        return Entities.Count;
     }
 
     public bool Contains(float id)
     {
-        throw new NotImplementedException();
+        T retrievedEntity = Entities.Find(x => x.ID == id);
+        bool found = (retrievedEntity != null);
+        return found;
     }
 
-    public bool Contains(T asset)
+    public bool Contains(T entity)
     {
-        return Contains(asset.ID);
+        return Contains(entity.ID);
     }
 
     public float GetNextID()
     {
-        throw new NotImplementedException();
+        float nextID = (from x in Entities select x.ID).Max();
+        return nextID + 1;
     }
 }

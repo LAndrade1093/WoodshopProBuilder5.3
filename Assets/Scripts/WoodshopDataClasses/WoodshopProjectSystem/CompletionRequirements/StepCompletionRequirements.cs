@@ -7,7 +7,7 @@ public enum StepCompletionType
     CutAllDados,
     SandPieces,
     GluePieces,
-    ClampAndDry,
+    Clamp,
     Paint
 }
 

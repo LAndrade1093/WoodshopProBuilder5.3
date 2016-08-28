@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System;
+using System.Collections.Generic;
 
 [System.Serializable]
-public class Tool : AbstractAsset
+public class Tool : AbstractAsset, ICsvImportable
 {
     [SerializeField]
     private string _displayName;
-    [SerializeField]
-    private ToolType _type;
     [SerializeField]
     private Sprite _icon;
 
@@ -16,13 +16,7 @@ public class Tool : AbstractAsset
         get { return _displayName; }
         private set { _displayName = value; }
     }
-
-    public ToolType Type
-    {
-        get { return _type; }
-        private set { _type = value; }
-    }
-
+    
     public Sprite Icon
     {
         get { return _icon; }
@@ -33,15 +27,20 @@ public class Tool : AbstractAsset
         : base()
     {
         this.DisplayName = string.Empty;
-        this.Type = ToolType.None;
         this.Icon = null;
     }
 
-    public Tool(float id, string name, ToolType tool, Sprite icon) 
+    public Tool(float id) 
+        : base(id)
+    {
+        this.DisplayName = string.Empty;
+        this.Icon = null;
+    }
+
+    public Tool(float id, string name, Sprite icon)
         : base(id)
     {
         this.DisplayName = name;
-        this.Type = tool;
         this.Icon = icon;
     }
 
@@ -53,7 +52,6 @@ public class Tool : AbstractAsset
         Tool otherTool = (Tool)obj;
         if (this.ID != otherTool.ID) return false;
         if (this.DisplayName != otherTool.DisplayName) return false;
-        if (this.Type != otherTool.Type) return false;
         if (this.Icon != otherTool.Icon) return false;
 
         return true;
@@ -62,5 +60,30 @@ public class Tool : AbstractAsset
     public override int GetHashCode()
     {
         return base.GetHashCode();
+    }
+
+    public void CreateFromCSV(Dictionary<string, string> csvData)
+    {
+        float id;
+        if(float.TryParse(csvData["tool_id"], out id))
+        {
+            ID = id;
+        }
+        else
+        {
+            Debug.Log("The value of tool_id was not a valid float value. Value Received: "+csvData["tool_id"]);
+        }
+
+        DisplayName = csvData["display_name"];
+
+        Sprite icon = Resources.Load("ToolIcons/"+csvData["icon_filename"]) as Sprite;
+        if(icon != null)
+        {
+            Icon = icon;
+        }
+        else
+        {
+            Debug.Log("Could not find the Sprite file with filename of " + csvData["tool_icon_filename"]);
+        }
     }
 }

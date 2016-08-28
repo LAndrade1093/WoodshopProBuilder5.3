@@ -11,27 +11,24 @@ public class CSVImportTest : MonoBehaviour {
 
     public void ImportFromCSV()
     {
-        TextAsset t = Resources.Load("GameCSVData/testingImport") as TextAsset;
-        if (t == null)
+        string filePath = "GameCSVData/";
+        string fileName = "testingImport";
+        List<Dictionary<string, string>> data = CSVImporter.LoadStringDataFromCSV(fileName, filePath);
+        string loadedData = "";
+        string keys = "";
+        foreach(string key in data[0].Keys)
         {
-            TextDisplay.text = "\"GameCSVData/testingImport\" was not found";
+            keys += key + " | ";
         }
-        else
+        loadedData += keys + "\n";
+        Debug.Log(keys);
+
+        foreach (Dictionary<string, string> dictionaryRow in data)
         {
-            StreamReader sr = new StreamReader(new MemoryStream(t.bytes));
-            string loadedData = "";
-            while (!sr.EndOfStream)
-            {
-                string[] line = sr.ReadLine().Split(',');
-                string loadedText = "";
-                foreach (string data in line)
-                {
-                    loadedText += data + " | ";
-                }
-                loadedData += loadedText + "\n";
-                Debug.Log(loadedText + "\n");
-            }
-            TextDisplay.text = loadedData;
+            string loadedText = dictionaryRow["id"] + " | " + dictionaryRow["enum"] + " | " + dictionaryRow["name"];
+            loadedData += loadedText + "\n";
+            Debug.Log(loadedText + "\n");
         }
+        TextDisplay.text = loadedData;
     }
 }

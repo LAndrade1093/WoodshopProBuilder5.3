@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 [System.Serializable]
 public class AbstractAsset : IDalAsset {
@@ -30,4 +31,5 @@ public class AbstractAsset : IDalAsset {
     {
         ID = id;
     }
+    
 }
