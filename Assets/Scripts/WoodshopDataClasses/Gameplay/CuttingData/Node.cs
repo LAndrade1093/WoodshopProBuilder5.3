@@ -4,8 +4,18 @@ using System.Collections.Generic;
 
 public class Node : MonoBehaviour 
 {
+    private string _nodeID; 
     public List<Node> ConnectedPieces;
-    public float pieceID;
+
+    public string NodeID
+    {
+        get { return _nodeID; }
+    }
+
+    void Start()
+    {
+        _nodeID = gameObject.name;
+    }
 	
     public void SeverConnection(Node piece)
     {
