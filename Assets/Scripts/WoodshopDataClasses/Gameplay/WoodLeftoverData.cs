@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Piece data will be saved in a prefab, so this class probably isn't necessary anymore
+/// </summary>
 [System.Serializable]
 public class WoodLeftoverData : ScriptableObject
 {

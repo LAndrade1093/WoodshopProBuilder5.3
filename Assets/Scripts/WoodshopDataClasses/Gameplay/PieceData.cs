@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Piece data will be saved in a prefab, so this class probably isn't necessary anymore
+/// </summary>
 [System.Serializable]
 public class WoodPieceData : ScriptableObject 
 {

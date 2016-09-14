@@ -7,6 +7,7 @@ using System.Collections;
 [System.Serializable]
 public class GameplayEntity : AbstractAsset
 {
+    public float AssociatedStepID;
     public float PerfectScore;
     public float AverageScore;
     public float PoorScore;

@@ -3,12 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using HedgehogTeam.EasyTouch;
 
-public enum SwipeGameType
-{
-    Paint,
-    Sanding,
-    Lacquer
-}
 public class SwipeGameplay : MonoBehaviour 
 {
     public SwipeGameType type = SwipeGameType.Paint;
