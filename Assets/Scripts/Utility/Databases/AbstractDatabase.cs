@@ -5,6 +5,10 @@ using System.Collections.Generic;
 using Woodshop.Utility.Exceptions;
 using System.Linq;
 
+/// <summary>
+/// Parent class for all database classes
+/// </summary>
+/// <typeparam name="T">The type that will be saved in the database, as long as it implements IDalAsset to use the ID functionality</typeparam>
 public abstract class AbstractDatabase<T> : ScriptableObject, IDal<T> where T : IDalAsset
 {
     private List<T> _entities;
@@ -24,15 +28,17 @@ public abstract class AbstractDatabase<T> : ScriptableObject, IDal<T> where T : 
         }
     }
 
-    protected abstract string DBFilePath { get; }
-    protected abstract string DBFileName { get; }
-    protected bool ValidateEntity() { return false; }
+    protected abstract List<string> DataFilePaths { get; }
 
     public T CreateEntity(T entity)
     {
         if(entity.ID <= -1)
         {
             entity.ID = GetNextID();
+        }
+        else if(Contains(entity.ID))
+        {
+            throw new EntityAlreadyExistsException(GetType().ToString() + " entity with an ID of "+ entity.ID + " already exists and another cannot be made with this id");
         }
         Entities.Add(entity);
         return entity;
@@ -42,7 +48,7 @@ public abstract class AbstractDatabase<T> : ScriptableObject, IDal<T> where T : 
     {
         if(!Contains(id))
         {
-            throw new AssetNotFoundException("Could not find "+GetType().ToString()+" entity with an id of "+id);
+            throw new EntityNotFoundException("Could not find "+GetType().ToString()+" entity with an ID of "+id);
         }
         T retrievedEntity = Entities.Find(x => x.ID == id);
         return retrievedEntity;
@@ -103,7 +109,16 @@ public abstract class AbstractDatabase<T> : ScriptableObject, IDal<T> where T : 
 
     public float GetNextID()
     {
-        float nextID = (from x in Entities select x.ID).Max();
-        return nextID + 1;
+        float nextID = 0;
+        if (Entities != null)
+        {
+            if (Entities.Count > 0)
+            {
+                nextID = (from x in Entities select x.ID).Max() + 1;
+            }
+        }
+        return nextID;
     }
+
+    protected abstract void LoadFromDataFile();
 }

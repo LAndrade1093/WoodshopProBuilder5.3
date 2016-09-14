@@ -64,7 +64,7 @@ public interface IDal<T> where T : IDalAsset
     bool Contains(T entity);
 
     /// <summary>
-    /// Determines the next id from the database
+    /// Determines the next id in the database
     /// i.e. if database has ids 1, 2, 8, and 10, id 11 will be retrieved
     /// </summary>
     /// <returns>The next id in the database</returns>

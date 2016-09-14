@@ -3,12 +3,12 @@ using System.Collections;
 
 namespace Woodshop.Utility.Exceptions
 {
-    public class AssetNotFoundException : System.Exception
+    public class EntityNotFoundException : System.Exception
     {
-        public AssetNotFoundException() { }
-        public AssetNotFoundException(string message) : base(message) { }
-        public AssetNotFoundException(string message, System.Exception inner) : base(message, inner) { }
-        protected AssetNotFoundException(
+        public EntityNotFoundException() { }
+        public EntityNotFoundException(string message) : base(message) { }
+        public EntityNotFoundException(string message, System.Exception inner) : base(message, inner) { }
+        protected EntityNotFoundException(
           System.Runtime.Serialization.SerializationInfo info,
           System.Runtime.Serialization.StreamingContext context) : base(info, context)
         { }

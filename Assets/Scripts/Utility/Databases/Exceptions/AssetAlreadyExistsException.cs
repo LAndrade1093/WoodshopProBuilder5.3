@@ -3,12 +3,12 @@ using System.Collections;
 
 namespace Woodshop.Utility.Exceptions
 {
-    public class AssetAlreadyExistsException : System.Exception
+    public class EntityAlreadyExistsException : System.Exception
     {
-        public AssetAlreadyExistsException() { }
-        public AssetAlreadyExistsException(string message) : base(message) { }
-        public AssetAlreadyExistsException(string message, System.Exception inner) : base(message, inner) { }
-        protected AssetAlreadyExistsException(
+        public EntityAlreadyExistsException() { }
+        public EntityAlreadyExistsException(string message) : base(message) { }
+        public EntityAlreadyExistsException(string message, System.Exception inner) : base(message, inner) { }
+        protected EntityAlreadyExistsException(
           System.Runtime.Serialization.SerializationInfo info,
           System.Runtime.Serialization.StreamingContext context) : base(info, context)
         { }
