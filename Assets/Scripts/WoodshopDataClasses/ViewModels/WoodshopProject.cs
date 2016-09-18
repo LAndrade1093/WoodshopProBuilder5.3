@@ -8,6 +8,6 @@ public class WoodshopProject : MonoBehaviour
     public float SalePrice;
     public int CurrentStepNumber;
     public Score ScoreManager;
-    public ProjectRequirements MaterialRequirements;
+    public ProjectMaterialRequirements MaterialRequirements;
     public List<WoodshopStep> Steps;
 }

@@ -3,26 +3,43 @@ using System.Collections;
 using System.Collections.Generic;
 
 [System.Serializable]
-public class ProjectCompletionRequirements
+public class ProjectCompletionRequirements : AbstractAsset
 {
+    [SerializeField]
     private float _associatedProjectID;
+    [SerializeField]
     private List<float> _stepIDs;
 
     public float AssociatedProjectID
     {
         get { return _associatedProjectID; }
-        set { _associatedProjectID = value; }
+        private set { _associatedProjectID = value; }
     }
 
     public List<float> StepIDs
     {
         get { return _stepIDs; }
-        set { _stepIDs = value; }
+        private set { _stepIDs = value; }
     }
 
-    public ProjectCompletionRequirements(float associatedPorjectID, List<float> projectSteps)
+    public ProjectCompletionRequirements()
+        : base()
     {
-        this.AssociatedProjectID = associatedPorjectID;
+        this.AssociatedProjectID = -1f;
+        this.StepIDs = new List<float>();
+    }
+
+    public ProjectCompletionRequirements(float id)
+        : base(id)
+    {
+        this.AssociatedProjectID = -1f;
+        this.StepIDs = new List<float>();
+    }
+
+    public ProjectCompletionRequirements(float id, float associatedProjectID, List<float> projectSteps)
+        : base(id)
+    {
+        this.AssociatedProjectID = associatedProjectID;
         if (projectSteps == null)
         {
             this.StepIDs = new List<float>();
@@ -33,19 +50,29 @@ public class ProjectCompletionRequirements
         }
     }
 
-    public List<Step> Steps
+    public Step GetStepByIndex(int stepIndex)
     {
-        get
+        Step step = null;
+        if (stepIndex >= 0 && stepIndex <= StepIDs.Count - 1)
         {
-            List<Step> steps = StepsDatabase.RetrieveStepsInProject(AssociatedProjectID);
-            return steps;
+            float id = StepIDs[stepIndex];
+            step = StepsDatabase.RetrieveStep(id);
         }
+        return step;
     }
 
-    public Step GetStep(int stepIndex)
+    public Step GetStepByID(float stepID)
     {
-        float id = StepIDs[stepIndex];
-        Step steps = StepsDatabase.RetrieveStep(id);
-        return steps;
+        Step step = null;
+        if (ProjectContainsStep(stepID))
+        {
+            step = StepsDatabase.RetrieveStep(stepID);
+        }
+        return step;
+    }
+
+    public bool ProjectContainsStep(float stepID)
+    {
+        return StepIDs.Contains(stepID);
     }
 }

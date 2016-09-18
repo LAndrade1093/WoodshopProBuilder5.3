@@ -26,7 +26,7 @@ public class MaterialsDatabase : AbstractDatabase<WoodshopMaterial>
     {
         get
         {
-            return new List<string> { "GameCSVData/WoodshopMaterials" };
+            return new List<string> { "GameCSVData/WoodshopMaterial" };
         }
     }
 

@@ -19,7 +19,7 @@ public class WoodshopMaterialCount
 /// To even look at the project though, the player must first unlock and buy the project
 /// </summary>
 [System.Serializable]
-public class ProjectRequirements : AbstractAsset
+public class ProjectMaterialRequirements : AbstractAsset
 {
     [SerializeField]
     private float _associatedProjectID;
@@ -46,7 +46,7 @@ public class ProjectRequirements : AbstractAsset
         private set { _requiredToolIDs = value; }
     }
 
-    public ProjectRequirements()
+    public ProjectMaterialRequirements()
         : base()
     {
         AssociatedProjectID = -1f;
@@ -54,7 +54,7 @@ public class ProjectRequirements : AbstractAsset
         RequiredToolIDs = new List<float>();
     }
 
-    public ProjectRequirements(float id)
+    public ProjectMaterialRequirements(float id)
         : base(id)
     {
         AssociatedProjectID = -1f;
@@ -62,7 +62,7 @@ public class ProjectRequirements : AbstractAsset
         RequiredToolIDs = new List<float>();
     }
 
-    public ProjectRequirements(float id, float projectID)
+    public ProjectMaterialRequirements(float id, float projectID)
         : base(id)
     {
         AssociatedProjectID = projectID;
@@ -70,7 +70,7 @@ public class ProjectRequirements : AbstractAsset
         RequiredToolIDs = new List<float>();
     }
 
-    public ProjectRequirements(float id, float projectID, List<WoodshopMaterialCount> requiredMaterials, List<float> requiredTools)
+    public ProjectMaterialRequirements(float id, float projectID, List<WoodshopMaterialCount> requiredMaterials, List<float> requiredTools)
         : base(id)
     {
         AssociatedProjectID = projectID;
@@ -191,7 +191,7 @@ public class ProjectRequirements : AbstractAsset
         if (this == obj) return true;
         if (obj == null || GetType() != obj.GetType()) return false;
 
-        ProjectRequirements pr = (ProjectRequirements)obj;
+        ProjectMaterialRequirements pr = (ProjectMaterialRequirements)obj;
         if (this.AssociatedProjectID != pr.AssociatedProjectID) return false;
         if (this.RequiredMaterials != pr.RequiredMaterials) return false;
         if (this.RequiredToolIDs != pr.RequiredToolIDs) return false;

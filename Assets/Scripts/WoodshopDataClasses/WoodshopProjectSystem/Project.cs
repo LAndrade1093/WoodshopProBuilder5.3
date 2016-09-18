@@ -17,7 +17,7 @@ public class Project : AbstractAsset
     [SerializeField]
     private float _materialRequirementsID;
     [SerializeField]
-    private float _projectCompletionRequirementsID;
+    private float _completionRequirementsID;
 
     public string Name
     {
@@ -37,17 +37,27 @@ public class Project : AbstractAsset
         private set { _projectPlansPrice = value; }
     }
 
-    public float MaterialRequirements
+    public float MaterialRequirementID
     {
         get { return _materialRequirementsID; }
         private set { _materialRequirementsID = value; }
     }
 
-    public float CompletionRequirements
+    public ProjectMaterialRequirements GetMaterialRequirements()
     {
-        get { return _projectCompletionRequirementsID; }
-        private set { _projectCompletionRequirementsID = value; }
+        return ProjectMaterialRequirementsDatabase.Instance.RetrieveEntity(MaterialRequirementID);
     }
+
+    public float CompletionRequirementID
+    {
+        get { return _completionRequirementsID; }
+        private set { _completionRequirementsID = value; }
+    }
+
+    //public ProjectCompletionRequirements GetProjectCompletionRequirements()
+    //{
+    //    return ProjectRequirementsCollection
+    //}
 
     public Project()
         : base()
@@ -55,8 +65,8 @@ public class Project : AbstractAsset
         this.Name = string.Empty;
         this.SalePrice = -100f;
         this.ProjectPlansPrice = -100f;
-        this.MaterialRequirements = -1f;
-        this.CompletionRequirements = -1f;
+        this.MaterialRequirementID = -1f;
+        this.CompletionRequirementID = -1f;
     }
 
     public Project(float id, string name, float salePrice, float projectPlansPrice, float requirementsID, float completionID)
@@ -65,8 +75,8 @@ public class Project : AbstractAsset
         this.Name = name;
         this.SalePrice = salePrice;
         this.ProjectPlansPrice = projectPlansPrice;
-        this.MaterialRequirements = requirementsID;
-        this.CompletionRequirements = completionID;
+        this.MaterialRequirementID = requirementsID;
+        this.CompletionRequirementID = completionID;
     }
 
     public override bool Equals(object obj)
@@ -78,7 +88,7 @@ public class Project : AbstractAsset
         if (this.ID != otherProject.ID) return false;
         if (this.Name != otherProject.Name) return false;
         if (this.SalePrice != otherProject.SalePrice) return false;
-        if (this.MaterialRequirements != otherProject.MaterialRequirements) return false;
+        if (this.MaterialRequirementID != otherProject.MaterialRequirementID) return false;
 
         return true;
     }
