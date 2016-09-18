@@ -3,6 +3,21 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+/// <summary>
+/// Since Unity cannot natively serialize a Dictionary, 
+/// this is a simple workaround that will instead store a list of this data class
+/// </summary>
+[System.Serializable]
+public class WoodshopMaterialCount
+{
+    public float RequiredMaterialID;
+    public int AmountRequired;
+}
+
+/// <summary>
+/// Class that tracks what materials and tools a player needs to work on the associated project
+/// To even look at the project though, the player must first unlock and buy the project
+/// </summary>
 [System.Serializable]
 public class ProjectRequirements : AbstractAsset
 {
@@ -11,7 +26,7 @@ public class ProjectRequirements : AbstractAsset
     [SerializeField]
     private List<WoodshopMaterialCount> _requiredMaterials;
     [SerializeField]
-    private List<Tool> _requiredTools;
+    private List<float> _requiredToolIDs;
 
     public float AssociatedProjectID
     {
@@ -25,81 +40,96 @@ public class ProjectRequirements : AbstractAsset
         private set { _requiredMaterials = value; }
     }
 
-    public List<Tool> RequiredTools
+    public List<float> RequiredToolIDs
     {
-        get { return _requiredTools; }
-        private set { _requiredTools = value; }
+        get { return _requiredToolIDs; }
+        private set { _requiredToolIDs = value; }
     }
 
-    public ProjectRequirements() 
+    public ProjectRequirements()
         : base()
     {
-        this.AssociatedProjectID = -1f;
-        this.RequiredMaterials = new List<WoodshopMaterialCount>();
-        this.RequiredTools = new List<Tool>();
+        AssociatedProjectID = -1f;
+        RequiredMaterials = new List<WoodshopMaterialCount>();
+        RequiredToolIDs = new List<float>();
+    }
+
+    public ProjectRequirements(float id)
+        : base(id)
+    {
+        AssociatedProjectID = -1f;
+        RequiredMaterials = new List<WoodshopMaterialCount>();
+        RequiredToolIDs = new List<float>();
     }
 
     public ProjectRequirements(float id, float projectID)
         : base(id)
     {
-        this.AssociatedProjectID = projectID;
-        this.RequiredMaterials = new List<WoodshopMaterialCount>();
-        this.RequiredTools = new List<Tool>();
+        AssociatedProjectID = projectID;
+        RequiredMaterials = new List<WoodshopMaterialCount>();
+        RequiredToolIDs = new List<float>();
     }
 
-    public ProjectRequirements(float id, float projectID, List<WoodshopMaterialCount> requiredMaterials, List<Tool> requiredTools)
+    public ProjectRequirements(float id, float projectID, List<WoodshopMaterialCount> requiredMaterials, List<float> requiredTools)
         : base(id)
     {
-        this.AssociatedProjectID = projectID;
-        this.RequiredMaterials = requiredMaterials;
-        this.RequiredTools = requiredTools;
+        AssociatedProjectID = projectID;
+        RequiredMaterials = requiredMaterials;
+        RequiredToolIDs = requiredTools;
     }
 
-    public bool RequiresWorkshopMaterial(WorkshopMaterial wm)
+    public void AddMaterialRequirement(float workshopMaterialID, int amountRequired)
     {
-        return true;
-        //return RequiredMaterials.ContainsKey(wm);
-    }
-
-    public bool RequiresTool(Tool tool)
-    {
-        return RequiredTools.Contains(tool);
-    }
-
-    public void AddMaterialRequirement(WorkshopMaterial workshopMaterial, int amount)
-    {
-        //if (RequiredMaterials.ContainsKey(workshopMaterial))
-        //{
-        //    RequiredMaterials[workshopMaterial] = amount;
-        //}
-        //else
-        //{
-        //    RequiredMaterials.Add(workshopMaterial, amount);
-        //}
-    }
-
-    public void RemoveMaterialRequirement(WorkshopMaterial workshopMaterial)
-    {
-        //if (RequiredMaterials.ContainsKey(workshopMaterial))
-        //{
-        //    RequiredMaterials.Remove(workshopMaterial);
-        //}
-    }
-
-    public void AddToolRequirement(Tool tool)
-    {
-        if (!RequiredTools.Contains(tool))
+        WoodshopMaterialCount newCount = new WoodshopMaterialCount { RequiredMaterialID = workshopMaterialID, AmountRequired = amountRequired };
+        if (RequiresWorkshopMaterial(workshopMaterialID))
         {
-            RequiredTools.Add(tool);
+            WoodshopMaterialCount currentCount = RequiredMaterials.Find(x => x.RequiredMaterialID == workshopMaterialID);
+            int index = RequiredMaterials.IndexOf(currentCount);
+            RequiredMaterials.Insert(index, newCount);
+        }
+        else
+        {
+            RequiredMaterials.Add(newCount);
         }
     }
 
-    public void RemoveToolRequirement(Tool tool)
+    public void RemoveMaterialRequirement(float workshopMaterialID)
     {
-        if (RequiredTools.Contains(tool))
+        if (RequiresWorkshopMaterial(workshopMaterialID))
         {
-            RequiredTools.Remove(tool);
+            WoodshopMaterialCount m = RequiredMaterials.Find(x => x.RequiredMaterialID == workshopMaterialID);
+            RequiredMaterials.Remove(m);
         }
+    }
+
+    public bool RequiresWorkshopMaterial(float workshopMaterialID)
+    {
+        WoodshopMaterialCount wsm = RequiredMaterials.Find(x => x.RequiredMaterialID == workshopMaterialID);
+        bool found = (wsm != null);
+        return found;
+    }
+
+
+
+    public void AddToolRequirement(float toolID)
+    {
+        if (!RequiredToolIDs.Contains(toolID))
+        {
+            RequiredToolIDs.Add(toolID);
+        }
+    }
+
+    public void RemoveToolRequirement(float toolID)
+    {
+        if (RequiredToolIDs.Contains(toolID))
+        {
+            RequiredToolIDs.Remove(toolID);
+        }
+    }
+
+    public bool RequiresTool(float toolID)
+    {
+        return RequiredToolIDs.Contains(toolID);
     }
 
     public bool AllMaterialsAvailable(Inventory playerInventory)
@@ -123,14 +153,14 @@ public class ProjectRequirements : AbstractAsset
     {
         bool toolAvailable = true;
 
-        foreach (Tool tool in RequiredTools)
-        {
-            toolAvailable = playerInventory.ToolIsAvailable(tool);
-            if (!toolAvailable)
-            {
-                break;
-            }
-        }
+        //foreach (Tool tool in RequiredToolIDs)
+        //{
+        //    toolAvailable = playerInventory.ToolIsAvailable(tool);
+        //    if (!toolAvailable)
+        //    {
+        //        break;
+        //    }
+        //}
 
         return toolAvailable;
     }
@@ -150,11 +180,11 @@ public class ProjectRequirements : AbstractAsset
     public List<ToolData> CheckTools(Inventory playerInventory)
     {
         List<ToolData> toolAvailable = new List<ToolData>();
-        foreach (Tool tool in RequiredTools)
-        {
-            bool available = playerInventory.ToolIsAvailable(tool);
-            toolAvailable.Add(new ToolData(tool, available));
-        }
+        //foreach (Tool tool in RequiredToolIDs)
+        //{
+        //    bool available = playerInventory.ToolIsAvailable(tool);
+        //    toolAvailable.Add(new ToolData(tool, available));
+        //}
         return toolAvailable;
     }
 
@@ -166,7 +196,7 @@ public class ProjectRequirements : AbstractAsset
         ProjectRequirements pr = (ProjectRequirements)obj;
         if (this.AssociatedProjectID != pr.AssociatedProjectID) return false;
         if (this.RequiredMaterials != pr.RequiredMaterials) return false;
-        if (this.RequiredTools != pr.RequiredTools) return false;
+        if (this.RequiredToolIDs != pr.RequiredToolIDs) return false;
 
         return true;
     }
@@ -177,6 +207,9 @@ public class ProjectRequirements : AbstractAsset
     }
 }
 
+/// <summary>
+/// Returned by methods in the ProjectRequirements class that bulk check tool availability in the player inventory
+/// </summary>
 public class ToolData
 {
     private Tool _toolToCheck;
@@ -201,7 +234,9 @@ public class ToolData
     }
 }
 
-
+/// <summary>
+///  Returned by methods in the ProjectRequirements class that bulk check WorkshopMaterial availability in the player inventory
+/// </summary>
 public class WorkshopMaterialCountData
 {
     private WorkshopMaterial _workMaterial;
@@ -241,22 +276,3 @@ public class WorkshopMaterialCountData
         this.AmountRequired = required;
     }
 }
-
-[System.Serializable]
-public class WoodshopMaterialCount
-{
-    public float RequiredMaterialID;
-    public int NumberRequired;
-}
-
-
-
-
-
-
-//ID = nextID++;
-//public float ID
-//{
-//    get { return _id; }
-//    private set { _id = value; }
-//}
