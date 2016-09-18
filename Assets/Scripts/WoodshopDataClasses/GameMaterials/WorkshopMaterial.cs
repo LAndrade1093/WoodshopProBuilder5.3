@@ -2,13 +2,17 @@
 using System.Collections;
 using System;
 
+/// <summary>
+/// The base class for any material in the game
+/// Inherit from this class to add a material that needs this info and more
+/// </summary>
 [System.Serializable]
-public class WorkshopMaterial : AbstractAsset
+public class WoodshopMaterial : AbstractAsset
 {
     [SerializeField]
     private string _name;
     [SerializeField]
-    private WorkshopMaterialType _type;
+    private WoodshopMaterialType _type;
     [SerializeField]
     private Sprite _icon;
 
@@ -18,7 +22,7 @@ public class WorkshopMaterial : AbstractAsset
         set { _name = value; }
     }
 
-    public WorkshopMaterialType Type
+    public WoodshopMaterialType Type
     {
         get { return _type; }
         set { _type = value; }
@@ -30,14 +34,14 @@ public class WorkshopMaterial : AbstractAsset
         set { _icon = value; }
     }
 
-    public WorkshopMaterial() : base()
+    public WoodshopMaterial() : base()
     {
         this.Name = string.Empty;
-        this.Type = WorkshopMaterialType.None;
+        this.Type = WoodshopMaterialType.None;
         this.Icon = null;
     }
 
-    public WorkshopMaterial(float id, string name, WorkshopMaterialType type)
+    public WoodshopMaterial(float id, string name, WoodshopMaterialType type)
         : base(id)
     {
         this.Name = name;
@@ -45,7 +49,7 @@ public class WorkshopMaterial : AbstractAsset
         this.Icon = null;
     }
 
-    public WorkshopMaterial(float id, string name, WorkshopMaterialType type, Sprite icon) 
+    public WoodshopMaterial(float id, string name, WoodshopMaterialType type, Sprite icon) 
         : base(id)
     {
         this.Name = name;
@@ -56,14 +60,14 @@ public class WorkshopMaterial : AbstractAsset
     public override bool Equals(object obj)
     {
         if (object.ReferenceEquals(this, obj)) return true;
-        return EqualsInheritance(obj) && obj.GetType() == typeof(WorkshopMaterial);
+        return EqualsInheritance(obj) && obj.GetType() == typeof(WoodshopMaterial);
     }
 
     protected virtual bool EqualsInheritance(object obj)
     {
-        if (obj == null || !(obj is WorkshopMaterial)) return false;
+        if (obj == null || !(obj is WoodshopMaterial)) return false;
 
-        WorkshopMaterial otherGameMaterial = (WorkshopMaterial)obj;
+        WoodshopMaterial otherGameMaterial = (WoodshopMaterial)obj;
 
         if (this.ID != otherGameMaterial.ID) return false;
         if (this.Name != otherGameMaterial.Name) return false;

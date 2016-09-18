@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Data for a wood project in the game
+/// </summary>
 [System.Serializable]
 public class Project : AbstractAsset
 {
@@ -10,9 +13,11 @@ public class Project : AbstractAsset
     [SerializeField]
     private float _salePrice;
     [SerializeField]
+    private float _projectPlansPrice;
+    [SerializeField]
     private float _materialRequirementsID;
     [SerializeField]
-    private float _completionRequirementsID;
+    private float _projectCompletionRequirementsID;
 
     public string Name
     {
@@ -26,6 +31,12 @@ public class Project : AbstractAsset
         private set { _salePrice = value; }
     }
 
+    public float ProjectPlansPrice
+    {
+        get { return _projectPlansPrice; }
+        private set { _projectPlansPrice = value; }
+    }
+
     public float MaterialRequirements
     {
         get { return _materialRequirementsID; }
@@ -34,8 +45,8 @@ public class Project : AbstractAsset
 
     public float CompletionRequirements
     {
-        get { return _completionRequirementsID; }
-        private set { _completionRequirementsID = value; }
+        get { return _projectCompletionRequirementsID; }
+        private set { _projectCompletionRequirementsID = value; }
     }
 
     public Project()
@@ -43,15 +54,17 @@ public class Project : AbstractAsset
     {
         this.Name = string.Empty;
         this.SalePrice = -100f;
+        this.ProjectPlansPrice = -100f;
         this.MaterialRequirements = -1f;
         this.CompletionRequirements = -1f;
     }
 
-    public Project(float id, string name, float salePrice, float requirementsID, float completionID)
+    public Project(float id, string name, float salePrice, float projectPlansPrice, float requirementsID, float completionID)
         : base(id)
     {
         this.Name = name;
         this.SalePrice = salePrice;
+        this.ProjectPlansPrice = projectPlansPrice;
         this.MaterialRequirements = requirementsID;
         this.CompletionRequirements = completionID;
     }
@@ -75,111 +88,3 @@ public class Project : AbstractAsset
         return base.GetHashCode();
     }
 }
-
-
-
-
-//public enum ProjectState
-//{
-//    None,
-//    Locked,
-//    Unlocked,
-//    Drying,
-//    Completed,
-//    Failed
-//}
-
-//public List<Step> projectSteps;
-//public ScoreTracker scoreTracker;
-
-//private int currentStep;
-
-//public float TotalPointsEarned
-//{
-//    get
-//    {
-//        float points = 0f;
-//        if (scoreTracker == null)
-//        {
-//            points = -1f;
-//            Debug.LogError("Score Tracker is not initialized");
-//        }
-//        return points;
-//    }
-//}
-
-//public float TotalPointsPossible
-//{
-//    get
-//    {
-//        float points = 0f;
-//        foreach (Step step in projectSteps)
-//        {
-//            points += step.pointsToScore;
-//        }
-//        return points;
-//    }
-//}
-
-//public Project(float ID, List<Step> steps, ScoreTracker scoreTracker, string name = "Project")
-//{
-//    this.ID = ID;
-//    this.name = name;
-//    this.projectSteps = steps;
-//    this.scoreTracker = scoreTracker;
-//    this.currentStep = 0;
-//}
-
-//public Project(float ID, List<Step> steps, ScoreTracker scoreTracker, string name = "Project")
-//{
-//    this.ID = ID;
-//    this.name = name;
-//    this.projectSteps = steps;
-//    this.scoreTracker = scoreTracker;
-//    this.currentStep = 0;
-//}
-
-//public Project(string name, List<Step> steps, ScoreTracker scoreTracker)
-//{
-//    this.name = name;
-//    this.projectSteps = steps;
-//    this.scoreTracker = scoreTracker;
-//}
-
-//public Project(string name, List<Step> steps, float pointsEarnedInProject)
-//{
-//    this.name = name;
-//    this.projectSteps = steps;
-//    this.scoreTracker = new ScoreTracker(pointsEarnedInProject);
-//}
-
-//public int GetCurrentStepIndex()
-//{
-//    return currentStep;
-//}
-
-//public int GetCurrentStepNumber()
-//{
-//    return (currentStep + 1);
-//}
-
-//public void GoToNextStep()
-//{
-//    currentStep++;
-//}
-
-//public void StartProject()
-//{
-//    scoreTracker.StartScoreTracking();
-//    currentStep = 0;
-//}
-
-//public Step GetCurrentStepObject()
-//{
-//    return projectSteps[currentStep];
-//}
-
-//public Step GetStepObject(int index)
-//{
-//    return projectSteps[index];
-//}

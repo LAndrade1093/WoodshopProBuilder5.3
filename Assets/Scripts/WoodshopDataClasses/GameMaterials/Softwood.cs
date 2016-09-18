@@ -2,7 +2,7 @@
 using System.Collections;
 
 [System.Serializable]
-public class Softwood : WorkshopMaterial
+public class Softwood : WoodshopMaterial
 {
     [SerializeField]
     private string _nomimalInches;
@@ -37,7 +37,7 @@ public class Softwood : WorkshopMaterial
         this.LengthInFeet = string.Empty;
     }
 
-    public Softwood(float id, string name, WorkshopMaterialType type, Sprite icon, string nominal, string actual, string length)
+    public Softwood(float id, string name, WoodshopMaterialType type, Sprite icon, string nominal, string actual, string length)
         : base(id, name, type, icon)
     {
         this.NomimalInches = nominal;

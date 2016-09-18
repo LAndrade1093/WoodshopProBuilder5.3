@@ -2,7 +2,7 @@
 using System.Collections;
 
 [System.Serializable]
-public class Dowel : WorkshopMaterial 
+public class Dowel : WoodshopMaterial 
 {
     [SerializeField]
     private string _diameterInInches;
@@ -28,7 +28,7 @@ public class Dowel : WorkshopMaterial
         this.LengthInInches = string.Empty;
     }
 
-    public Dowel(float id, string name, WorkshopMaterialType type, Sprite icon, string diameter, string length)
+    public Dowel(float id, string name, WoodshopMaterialType type, Sprite icon, string diameter, string length)
         : base(id, name, type, icon)
     {
         this.DiameterInInches = diameter;

@@ -2,106 +2,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
-public class MaterialsDatabase
+public class MaterialsDatabase : AbstractDatabase<WoodshopMaterial>
 {
-    private static Dictionary<float, WorkshopMaterial> materialsList;
+    private static MaterialsDatabase _instance;
 
-    public static void ValidateDatabase()
+    public static MaterialsDatabase Instance
     {
-        if (materialsList == null)
+        get
         {
-            materialsList = new Dictionary<float, WorkshopMaterial>();
-        }
-    }
-
-    public static void CreateMaterial(WorkshopMaterial workshopMaterial)
-    {
-        ValidateDatabase();
-        if (!materialsList.ContainsKey(workshopMaterial.ID))
-        {
-            materialsList.Add(workshopMaterial.ID, workshopMaterial);
-        }
-        else
-        {
-            Debug.LogError("Materials list already contains " + workshopMaterial);
-        }
-    }
-
-    public static void UpdateMaterial(WorkshopMaterial newWorkshopMaterial)
-    {
-        ValidateDatabase();
-        if (materialsList.ContainsKey(newWorkshopMaterial.ID))
-        {
-            materialsList[newWorkshopMaterial.ID] = newWorkshopMaterial;
-        }
-        else
-        {
-            Debug.LogError("Material with id \"" + newWorkshopMaterial.ID + "\" was not found in the database");
-        }
-    }
-
-    public static WorkshopMaterial RetrieveMaterial(float ID)
-    {
-        ValidateDatabase();
-        WorkshopMaterial wm = null;
-        if (materialsList.ContainsKey(ID))
-        {
-            wm = materialsList[ID];
-        }
-        else
-        {
-            Debug.LogError("Material ID \"" + ID + "\" was not found in the database");
-        }
-        return wm;
-    }
-
-    public static bool DeleteMaterial(float ID)
-    {
-        ValidateDatabase();
-        bool successful = false;
-        if (materialsList.ContainsKey(ID))
-        {
-            successful = materialsList.Remove(ID);
-        }
-        else
-        {
-            Debug.LogError("Material ID \"" + ID + "\" was not found in the database");
-        }
-        return successful;
-    }
-
-    public static bool DeleteMaterial(WorkshopMaterial materialToDelete)
-    {
-        ValidateDatabase();
-        bool successful = false;
-        if (materialsList.ContainsKey(materialToDelete.ID))
-        {
-            WorkshopMaterial toolRetrieved = RetrieveMaterial(materialToDelete.ID);
-            if (toolRetrieved == materialToDelete)
+            if(_instance == null)
             {
-                successful = materialsList.Remove(materialToDelete.ID);
+                _instance = new MaterialsDatabase();
             }
-            //else
-            //{
-            //    Debug.LogError("Tool to delete does not match the ID");
-            //}
+            return _instance;
         }
-        else
-        {
-            Debug.LogError(materialToDelete + " is not in the list");
-        }
-        return successful;
     }
 
-    public static List<WorkshopMaterial> RetrieveAllMaterials()
+    private MaterialsDatabase() { }
+
+    protected override List<string> DataFilePaths
     {
-        ValidateDatabase();
-        List<WorkshopMaterial> allMaterials = new List<WorkshopMaterial>();
-        if (materialsList.Count > 0)
+        get
         {
-            allMaterials = materialsList.Values.ToList();
+            return new List<string> { "GameCSVData/WoodshopMaterials" };
         }
-        return allMaterials;
+    }
+
+    protected override void LoadFromDataFile()
+    {
+        throw new NotImplementedException();
     }
 }

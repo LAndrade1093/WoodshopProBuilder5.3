@@ -2,7 +2,7 @@
 using System.Collections;
 
 [System.Serializable]
-public class Hardwood : WorkshopMaterial
+public class Hardwood : WoodshopMaterial
 {
     [SerializeField]
     private string _roughSizeInInches;
@@ -46,7 +46,7 @@ public class Hardwood : WorkshopMaterial
         this.ActualDimensionSurfacedTwoSides = string.Empty;
     }
 
-    public Hardwood(float id, string name, WorkshopMaterialType type, Sprite icon, string roughSize, string nominalSize, string actualDimensionS1S, string actualDimensionS2S)
+    public Hardwood(float id, string name, WoodshopMaterialType type, Sprite icon, string roughSize, string nominalSize, string actualDimensionS1S, string actualDimensionS2S)
         : base(id, name, type, icon)
     {
         this.RoughSizeInInches = roughSize;

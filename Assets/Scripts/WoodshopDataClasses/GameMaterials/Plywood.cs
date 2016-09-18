@@ -2,7 +2,7 @@
 using System.Collections;
 
 [System.Serializable]
-public class Plywood : WorkshopMaterial
+public class Plywood : WoodshopMaterial
 {
     [SerializeField]
     private string _thicknessInInches;
@@ -37,7 +37,7 @@ public class Plywood : WorkshopMaterial
         this.LengthInFeet = string.Empty;
     }
 
-    public Plywood(float id, string name, WorkshopMaterialType type, Sprite icon, string thickness, string width, string length)
+    public Plywood(float id, string name, WoodshopMaterialType type, Sprite icon, string thickness, string width, string length)
         : base(id, name, type, icon)
     {
         this.ThicknessInInches = thickness;

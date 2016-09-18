@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum WorkshopMaterialType
+public enum WoodshopMaterialType
 {
     None,
     WoodStrip,

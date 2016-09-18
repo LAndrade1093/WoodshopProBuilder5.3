@@ -78,6 +78,7 @@ public class ProjectRequirements : AbstractAsset
         RequiredToolIDs = requiredTools;
     }
 
+    #region Material Methods
     public void AddMaterialRequirement(float workshopMaterialID, int amountRequired)
     {
         WoodshopMaterialCount newCount = new WoodshopMaterialCount { RequiredMaterialID = workshopMaterialID, AmountRequired = amountRequired };
@@ -109,8 +110,35 @@ public class ProjectRequirements : AbstractAsset
         return found;
     }
 
+    public List<WoodshopMaterialCountData> CheckPlayerMaterials(Inventory playerInventory)
+    {
+        List<WoodshopMaterialCountData> availableMaterials = new List<WoodshopMaterialCountData>();
+        foreach (WoodshopMaterialCount wc in RequiredMaterials)
+        {
+            WoodshopMaterial wm = MaterialsDatabase.Instance.RetrieveEntity(wc.RequiredMaterialID);
+            int amountAvailable = playerInventory.GetMaterialCount(wm.ID);
+            availableMaterials.Add(new WoodshopMaterialCountData(wm, amountAvailable, wc.AmountRequired));
+        }
+        return availableMaterials;
+    }
 
+    public bool PlayerHasAllRequiredMaterials(Inventory playerInventory)
+    {
+        bool hasAllMaterials = true;
+        for (int i = 0; i < RequiredMaterials.Count && hasAllMaterials; i++)
+        {
+            WoodshopMaterialCount wc = RequiredMaterials[i];
+            int count = playerInventory.GetMaterialCount(wc.RequiredMaterialID);
+            if(count == 0 || count < wc.AmountRequired)
+            {
+                hasAllMaterials = false;
+            }
+        }
+        return hasAllMaterials;
+    }
+    #endregion
 
+    #region Tool Methods
     public void AddToolRequirement(float toolID)
     {
         if (!RequiredToolIDs.Contains(toolID))
@@ -132,61 +160,31 @@ public class ProjectRequirements : AbstractAsset
         return RequiredToolIDs.Contains(toolID);
     }
 
-    public bool AllMaterialsAvailable(Inventory playerInventory)
+    public List<ToolData> CheckPlayerTools(Inventory playerInventory)
     {
-        bool hasAllMaterials = true;
-
-        //foreach (KeyValuePair<WorkshopMaterial, int> mat in RequiredMaterials)
-        //{
-        //    int count = playerInventory.GetMaterialCount(mat.Key);
-        //    if (count == -1 || count < mat.Value)
-        //    {
-        //        hasAllMaterials = false;
-        //        break;
-        //    }
-        //}
-
-        return hasAllMaterials;
+        List<ToolData> toolsAvailable = new List<ToolData>();
+        foreach (float toolID in RequiredToolIDs)
+        {
+            Tool tool = ToolsDatabase.Instance.RetrieveEntity(toolID);
+            bool available = playerInventory.ToolIsAvailable(toolID);
+            toolsAvailable.Add(new ToolData(tool, available));
+        }
+        return toolsAvailable;
     }
 
-    public bool AllToolsAvailable(Inventory playerInventory)
+    public bool PlayerHasAllRequiredTools(Inventory playerInventory)
     {
-        bool toolAvailable = true;
+        bool allToolsAvailable = true;
 
-        //foreach (Tool tool in RequiredToolIDs)
-        //{
-        //    toolAvailable = playerInventory.ToolIsAvailable(tool);
-        //    if (!toolAvailable)
-        //    {
-        //        break;
-        //    }
-        //}
+        for (int i = 0; i < RequiredToolIDs.Count && allToolsAvailable; i++)
+        {
+            float toolID = RequiredToolIDs[i];
+            allToolsAvailable = playerInventory.ToolIsAvailable(toolID);
+        }
 
-        return toolAvailable;
+        return allToolsAvailable;
     }
-
-    public List<WorkshopMaterialCountData> CheckMaterials(Inventory playerInventory)
-    {
-        List<WorkshopMaterialCountData> availableMaterials = new List<WorkshopMaterialCountData>();
-        //foreach (KeyValuePair<WorkshopMaterial, int> mat in _requiredMaterials)
-        //{
-        //    int required = mat.Value;
-        //    int available = playerInventory.GetMaterialCount(mat.Key);
-        //    availableMaterials.Add(new WorkshopMaterialCountData(mat.Key, available, required));
-        //}
-        return availableMaterials;
-    }
-
-    public List<ToolData> CheckTools(Inventory playerInventory)
-    {
-        List<ToolData> toolAvailable = new List<ToolData>();
-        //foreach (Tool tool in RequiredToolIDs)
-        //{
-        //    bool available = playerInventory.ToolIsAvailable(tool);
-        //    toolAvailable.Add(new ToolData(tool, available));
-        //}
-        return toolAvailable;
-    }
+    #endregion
 
     public override bool Equals(object obj)
     {
@@ -237,13 +235,13 @@ public class ToolData
 /// <summary>
 ///  Returned by methods in the ProjectRequirements class that bulk check WorkshopMaterial availability in the player inventory
 /// </summary>
-public class WorkshopMaterialCountData
+public class WoodshopMaterialCountData
 {
-    private WorkshopMaterial _workMaterial;
+    private WoodshopMaterial _workMaterial;
     private int _amountAvailable;
     private int _amountRequired;
 
-    public WorkshopMaterial WorkMaterial
+    public WoodshopMaterial WorkMaterial
     {
         get { return _workMaterial; }
         private set { _workMaterial = value; }
@@ -269,7 +267,7 @@ public class WorkshopMaterialCountData
         }
     }
 
-    public WorkshopMaterialCountData(WorkshopMaterial material, int available, int required)
+    public WoodshopMaterialCountData(WoodshopMaterial material, int available, int required)
     {
         this.WorkMaterial = material;
         this.AmountAvailable = available;
