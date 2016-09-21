@@ -2,22 +2,31 @@
 using System.Collections;
 using System;
 
+/// <summary>
+/// Stores and controls the score for a specific project for a specific player profile
+/// </summary>
 [System.Serializable]
-public class Score
+public class Score : AbstractAsset
 {
-    private float nextID = 0;
-    private float _id;
+    private float _associatedProfileID;
+    private float _associatedProjectID;
     private float _latestScoreValue;
     private float _highestScoreValue;
 
     private float temporaryPointValue;
 
-    public float ID
+    public float AssociatedProfileID
     {
-        get { return _id; }
-        private set { _id = value; }
+        get { return _associatedProfileID; }
+        private set{ _associatedProfileID = value; }
     }
 
+    public float AssociatedProjectID
+    {
+        get { return _associatedProjectID; }
+        private set { _associatedProjectID = value; }
+    }
+    
     public float LatestScore
     {
         get { return _latestScoreValue; }
@@ -31,27 +40,43 @@ public class Score
     }
 
     public Score()
+        : base()
     {
-        this.ID = nextID++;
         this.LatestScore = 0f;
         this.HighScore = 0f;
         this.temporaryPointValue = 0f;
+        this.AssociatedProfileID = -1f;
+        this.AssociatedProjectID = -1f;
     }
 
-    public Score(float latest, float highScore)
+    public Score(float id)
+        : base(id)
     {
-        this.ID = nextID++;        
+        this.LatestScore = 0f;
+        this.HighScore = 0f;
+        this.temporaryPointValue = 0f;
+        this.AssociatedProfileID = -1f;
+        this.AssociatedProjectID = -1f;
+    }
+
+    public Score(float id, float latest, float highScore, float profileID, float projectID)
+        : base(id)
+    {        
         this.LatestScore = latest;
         this.HighScore = highScore;
         this.temporaryPointValue = 0f;
+        this.AssociatedProfileID = profileID;
+        this.AssociatedProjectID = projectID;
     }
 
-    public Score(float latest, float highScore, float previousScore)
+    public Score(float id, float latest, float highScore, float previousScore, float profileID, float projectID)
+        : base(id)
     {
-        this.ID = nextID++;
         this.LatestScore = latest;
         this.HighScore = highScore;
         this.temporaryPointValue = previousScore;
+        this.AssociatedProfileID = profileID;
+        this.AssociatedProjectID = projectID;
     }
 
     public virtual void Increase(float amount)
@@ -95,7 +120,7 @@ public class Score
         {
             onLatestScoreUpdated(this, EventArgs.Empty);
         }
-        ScoresDatabase.UpdateScore(ID, this);
+        ScoresDatabase.Instance.UpdateEntity(this);
     }
 
     public bool ScoreReachedHighScore(float scoreValue)
@@ -166,24 +191,3 @@ public class Score
         }
     }
 }
-
-
-
-//public Score(string id, )
-//{
-//    this.ID = id;
-//    TotalPoints = 0;
-//    temporaryPoints = 0;
-//}
-
-//public virtual void Decrease(float amount, bool canBeLessThanZero = false)
-//{
-//    if ((temporaryPointValue - amount) < 0 && !canBeLessThanZero)
-//    {
-//        temporaryPointValue = 0;
-//    }
-//    else
-//    {
-//        temporaryPointValue -= amount;
-//    }
-//}

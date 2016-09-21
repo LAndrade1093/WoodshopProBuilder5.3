@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
+/// <summary>
+/// Stores all the different types of materials in the game
+/// </summary>
 public class MaterialsDatabase : AbstractDatabase<WoodshopMaterial>
 {
     private static MaterialsDatabase _instance;
@@ -26,7 +29,11 @@ public class MaterialsDatabase : AbstractDatabase<WoodshopMaterial>
     {
         get
         {
-            return new List<string> { "GameCSVData/WoodshopMaterial" };
+            return new List<string> { "GameCSVData/WoodshopMaterial",
+                "GameCSVData/WoodshopMaterial",
+                "GameCSVData/WoodshopMaterial",
+                "GameCSVData/WoodshopMaterial",
+                "GameCSVData/WoodshopMaterial" };
         }
     }
 

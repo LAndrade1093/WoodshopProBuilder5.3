@@ -2,90 +2,40 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
-public class ScoresDatabase
+/// <summary>
+/// Stores all scores in the game
+/// </summary>
+public class ScoresDatabase : AbstractDatabase<Score>
 {
-    private static Dictionary<float, Score> scoresDictionary = null;
+    private static ScoresDatabase _instance;
 
-    public static void ValidateDatabase()
+    public static ScoresDatabase Instance
     {
-        if (scoresDictionary == null)
+        get
         {
-            scoresDictionary = new Dictionary<float, Score>();
-        }
-    }
-
-    public static void AddScore(Score score)
-    {
-        ValidateDatabase();
-        if (scoresDictionary.ContainsKey(score.ID))
-        {
-            Debug.LogError("Project ID \"" + score.ID + "\" is already used. Score was not saved.");
-        }
-        else
-        {
-            scoresDictionary.Add(score.ID, score);
-        }
-    }
-
-    public static void UpdateScore(float id, Score score)
-    {
-        if (id == score.ID)
-        {
-            ValidateDatabase();
-            if (!scoresDictionary.ContainsKey(id))
+            if (_instance == null)
             {
-                AddScore(score);
+                _instance = new ScoresDatabase();
             }
-            else
-            {
-                scoresDictionary[id] = score;
-            }
-        }
-        else
-        {
-            Debug.LogError("The id \"" + id + "\" does not match \"" + score.ID + "\", the id of the Score being updated.");
+            return _instance;
         }
     }
 
-    public static Score RetrieveScore(float scoreID)
+    private ScoresDatabase() { }
+
+    protected override List<string> DataFilePaths
     {
-        ValidateDatabase();
-        Score score = null;
-        if (scoresDictionary.ContainsKey(scoreID))
+        get
         {
-            score = scoresDictionary[scoreID];
+            //Save to binary file on the user's device
+            return new List<string> { "Scores" };
         }
-        else
-        {
-            Debug.LogError("The id \"" + scoreID + "\" was not in the Scores database.");
-        }
-        return score;
     }
 
-    public static List<Score> RetrieveAllScores()
+    protected override void LoadFromDataFile()
     {
-        ValidateDatabase();
-        List<Score> allScores = new List<Score>();
-        if (scoresDictionary.Count > 0)
-        {
-            allScores = scoresDictionary.Values.ToList();
-        }
-        return allScores;
+        throw new NotImplementedException();
     }
-
-    //public static bool DeleteProject(string projectID)
-    //{
-    //    ValidateDatabase();
-    //    bool successful = false;
-    //    if (gameProjectsDictionary.ContainsKey(projectID))
-    //    {
-    //        successful = gameProjectsDictionary.Remove(projectID);
-    //    }
-    //    else
-    //    {
-    //        Debug.LogError("The project id \"" + projectID + "\" was not in the database.");
-    //    }
-    //    return successful;
-    //}
 }

@@ -1,8 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public enum StepCompletionType
 {
+    None,
     CutAllLines,
     CutAllDados,
     SandPieces,
@@ -12,16 +14,22 @@ public enum StepCompletionType
 }
 
 [System.Serializable]
-public class StepCompletionRequirements
+public class StepCompletionRequirements<T> : AbstractAsset where T : GameplayEntity
 {
-    private Step _associatedStep;
+    private float _associatedStepID;
     private StepCompletionType _type;
+    private List<T> _gameplayEntities;
 
-    public Step AssociatedStep
+    public float AssociatedStep
     {
-        get { return _associatedStep; }
-        private set { _associatedStep = value; }
+        get { return _associatedStepID; }
+        private set { _associatedStepID = value; }
     }
+
+    //public Step AssociatedStep
+    //{
+    //    get { return StepsDatabase }
+    //}
 
     public StepCompletionType Type
     {
@@ -29,29 +37,51 @@ public class StepCompletionRequirements
         private set { _type = value; }
     }
 
-    public StepCompletionRequirements(Step step, StepCompletionType type)
+    public List<T> GameplayEntities
     {
-        this.AssociatedStep = step;
-        this.Type = type;
+        get
+        {
+            if(_gameplayEntities == null)
+            {
+                _gameplayEntities = new List<T>();
+            }
+            return _gameplayEntities;
+        }
+        private set { _gameplayEntities = value; }
     }
 
-    public StepCompletionRequirements(float stepID, StepCompletionType type)
+    public StepCompletionRequirements()
+        : base()
     {
-        this.AssociatedStep = StepsDatabase.RetrieveStep(stepID);
+        this.AssociatedStep = -1;
+        this.Type = StepCompletionType.None;
+    }
+
+    public StepCompletionRequirements(float id)
+        : base(id)
+    {
+        this.AssociatedStep = -1;
+        this.Type = StepCompletionType.None;
+    }
+
+    public StepCompletionRequirements(float id, float stepID, StepCompletionType type)
+        : base(id)
+    {
+        this.AssociatedStep = stepID;
         this.Type = type;
     }
 
     public override bool Equals(object obj)
     {
         if (object.ReferenceEquals(this, obj)) return true;
-        return EqualsInheritance(obj) && obj.GetType() == typeof(StepCompletionRequirements);
+        return EqualsInheritance(obj) && obj.GetType() == typeof(StepCompletionRequirements<T>);
     }
 
     protected virtual bool EqualsInheritance(object obj)
     {
-        if (obj == null || !(obj is StepCompletionRequirements)) return false;
+        if (obj == null || !(obj is StepCompletionRequirements<T>)) return false;
 
-        StepCompletionRequirements otherStepRequirements = (StepCompletionRequirements)obj;
+        StepCompletionRequirements<T> otherStepRequirements = (StepCompletionRequirements<T>)obj;
 
         if (this.AssociatedStep != otherStepRequirements.AssociatedStep) return false;
         if (this.Type != otherStepRequirements.Type) return false;

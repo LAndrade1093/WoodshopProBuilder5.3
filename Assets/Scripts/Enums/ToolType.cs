@@ -1,4 +1,7 @@
-﻿public enum ToolType 
+﻿/// <summary>
+/// The tool used in a step. Should match scene name so that these can be used for loading the scene
+/// </summary>
+public enum ToolType 
 {
     None,
     TableSaw,

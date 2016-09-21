@@ -2,20 +2,17 @@
 using System.Collections;
 using UnityEngine.SocialPlatforms;
 
-public class PlayerProfile 
+/// <summary>
+/// Basic data related to the player.
+/// </summary>
+[System.Serializable]
+public class PlayerProfile : AbstractAsset
 {
-    private static float nextID = 0;
-    private float _id;
     private string _name;
     private WoodshopRank _rank;
     private PlayerStatistics _stats;
-
-    public float ID
-    {
-        get { return _id; }
-        private set { _id = value; }
-    }
-
+    private bool _defaultTutorialsToOn;
+    
     public string Name
     {
         get { return _name; }
@@ -34,19 +31,36 @@ public class PlayerProfile
         set { _stats = value; }
     }
 
-    public PlayerProfile()
+    public bool DefaultTutorialsToOn
     {
-        this.ID = nextID++;
+        get { return _defaultTutorialsToOn; }
+        set { _defaultTutorialsToOn = value; }
+    }
+
+    public PlayerProfile() 
+        : base()
+    {
         this.Name = "NA";
         this.Rank = WoodshopRank.Amateur;
         this.Stats = new PlayerStatistics(this.ID);
+        this.DefaultTutorialsToOn = false;
     }
 
-    public PlayerProfile(string name, WoodshopRank rank, PlayerStatistics stats)
+    public PlayerProfile(float id)
+        : base(id)
     {
-        this.ID = nextID++;
+        this.Name = "NA";
+        this.Rank = WoodshopRank.Amateur;
+        this.Stats = null;
+        this.DefaultTutorialsToOn = false;
+    }
+
+    public PlayerProfile(float id, string name, WoodshopRank rank, PlayerStatistics stats, bool tutorialsOn)
+        : base(id)
+    {
         this.Name = name;
         this.Rank = rank;
         this.Stats = stats;
+        this.DefaultTutorialsToOn = tutorialsOn;
     }
 }

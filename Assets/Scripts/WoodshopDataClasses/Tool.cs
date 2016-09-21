@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 
 [System.Serializable]
-public class Tool : AbstractAsset, ICsvImportable
+public class Tool : AbstractAsset
 {
     [SerializeField]
     private string _displayName;
@@ -60,30 +60,5 @@ public class Tool : AbstractAsset, ICsvImportable
     public override int GetHashCode()
     {
         return base.GetHashCode();
-    }
-
-    public void CreateFromCSV(Dictionary<string, string> csvData)
-    {
-        float id;
-        if(float.TryParse(csvData["tool_id"], out id))
-        {
-            ID = id;
-        }
-        else
-        {
-            Debug.Log("The value of tool_id was not a valid float value. Value Received: "+csvData["tool_id"]);
-        }
-
-        DisplayName = csvData["display_name"];
-
-        Sprite icon = Resources.Load("ToolIcons/"+csvData["icon_filename"]) as Sprite;
-        if(icon != null)
-        {
-            Icon = icon;
-        }
-        else
-        {
-            Debug.Log("Could not find the Sprite file with filename of " + csvData["tool_icon_filename"]);
-        }
     }
 }

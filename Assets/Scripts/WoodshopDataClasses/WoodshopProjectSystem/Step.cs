@@ -2,6 +2,9 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Data for a step within a wood project
+/// </summary>
 [System.Serializable]
 public class Step : AbstractAsset
 {
@@ -10,11 +13,13 @@ public class Step : AbstractAsset
     [SerializeField]
     private int _stepNumber;
     [SerializeField]
+    private ToolType _tool;
+    [SerializeField]
     private Sprite _planDrawing;
     [SerializeField]
     private string _stepInstructions;
     [SerializeField]
-    private float _stepCompletionRequirementsID;
+    private float _stepCompletionRequirementID;
 
     public float AssociatedProjectID
     {
@@ -25,7 +30,13 @@ public class Step : AbstractAsset
     public int StepNumber
     {
         get { return _stepNumber; }
-        set { _stepNumber = value; }
+        private set { _stepNumber = value; }
+    }
+
+    public ToolType Tool
+    {
+        get { return _tool; }
+        private set { _tool = value; }
     }
 
     public Sprite PlanDrawing
@@ -42,8 +53,8 @@ public class Step : AbstractAsset
 
     public float StepCompletionRequirementsID
     {
-        get { return _stepCompletionRequirementsID; }
-        private set { _stepCompletionRequirementsID = value; }
+        get { return _stepCompletionRequirementID; }
+        private set { _stepCompletionRequirementID = value; }
     }
 
     public Step()
@@ -51,19 +62,37 @@ public class Step : AbstractAsset
     {
         this.AssociatedProjectID = -1f;
         this.StepNumber = -1;
+        this.Tool = ToolType.None;
         this.PlanDrawing = null;
         this.StepInstructions = string.Empty;
-        StepCompletionRequirementsID = -1f;
+        this.StepCompletionRequirementsID = -1f;
     }
 
-    public Step(float id, float projectID, int stepNumber, Sprite planDrawing, string instructions, float stepCompletionId)
+    public Step(float id)
+        : base(id)
+    {
+        this.AssociatedProjectID = -1f;
+        this.StepNumber = -1;
+        this.Tool = ToolType.None;
+        this.PlanDrawing = null;
+        this.StepInstructions = string.Empty;
+        this.StepCompletionRequirementsID = -1f;
+    }
+
+    public Step(float id, float projectID, int stepNumber, ToolType type, Sprite planDrawing, string instructions, float stepCompletion)
         : base(id)
     {
         this.AssociatedProjectID = projectID;
         this.StepNumber = stepNumber;
+        this.Tool = type;
         this.PlanDrawing = planDrawing;
         this.StepInstructions = instructions;
-        this.StepCompletionRequirementsID = stepCompletionId;
+        this.StepCompletionRequirementsID = stepCompletion;
+    }
+
+    public float GetMaxScoreForStep()
+    {
+        return 0;
     }
 
     public override bool Equals(object obj)
@@ -86,7 +115,3 @@ public class Step : AbstractAsset
         return base.GetHashCode();
     }
 }
-
-
-
-//public ToolType ToolToUse;

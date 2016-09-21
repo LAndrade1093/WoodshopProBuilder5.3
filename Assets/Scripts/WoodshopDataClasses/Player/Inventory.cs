@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+/// <summary>
+/// The player's inventory. Tracks everything the player has with methods to access and manipulate what the player has.
+/// </summary>
 [System.Serializable]
 public class Inventory : AbstractAsset
 {

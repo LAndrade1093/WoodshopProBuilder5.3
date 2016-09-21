@@ -30,7 +30,7 @@ public abstract class AbstractDatabase<T> : ScriptableObject, IDal<T> where T : 
 
     protected abstract List<string> DataFilePaths { get; }
 
-    public T CreateEntity(T entity)
+    public virtual T CreateEntity(T entity)
     {
         if(entity.ID <= -1)
         {
@@ -44,7 +44,7 @@ public abstract class AbstractDatabase<T> : ScriptableObject, IDal<T> where T : 
         return entity;
     }
 
-    public T RetrieveEntity(float id)
+    public virtual T RetrieveEntity(float id)
     {
         if(!Contains(id))
         {
@@ -54,13 +54,13 @@ public abstract class AbstractDatabase<T> : ScriptableObject, IDal<T> where T : 
         return retrievedEntity;
     }
 
-    public List<T> RetrieveAllEntities()
+    public virtual List<T> RetrieveAllEntities()
     {
         List<T> listCopy = Entities;
         return listCopy;
     }
 
-    public T UpdateEntity(T entity)
+    public virtual T UpdateEntity(T entity)
     {
         if(Contains(entity.ID))
         {
@@ -75,7 +75,7 @@ public abstract class AbstractDatabase<T> : ScriptableObject, IDal<T> where T : 
         return entity;
     }
 
-    public void DeleteEntity(float id)
+    public virtual void DeleteEntity(float id)
     {
         if(Contains(id))
         {
@@ -85,24 +85,24 @@ public abstract class AbstractDatabase<T> : ScriptableObject, IDal<T> where T : 
         }
     }
 
-    public void DeleteEntity(T entity)
+    public virtual void DeleteEntity(T entity)
     {
         DeleteEntity(entity.ID);
     }
 
-    public int Count()
+    public virtual int Count()
     {
         return Entities.Count;
     }
 
-    public bool Contains(float id)
+    public virtual bool Contains(float id)
     {
         T retrievedEntity = Entities.Find(x => x.ID == id);
         bool found = (retrievedEntity != null);
         return found;
     }
 
-    public bool Contains(T entity)
+    public virtual bool Contains(T entity)
     {
         return Contains(entity.ID);
     }

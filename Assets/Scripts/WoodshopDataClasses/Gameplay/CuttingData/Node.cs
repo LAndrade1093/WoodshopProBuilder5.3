@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// A wood piece and all of the other pieces it is adjacent to in the wood material that will be cut.
+/// </summary>
 public class Node : MonoBehaviour 
 {
     private string _nodeID; 

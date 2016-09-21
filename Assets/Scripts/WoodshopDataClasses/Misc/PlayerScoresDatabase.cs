@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+/// <summary>
+/// (Deprecated) Stored PlayerProjectScoreLink instances.
+/// Like mentioned in the PlayerProjectScoreLink notes, this was ignored since it can make things too complicated.
+/// </summary>
 public class PlayerScoreLinkDatabase 
 {
     private static List<PlayerProjectScoreLink> playerScoresCollection = null;
@@ -31,7 +35,7 @@ public class PlayerScoreLinkDatabase
     public static Score RetrieveScoreByProfile(float profileID, float projectID)
     {
         PlayerProjectScoreLink link = playerScoresCollection.First(x => x.PlayerProfileID == profileID && x.ProjectID == projectID);
-        Score score = ScoresDatabase.RetrieveScore(link.ScoreID);
+        Score score = ScoresDatabase.Instance.RetrieveEntity(link.ScoreID);
         return score;
     }
 
@@ -62,7 +66,7 @@ public class PlayerScoreLinkDatabase
         scoresList = new List<Score>();
         foreach (PlayerProjectScoreLink scoreLink in links)
         {
-            Score score = ScoresDatabase.RetrieveScore(scoreLink.ScoreID);
+            Score score = ScoresDatabase.Instance.RetrieveEntity(scoreLink.ScoreID);
             if (score != null)
             {
                 scoresList.Add(score);
