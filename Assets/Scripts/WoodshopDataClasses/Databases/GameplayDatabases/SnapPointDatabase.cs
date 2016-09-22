@@ -1,12 +1,37 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 [System.Serializable]
-public class SnapPointDatabase : ScriptableObject 
+public class SnapPointDatabase : AbstractDatabase<GlueAreaData>
 {
-    [SerializeField]
-    public string ID;
-    [SerializeField]
-    public List<SnapPointData> SnapPointDataList;
+    private static SnapPointDatabase _instance;
+
+    public static SnapPointDatabase Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = new SnapPointDatabase();
+            }
+            return _instance;
+        }
+    }
+
+    private SnapPointDatabase() { }
+
+    protected override List<string> DataFilePaths
+    {
+        get
+        {
+            return new List<string> { "GameCSVData/SnapPoints" };
+        }
+    }
+
+    protected override void LoadFromDataFile()
+    {
+        throw new NotImplementedException();
+    }
 }

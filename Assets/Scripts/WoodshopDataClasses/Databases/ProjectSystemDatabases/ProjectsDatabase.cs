@@ -2,65 +2,36 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
-public class ProjectsDatabase 
+public class ProjectsDatabase : AbstractDatabase<Project>
 {
-    private static Dictionary<float, Project> gameProjectsDictionary = null;
+    private static ProjectsDatabase _instance;
 
-    public static void ValidateDatabase()
+    public static ProjectsDatabase Instance
     {
-        if (gameProjectsDictionary == null)
+        get
         {
-            gameProjectsDictionary = new Dictionary<float, Project>();
+            if (_instance == null)
+            {
+                _instance = new ProjectsDatabase();
+            }
+            return _instance;
         }
     }
 
-    public static void AddProject(Project project)
+    private ProjectsDatabase() { }
+
+    protected override List<string> DataFilePaths
     {
-        ValidateDatabase();
-        if (ProjectsDatabase.Contains(project))
+        get
         {
-            Debug.LogError("Project ID \"" + project.ID + "\" is already in the database. Project was not saved.");
-        }
-        else
-        {
-            gameProjectsDictionary.Add(project.ID, project);
+            return new List<string> { "GameCSVData/Projects" };
         }
     }
 
-    public static Project RetrieveProject(float projectID)
+    protected override void LoadFromDataFile()
     {
-        ValidateDatabase();
-        Project project = null;
-        if (ProjectsDatabase.Contains(projectID))
-        {
-            project = gameProjectsDictionary[projectID];
-        }
-        else
-        {
-            Debug.LogError("The project id \"" + projectID + "\" was not in the database.");
-        }
-        return project;
-    }
-
-    public static List<Project> RetrieveAllProjects()
-    {
-        ValidateDatabase();
-        List<Project> allProjects = new List<Project>();
-        if (gameProjectsDictionary.Count > 0)
-        {
-            allProjects = gameProjectsDictionary.Values.ToList();
-        }
-        return allProjects;
-    }
-
-    public static bool Contains(float projectID)
-    {
-        return gameProjectsDictionary.ContainsKey(projectID);
-    }
-
-    public static bool Contains(Project project)
-    {
-        return Contains(project.ID);
+        throw new NotImplementedException();
     }
 }

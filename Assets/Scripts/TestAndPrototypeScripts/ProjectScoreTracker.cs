@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Prototype score tracker (Replace with Score class)
+/// </summary>
 public class ProjectScoreTracker : MonoBehaviour 
 {
     [Header("Project Value")]

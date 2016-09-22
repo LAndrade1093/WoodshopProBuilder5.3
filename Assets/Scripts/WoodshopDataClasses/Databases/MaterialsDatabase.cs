@@ -29,11 +29,7 @@ public class MaterialsDatabase : AbstractDatabase<WoodshopMaterial>
     {
         get
         {
-            return new List<string> { "GameCSVData/WoodshopMaterial",
-                "GameCSVData/WoodshopMaterial",
-                "GameCSVData/WoodshopMaterial",
-                "GameCSVData/WoodshopMaterial",
-                "GameCSVData/WoodshopMaterial" };
+            return new List<string> { "GameCSVData/WoodshopMaterial" };
         }
     }
 

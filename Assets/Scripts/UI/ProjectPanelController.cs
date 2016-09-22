@@ -10,9 +10,9 @@ public class ProjectPanelController : MonoBehaviour
 
 	void Start ()
     {
-        foreach(Project p in ProjectsDatabase.RetrieveAllProjects())
-        {
+        //foreach(Project p in ProjectsDatabase.RetrieveAllProjects())
+        //{
 
-        }
+        //}
 	}
 }

@@ -25,6 +25,41 @@ public class ScoresDatabase : AbstractDatabase<Score>
 
     private ScoresDatabase() { }
 
+    public List<Score> GetScoresForPlayer(float playerProfileID)
+    {
+        List<Score> associatedScores = new List<Score>();
+        List<Score> scores = RetrieveAllEntities();
+        foreach(Score s in scores)
+        {
+            if(s.AssociatedProfileID == playerProfileID)
+            {
+                scores.Add(s);
+            }
+        }
+        return scores;
+    }
+
+    public List<Score> GetScoresByProjectID(float projectID)
+    {
+        List<Score> associatedScores = new List<Score>();
+        List<Score> scores = RetrieveAllEntities();
+        foreach (Score s in scores)
+        {
+            if (s.AssociatedProjectID == projectID)
+            {
+                scores.Add(s);
+            }
+        }
+        return scores;
+    }
+
+    public Score GetScoreByAssociations(float projectID, float playerProfileID)
+    {
+        List<Score> scores = RetrieveAllEntities();
+        Score score = scores.Find(x => x.AssociatedProjectID == projectID && x.AssociatedProfileID == playerProfileID);
+        return score;
+    }
+
     protected override List<string> DataFilePaths
     {
         get

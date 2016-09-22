@@ -3,22 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class ScoreRequirement 
+/// <summary>
+/// Associates a score requirement to a project for the associated ScoreLock.
+/// </summary>
+public class ScoreRequirement : AbstractAsset
 {
-    private ScoreLock _associatedScoreLock;
-    private float _requiredScore;
-    private float _associatedProjectID = -1f;
+    private float _associatedScoreLockID;
+    private float _requiredProjectScore;
+    private float _associatedProjectID;
 
-    public ScoreLock AssociatedScoreLock
+    public float AssociatedScoreLockID
     {
-        get { return _associatedScoreLock; }
-        private set { _associatedScoreLock = value; }
+        get { return _associatedScoreLockID; }
+        private set { _associatedScoreLockID = value; }
     }
 
-    public float RequiredScore
+    public float RequiredProjectScore
     {
-        get { return _requiredScore; }
-        set { _requiredScore = value; }
+        get { return _requiredProjectScore; }
+        set { _requiredProjectScore = value; }
     }
 
     public float AssociatedProjectID
@@ -26,58 +29,85 @@ public class ScoreRequirement
         get { return _associatedProjectID; }
         private set 
         {
-            if (_associatedProjectID < 0) //If not set
+            if (_associatedProjectID >= 0) //Association was already set
             {
-                Project project = ProjectsDatabase.RetrieveProject(value);
-                if (project != null)
+                Project previousProject = ProjectsDatabase.Instance.RetrieveEntity(_associatedProjectID);
+                if (previousProject != null)
                 {
-                    _associatedProjectID = value;
-                    List<Score> scores = PlayerScoreLinkDatabase.RetrieveAllScoresAssociatedToTheProject(_associatedProjectID);
-                    foreach(Score score in scores)
+                    List<Score> scores = ScoresDatabase.Instance.GetScoresByProjectID(_associatedProjectID);
+                    foreach (Score score in scores)
                     {
-                        score.OnLatestScoreUpdated += OnProjectScoreUpdated;
+                        score.OnLatestScoreUpdated -= OnProjectScoreUpdated;
                     }
+                }
+            }
+
+            _associatedProjectID = value;
+            Project project = ProjectsDatabase.Instance.RetrieveEntity(_associatedProjectID);
+            if (project != null)
+            {
+                List<Score> scores = ScoresDatabase.Instance.GetScoresByProjectID(_associatedProjectID);
+                foreach (Score score in scores)
+                {
+                    score.OnLatestScoreUpdated += OnProjectScoreUpdated;
                 }
             }
         }
     }
 
-    public ScoreRequirement(float projectID)
+    public ScoreRequirement()
+        : base()
     {
-        this.AssociatedScoreLock = null;
-        this.RequiredScore = -1f;
+        this.AssociatedScoreLockID = -1f;
+        this.RequiredProjectScore = -1f;
+        this.AssociatedProjectID = -1f;
+    }
+
+    public ScoreRequirement(float id)
+        : base(id)
+    {
+        this.AssociatedScoreLockID = -1f;
+        this.RequiredProjectScore = -1f;
+        this.AssociatedProjectID = -1f;
+    }
+
+    public ScoreRequirement(float id, float scoreLockID, float requiredScore, float projectID)
+        : base(id)
+    {
+        this.AssociatedScoreLockID = scoreLockID;
+        this.RequiredProjectScore = requiredScore;
         this.AssociatedProjectID = projectID;
     }
 
-    public ScoreRequirement(float minimumScore, float projectID)
-    {
-        this.AssociatedScoreLock = null;
-        this.RequiredScore = minimumScore;
-        this.AssociatedProjectID = projectID;
-    }
-
-    public bool ProjectScoreReachedRequiredScore()
+    public bool ScoreRequirementMet(float playerprofileID)
     {
         bool reached = false;
-        Project project = ProjectsDatabase.RetrieveProject(AssociatedProjectID);
-        Score score = PlayerScoreLinkDatabase.RetrieveScoreByProfile(PlayerProfileDatabase.currentProfile.ID, project.ID);
+        Project project = ProjectsDatabase.Instance.RetrieveEntity(AssociatedProjectID);
+        Score score = ScoresDatabase.Instance.GetScoreByAssociations(AssociatedProjectID, playerprofileID);
         float projectScoreValue = score.HighScore;
-        reached = (projectScoreValue >= RequiredScore);
+        reached = (projectScoreValue >= RequiredProjectScore);
         return reached;
     }
 
     public void SetAssociatedScoreLock(ScoreLock scoreLock)
     {
-        this.AssociatedScoreLock = scoreLock;
+        SetAssociatedScoreLock(scoreLock.ID);
+    }
+
+    public void SetAssociatedScoreLock(float scoreLockID)
+    {
+        this.AssociatedScoreLockID = scoreLockID;
     }
 
     public void OnProjectScoreUpdated(object sender, EventArgs e)
     {
         if (sender.GetType() == typeof(Score))
         {
-            if (ProjectScoreReachedRequiredScore())
+            Score score = (Score)sender;
+            if (ScoreRequirementMet(score.AssociatedProfileID))
             {
-                AssociatedScoreLock.UnlockProject();
+                ScoreLock scoreLock = ScoreLockDatabase.Instance.RetrieveEntity(AssociatedScoreLockID);
+                scoreLock.UnlockProject(score.AssociatedProfileID);//Maybe use the currentProfile field in the PlayerProfileDatabase?
             }
         }
     }
@@ -86,13 +116,6 @@ public class ScoreRequirement
 
 
 
-
-//public ScoreRequirement(float minimumScore, Project project)
-//{
-//    this.ID = nextId++;
-//    this.MinimumScore = minimumScore;
-//    this.ProjectToCheck = project;
-//}
 
 //public ScoreRequirement(float minimumScore, string projectID)
 //{
@@ -106,22 +129,5 @@ public class ScoreRequirement
 //    else
 //    {
 //        this.ProjectToCheckID = retrievedProject;
-//    }
-//}
-
-
-
-
-//else if (_associatedProjectID != value)
-//{
-//    Project currentProject = ProjectsCollection.RetrieveProject(_associatedProjectID);
-//    Project otherProject = ProjectsCollection.RetrieveProject(value);
-//    canBeSet = (currentProject != null && otherProject != null);
-//    if (canBeSet)
-//    {
-//        Score currentScore = PlayerScoresCollection.RetrieveScoreByProfile(PlayerProfileContainer.currentProfile.ID, currentProject.ID);
-//        currentScore.OnLatestScoreUpdated -= OnProjectScoreUpdated;
-//        Score otherScore = PlayerScoresCollection.RetrieveScoreByProfile(PlayerProfileContainer.currentProfile.ID, value);
-//        otherScore.OnLatestScoreUpdated += OnProjectScoreUpdated;
 //    }
 //}

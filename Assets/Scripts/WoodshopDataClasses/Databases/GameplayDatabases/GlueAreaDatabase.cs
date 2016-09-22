@@ -1,12 +1,37 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 [System.Serializable]
-public class GlueAreaDatabase : ScriptableObject 
+public class GlueAreaDatabase : AbstractDatabase<GlueAreaData>
 {
-    [SerializeField]
-    public string ID;
-    [SerializeField]
-    public List<GlueAreaData> GlueAreaDataList;
+    private static GlueAreaDatabase _instance;
+
+    public static GlueAreaDatabase Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = new GlueAreaDatabase();
+            }
+            return _instance;
+        }
+    }
+
+    private GlueAreaDatabase() { }
+
+    protected override List<string> DataFilePaths
+    {
+        get
+        {
+            return new List<string> { "GameCSVData/GlueAreas" };
+        }
+    }
+
+    protected override void LoadFromDataFile()
+    {
+        throw new NotImplementedException();
+    }
 }

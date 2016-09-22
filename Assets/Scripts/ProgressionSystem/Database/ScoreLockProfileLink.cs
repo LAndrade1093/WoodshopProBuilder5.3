@@ -1,7 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ScoreLockProfileLink 
+/// <summary>
+/// Associates a ScoreLock instance to a PlayerProfile through IDs.
+/// Tracks whether or not the project associated to the ScoreLock is unlocked for the associated profile.
+/// When a player profile is created, a new instance for each ScoreLock must be created and saved.
+/// </summary>
+public class ScoreLockProfileLink : AbstractAsset
 {
     private float _scoreLockID;
     private float _profileID;
@@ -25,11 +30,36 @@ public class ScoreLockProfileLink
         set { _projectUnlocked = value; }
     }
 
-    public ScoreLockProfileLink(float scoreLock, float profile)
+    public ScoreLockProfileLink()
+        : base()
     {
-        this.ScoreLockID = scoreLock;
-        this.ProfileID = profile;
+        this.ScoreLockID = -1f;
+        this.ProfileID = -1f;
         this.ProjectUnlocked = false;
+    }
+
+    public ScoreLockProfileLink(float id)
+        : base(id)
+    {
+        this.ScoreLockID = -1f;
+        this.ProfileID = -1f;
+        this.ProjectUnlocked = false;
+    }
+
+    public ScoreLockProfileLink(float id, float scoreLockID, float profileID)
+        : base(id)
+    {
+        this.ScoreLockID = scoreLockID;
+        this.ProfileID = profileID;
+        this.ProjectUnlocked = false;
+    }
+
+    public ScoreLockProfileLink(float id, float scoreLockID, float profileID, bool projectIsUnlocked)
+        : base(id)
+    {
+        this.ScoreLockID = scoreLockID;
+        this.ProfileID = profileID;
+        this.ProjectUnlocked = projectIsUnlocked;
     }
 }
 

@@ -2,51 +2,46 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
-public class ScoreLockDatabase
+/// <summary>
+/// Stores all ScoreLock instances.
+/// </summary>
+public class ScoreLockDatabase : AbstractDatabase<ScoreLock>
 {
-    private static List<ScoreLock> scoreLockList = null;
+    private static ScoreLockDatabase _instance;
 
-    public static void ValidateDatabase()
+    public static ScoreLockDatabase Instance
     {
-        if (scoreLockList == null)
+        get
         {
-            scoreLockList = new List<ScoreLock>();
+            if (_instance == null)
+            {
+                _instance = new ScoreLockDatabase();
+            }
+            return _instance;
         }
     }
 
-    public static void AddScoreLock(ScoreLock gate)
+    private ScoreLockDatabase() { }
+
+    public ScoreLock RetrieveScoreLockByProjectID(float projectID)
     {
-        ValidateDatabase();
-        if (!scoreLockList.Contains(gate))
+        ScoreLock scoreLock = null;
+        scoreLock = Instance.RetrieveAllEntities().First(x => x.ProjectIDToUnlock == projectID);
+        return scoreLock;
+    }
+
+    protected override List<string> DataFilePaths
+    {
+        get
         {
-            scoreLockList.Add(gate);
-        }
-        else
-        {
-            Debug.LogError(gate.ID + ": This score gate is already in the databse");
+            return new List<string> { "GameCSVData/ScoreLock" };
         }
     }
 
-    public static ScoreLock RetrieveScoreLock(float lockID)
+    protected override void LoadFromDataFile()
     {
-        ValidateDatabase();
-        ScoreLock gate = null;
-        gate = scoreLockList.First(x => x.ID == lockID);
-        return gate;
-    }
-
-    public static ScoreLock RetrieveScoreLockByProjectID(float projectID)
-    {
-        ValidateDatabase();
-        ScoreLock gate = null;
-        gate = scoreLockList.First(x => x.ProjectIDToUnlock == projectID);
-        return gate;
-    }
-
-    public List<ScoreLock> RetrieveAllScoreLocks()
-    {
-        ValidateDatabase();
-        return scoreLockList;
+        throw new NotImplementedException();
     }
 }

@@ -2,70 +2,75 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
-public class ScoreLockProfileLinkDatabase 
+/// <summary>
+/// Stores all ScoreLockProfileLink instances.
+/// </summary>
+public class ScoreLockProfileLinkDatabase : AbstractDatabase<ScoreLockProfileLink>
 {
-    private static List<ScoreLockProfileLink> scoreLockToProfileList;
+    private static ScoreLockProfileLinkDatabase _instance;
 
-    public static void ValidateDatabase()
+    public static ScoreLockProfileLinkDatabase Instance
     {
-        if (scoreLockToProfileList == null)
+        get
         {
-            scoreLockToProfileList = new List<ScoreLockProfileLink>();
+            if (_instance == null)
+            {
+                _instance = new ScoreLockProfileLinkDatabase();
+            }
+            return _instance;
         }
     }
 
-    public static MethodResult AddLink(ScoreLockProfileLink link)
+    protected override List<string> DataFilePaths
     {
-        MethodResult result = new MethodResult();
-        ValidateDatabase();
-        if (!scoreLockToProfileList.Contains(link))
+        get
         {
-            scoreLockToProfileList.Add(link);
+            //Save to binary file on device
+            return new List<string> { "ScoreLockProfileLinks" };
         }
-        else
-        {
-            result = new MethodResult("Profile ID " + link.ProfileID + " to ScoreLock ID " + link.ScoreLockID + " is already in the ScoreLockProfileLink database", false, ErrorType.UnableToAddToDatabase);
-        }
-        return result;
     }
 
-    public static Project RetrieveProjectToUnlock(float scoreLockID)
+    private ScoreLockProfileLinkDatabase() { }
+
+    public Project RetrieveProjectToUnlock(float scoreLockID)
     {
-        ValidateDatabase();
-        ScoreLockProfileLink link = scoreLockToProfileList.First(x => x.ScoreLockID == scoreLockID);
-        ScoreLock scoreLock = ScoreLockDatabase.RetrieveScoreLock(link.ScoreLockID);
-        Project project = ProjectsDatabase.RetrieveProject(scoreLock.ProjectIDToUnlock);
+        ScoreLockProfileLink link = Entities.First(x => x.ScoreLockID == scoreLockID);
+        ScoreLock scoreLock = ScoreLockDatabase.Instance.RetrieveEntity(link.ScoreLockID);
+        Project project = ProjectsDatabase.Instance.RetrieveEntity(scoreLock.ProjectIDToUnlock);
         return project;
     }
 
-    public static List<ScoreLockStatus> RetrieveAllScoreLockStatusByProfile(float profileID)
+    public List<ScoreLockStatus> RetrieveAllScoreLockStatusByProfile(float profileID)
     {
-        ValidateDatabase();
         List<ScoreLockStatus> statusList = new List<ScoreLockStatus>();
-        List<ScoreLockProfileLink> linkList = scoreLockToProfileList.Where(x => x.ProfileID == profileID).ToList();
+        List<ScoreLockProfileLink> linkList = Entities.Where(x => x.ProfileID == profileID).ToList();
         foreach (ScoreLockProfileLink link in linkList)
         {
-            ScoreLock scoreLock = ScoreLockDatabase.RetrieveScoreLock(link.ScoreLockID);
+            ScoreLock scoreLock = ScoreLockDatabase.Instance.RetrieveEntity(link.ScoreLockID);
             bool projectUnlocked = link.ProjectUnlocked;
             statusList.Add(new ScoreLockStatus() { ScoreLock = scoreLock, IsProjectUnlock = projectUnlocked });
         }
         return statusList;
     }
 
-    public static bool IsProjectUnlockedForProfile(float projectID, float profileID)
+    public bool IsProjectUnlockedForProfile(float projectID, float profileID)
     {
-        ValidateDatabase();
-        ScoreLock scoreLock = ScoreLockDatabase.RetrieveScoreLockByProjectID(projectID);
-        ScoreLockProfileLink link = scoreLockToProfileList.First(x => x.ProfileID == profileID && x.ScoreLockID == scoreLock.ID);
+        ScoreLock scoreLock = ScoreLockDatabase.Instance.RetrieveScoreLockByProjectID(projectID);
+        ScoreLockProfileLink link = Entities.First(x => x.ProfileID == profileID && x.ScoreLockID == scoreLock.ID);
         return link.ProjectUnlocked;
     }
 
-    public static void UnlockProjectForProfile(float scoreLockID, float profileID)
+    public void UnlockProjectForProfile(float scoreLockID, float profileID)
     {
-        ValidateDatabase();
-        ScoreLockProfileLink link = scoreLockToProfileList.First(x => x.ProfileID == profileID && x.ScoreLockID == scoreLockID);
+        ScoreLockProfileLink link = Entities.First(x => x.ProfileID == profileID && x.ScoreLockID == scoreLockID);
         link.ProjectUnlocked = true;
+    }
+
+    protected override void LoadFromDataFile()
+    {
+        throw new NotImplementedException();
     }
 
     //public static ScoreLock RetrieveScoreLock(Project project)

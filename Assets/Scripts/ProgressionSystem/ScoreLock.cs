@@ -4,19 +4,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-public class ScoreLock
+/// <summary>
+/// Tracks the requirements needed to unlock a project.
+/// When all the requirements are met, the project is unlocked for the given player profile (usually the currently signed in player).
+/// </summary>
+public class ScoreLock : AbstractAsset
 {
-    private float nextID = 0f;
-    private float _id;
     private float _projectIDToUnlock;
     private List<ScoreRequirement> _minimumRequirements;
-
-    public float ID
-    {
-        get { return _id; }
-        private set { _id = value; }
-    }
-
+    
     public float ProjectIDToUnlock
     {
         get { return _projectIDToUnlock; }
@@ -29,29 +25,34 @@ public class ScoreLock
         set { _minimumRequirements = value; }
     }
 
-    public ScoreLock()
+    public ScoreLock() 
+        : base()
     {
-        this.ID = nextID++;
         this.ProjectIDToUnlock = -1f;
         this.MinimumRequirements = new List<ScoreRequirement>();
     }
 
-    public ScoreLock(float associatedProjectID, ScoreRequirement singleRequirement)
+    public ScoreLock(float id)
+        : base(id)
     {
-        this.ID = nextID++;
+        this.ProjectIDToUnlock = -1f;
+        this.MinimumRequirements = new List<ScoreRequirement>();
+    }
+
+    public ScoreLock(float id, float associatedProjectID, ScoreRequirement singleRequirement)
+        : base(id)
+    {
         this.ProjectIDToUnlock = associatedProjectID;
         this.MinimumRequirements = new List<ScoreRequirement>();
         this.AddRequirement(singleRequirement);
-        UnlockProject(false);
     }
 
-    public ScoreLock(float associatedProjectID, List<ScoreRequirement> requirements)
+    public ScoreLock(float id, float associatedProjectID, List<ScoreRequirement> requirements)
+        : base(id)
     {
-        this.ID = nextID++;
         this.ProjectIDToUnlock = associatedProjectID;
         this.MinimumRequirements = new List<ScoreRequirement>();
         this.AddListOfRequirements(requirements);
-        UnlockProject(false);
     }
 
     public void AddListOfRequirements(List<ScoreRequirement> requirementsToAdd)
@@ -83,22 +84,27 @@ public class ScoreLock
         MinimumRequirements.Remove(requirementToRemove);
     }
 
-    public void UnlockProject(bool alertListeners = true)
+    public bool AllRequirementsAreMetByPlayer(float playerProfileID)
     {
-        bool projectAlreadyUnlocked = ScoreLockProfileLinkDatabase.IsProjectUnlockedForProfile(ProjectIDToUnlock, PlayerProfileDatabase.currentProfile.ID);
+        bool requirementsMet = true;
+        for (int i = 0; i < MinimumRequirements.Count && requirementsMet; i++)
+        {
+            requirementsMet = MinimumRequirements[i].ScoreRequirementMet(playerProfileID);
+        }
+        return requirementsMet;
+    }
+
+    public void UnlockProject(float playerProfileID, bool alertListeners = true)
+    {
+        bool projectAlreadyUnlocked = ScoreLockProfileLinkDatabase.Instance.IsProjectUnlockedForProfile(ProjectIDToUnlock, playerProfileID);
         if (!projectAlreadyUnlocked)
         {
-            bool unlockingIsPossible = true;
-            for (int i = 0; i < MinimumRequirements.Count && unlockingIsPossible; i++)
+            if (AllRequirementsAreMetByPlayer(playerProfileID))
             {
-                unlockingIsPossible = MinimumRequirements[i].ProjectScoreReachedRequiredScore();
-            }
-            if (unlockingIsPossible)
-            {
-                ScoreLockProfileLinkDatabase.UnlockProjectForProfile(ID, PlayerProfileDatabase.currentProfile.ID);
+                ScoreLockProfileLinkDatabase.Instance.UnlockProjectForProfile(ID, playerProfileID);
                 if (alertListeners && onProjectUnlocked != null)
                 {
-                    Project project = ProjectsDatabase.RetrieveProject(ProjectIDToUnlock);
+                    Project project = ProjectsDatabase.Instance.RetrieveEntity(ProjectIDToUnlock);
                     onProjectUnlocked(this, new ScoreLockEventArgs(project));
                 }
             }
