@@ -57,4 +57,9 @@ public class Dowel : WoodshopMaterial
     {
         return base.GetHashCode();
     }
+
+    public override string ToString()
+    {
+        return Name+": "+DiameterInInches+"\" diameter X "+LengthInInches+"\" long ";
+    }
 }

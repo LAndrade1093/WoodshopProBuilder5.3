@@ -1,5 +1,13 @@
 ﻿public enum WoodshopRank
 {
     Amateur,
-    Beginner
+    Beginner,
+    Hobbyist,
+    Adept,
+    Talented,
+    Proficient,
+    Skillful,
+    Expert,
+    Specialist,
+    Pro,
 }

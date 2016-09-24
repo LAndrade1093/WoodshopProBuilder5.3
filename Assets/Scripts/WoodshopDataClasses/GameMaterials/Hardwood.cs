@@ -79,4 +79,9 @@ public class Hardwood : WoodshopMaterial
     {
         return base.GetHashCode();
     }
+
+    public override string ToString()
+    {
+        return Name + ": " + RoughSizeInInches + " " + NominalSize + " " + ActualDimensionSurfacedOneSide + " " + ActualDimensionSurfacedTwoSides;
+    }
 }

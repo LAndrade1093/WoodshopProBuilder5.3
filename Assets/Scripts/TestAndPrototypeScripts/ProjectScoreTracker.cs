@@ -2,7 +2,7 @@
 using System.Collections;
 
 /// <summary>
-/// Prototype score tracker (Replace with Score class)
+/// Simple score tracker for the prototype (Replace with Score class)
 /// </summary>
 public class ProjectScoreTracker : MonoBehaviour 
 {

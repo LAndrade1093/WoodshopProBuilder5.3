@@ -102,14 +102,14 @@ public class Inventory : AbstractAsset
         {
             if (MaterialIsAvailable(materialID))
             {
-                WoodshopMaterialCount w = AvailableMaterials.Find(x => x.RequiredMaterialID == materialID);
+                WoodshopMaterialCount w = AvailableMaterials.Find(x => x.MaterialID == materialID);
                 int index = AvailableMaterials.IndexOf(w);
-                w.AmountRequired += amountToAdd;
+                w.Amount += amountToAdd;
                 AvailableMaterials.Insert(index, w);
             }
             else
             {
-                WoodshopMaterialCount newCount = new WoodshopMaterialCount { RequiredMaterialID = materialID, AmountRequired = amountToAdd };
+                WoodshopMaterialCount newCount = new WoodshopMaterialCount { MaterialID = materialID, Amount = amountToAdd };
                 AvailableMaterials.Add(newCount);
             }
             return true;
@@ -133,9 +133,9 @@ public class Inventory : AbstractAsset
                 }
                 else
                 {
-                    WoodshopMaterialCount w = AvailableMaterials.Find(x => x.RequiredMaterialID == materialID);
-                    w.AmountRequired -= amountToRemove;
-                    if (w.AmountRequired == 0)
+                    WoodshopMaterialCount w = AvailableMaterials.Find(x => x.MaterialID == materialID);
+                    w.Amount -= amountToRemove;
+                    if (w.Amount == 0)
                     {
                         AvailableMaterials.Remove(w);
                     }
@@ -154,8 +154,8 @@ public class Inventory : AbstractAsset
         int count = 0;
         if (MaterialIsAvailable(materialID))
         {
-            WoodshopMaterialCount w = AvailableMaterials.Find(x => x.RequiredMaterialID == materialID);
-            count = w.AmountRequired;
+            WoodshopMaterialCount w = AvailableMaterials.Find(x => x.MaterialID == materialID);
+            count = w.Amount;
         }
         return count;
     }
@@ -168,7 +168,7 @@ public class Inventory : AbstractAsset
 
     public bool MaterialIsAvailable(float materialID)
     {
-        WoodshopMaterialCount w = AvailableMaterials.Find(x => x.RequiredMaterialID == materialID);
+        WoodshopMaterialCount w = AvailableMaterials.Find(x => x.MaterialID == materialID);
         return (w != null);
     }
     #endregion

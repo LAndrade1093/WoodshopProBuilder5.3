@@ -10,8 +10,8 @@ using System;
 [System.Serializable]
 public class WoodshopMaterialCount
 {
-    public float RequiredMaterialID;
-    public int AmountRequired;
+    public float MaterialID;
+    public int Amount;
 }
 
 /// <summary>
@@ -81,10 +81,10 @@ public class ProjectMaterialRequirements : AbstractAsset
     #region Material Methods
     public void AddMaterialRequirement(float workshopMaterialID, int amountRequired)
     {
-        WoodshopMaterialCount newCount = new WoodshopMaterialCount { RequiredMaterialID = workshopMaterialID, AmountRequired = amountRequired };
+        WoodshopMaterialCount newCount = new WoodshopMaterialCount { MaterialID = workshopMaterialID, Amount = amountRequired };
         if (RequiresWorkshopMaterial(workshopMaterialID))
         {
-            WoodshopMaterialCount currentCount = RequiredMaterials.Find(x => x.RequiredMaterialID == workshopMaterialID);
+            WoodshopMaterialCount currentCount = RequiredMaterials.Find(x => x.MaterialID == workshopMaterialID);
             int index = RequiredMaterials.IndexOf(currentCount);
             RequiredMaterials.Insert(index, newCount);
         }
@@ -98,14 +98,14 @@ public class ProjectMaterialRequirements : AbstractAsset
     {
         if (RequiresWorkshopMaterial(workshopMaterialID))
         {
-            WoodshopMaterialCount m = RequiredMaterials.Find(x => x.RequiredMaterialID == workshopMaterialID);
+            WoodshopMaterialCount m = RequiredMaterials.Find(x => x.MaterialID == workshopMaterialID);
             RequiredMaterials.Remove(m);
         }
     }
 
     public bool RequiresWorkshopMaterial(float workshopMaterialID)
     {
-        WoodshopMaterialCount wsm = RequiredMaterials.Find(x => x.RequiredMaterialID == workshopMaterialID);
+        WoodshopMaterialCount wsm = RequiredMaterials.Find(x => x.MaterialID == workshopMaterialID);
         bool found = (wsm != null);
         return found;
     }
@@ -115,9 +115,9 @@ public class ProjectMaterialRequirements : AbstractAsset
         List<WoodshopMaterialCountData> availableMaterials = new List<WoodshopMaterialCountData>();
         foreach (WoodshopMaterialCount wc in RequiredMaterials)
         {
-            WoodshopMaterial wm = MaterialsDatabase.Instance.RetrieveEntity(wc.RequiredMaterialID);
+            WoodshopMaterial wm = MaterialsDatabase.Instance.RetrieveEntity(wc.MaterialID);
             int amountAvailable = playerInventory.GetMaterialCount(wm.ID);
-            availableMaterials.Add(new WoodshopMaterialCountData(wm, amountAvailable, wc.AmountRequired));
+            availableMaterials.Add(new WoodshopMaterialCountData(wm, amountAvailable, wc.Amount));
         }
         return availableMaterials;
     }
@@ -128,8 +128,8 @@ public class ProjectMaterialRequirements : AbstractAsset
         for (int i = 0; i < RequiredMaterials.Count && hasAllMaterials; i++)
         {
             WoodshopMaterialCount wc = RequiredMaterials[i];
-            int count = playerInventory.GetMaterialCount(wc.RequiredMaterialID);
-            if(count == 0 || count < wc.AmountRequired)
+            int count = playerInventory.GetMaterialCount(wc.MaterialID);
+            if(count == 0 || count < wc.Amount)
             {
                 hasAllMaterials = false;
             }

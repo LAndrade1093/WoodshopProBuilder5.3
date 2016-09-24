@@ -20,7 +20,7 @@ public class IntroScript : MonoBehaviour
     void Start()
     {
         //PlayGamesPlatform.Activate();
-        SuccessPanel.SetActive(false);
+        //SuccessPanel.SetActive(false);
 
         if (PlayerPrefs.HasKey(GameManager.instance.LevelKey))
         {
@@ -36,31 +36,31 @@ public class IntroScript : MonoBehaviour
         }
     }
 
-    public void SignIn()
-    {
-        SuccessPanel.SetActive(true);
-        SuccessPanelText.text = "Signing in...";
-        SignInButton.interactable = false;
+    //public void SignIn()
+    //{
+    //    SuccessPanel.SetActive(true);
+    //    SuccessPanelText.text = "Signing in...";
+    //    SignInButton.interactable = false;
 
-        //Social.localUser.Authenticate((bool success) =>
-        //{
-        //    SuccessPanel.SetActive(true);
-        //    if (success)
-        //    {
-        //        SuccessPanelText.text = "Sign-In was successful";
-        //    }
-        //    else
-        //    {
-        //        SuccessPanelText.text = "Sign-In failed";
-        //        SignInButton.interactable = true;
-        //    }
-        //});
-    }
+    //    Social.localUser.Authenticate((bool success) =>
+    //    {
+    //        SuccessPanel.SetActive(true);
+    //        if (success)
+    //        {
+    //            SuccessPanelText.text = "Sign-In was successful";
+    //        }
+    //        else
+    //        {
+    //            SuccessPanelText.text = "Sign-In failed";
+    //            SignInButton.interactable = true;
+    //        }
+    //    });
+    //}
 
-    public void ShowAchievements()
-    {
-        //Social.ShowAchievementsUI();
-    }
+    //public void ShowAchievements()
+    //{
+    //    Social.ShowAchievementsUI();
+    //}
 
     public void StartProject()
     {
@@ -73,16 +73,5 @@ public class IntroScript : MonoBehaviour
     {
         ModalBackground.SetActive(show);
         InstructionsPanel.SetActive(show);
-    }
-
-    private Project SetUpTestProject()
-    {
-        //List<Step> steps = new List<Step>();
-        //for (int i = 0; i < 15; i++)
-        //{
-
-        //}
-        //Project p = new Project();
-        return null;
     }
 }

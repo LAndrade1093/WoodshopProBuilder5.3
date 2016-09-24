@@ -10,9 +10,14 @@ public class ProjectPanelController : MonoBehaviour
 
 	void Start ()
     {
-        //foreach(Project p in ProjectsDatabase.RetrieveAllProjects())
-        //{
+        List<Project> p = ProjectsDatabase.Instance.RetrieveAllEntities();
+        if(ProjectsDatabase.Instance.Count() <= 0)
+        {
+            Debug.Log("No projects available. Leaving test project.");
+        }
+        else
+        {
 
-        //}
-	}
+        }
+    }
 }

@@ -64,8 +64,8 @@ public class Plywood : WoodshopMaterial
         return true;
     }
 
-    public override int GetHashCode()
+    public override string ToString()
     {
-        return base.GetHashCode();
+        return Name + ": " + LengthInFeet + "\' L x " + WidthInFeet + "\' W x " + ThicknessInInches + "\" T ";
     }
 }

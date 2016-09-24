@@ -81,4 +81,9 @@ public class WoodshopMaterial : AbstractAsset
     {
         return base.GetHashCode();
     }
+
+    public override string ToString()
+    {
+        return Name;
+    }
 }

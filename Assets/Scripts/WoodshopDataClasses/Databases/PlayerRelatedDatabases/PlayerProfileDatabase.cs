@@ -22,7 +22,7 @@ public class PlayerProfileDatabase : AbstractDatabase<PlayerProfile>
 
     private PlayerProfileDatabase() { }
 
-    public PlayerProfile currentProfile;
+    public PlayerProfile currentProfile = null;
     private const int MaxProfiles = 4;
 
     public static void SetCurrentPlayer(float profileID)
