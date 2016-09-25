@@ -1,51 +1,76 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 [System.Serializable]
-public class ClampStepRequirement// : StepCompletionRequirements 
+public class ClampStepRequirement : StepCompletionRequirements
 {
-    //private List<ClampPointData> _clampPoints;
+    [SerializeField]
+    private WoodshopGameplayContainer<ClampPointData> _clampData;
 
-    //public List<ClampPointData> ClampPoints
-    //{
-    //    get { return _clampPoints; }
-    //    private set { _clampPoints = value; }
-    //}
+    public WoodshopGameplayContainer<ClampPointData> ClampData
+    {
+        get { return _clampData; }
+        set { _clampData = value; }
+    }
 
-    //public ClampStepRequirement(Step step, StepCompletionType type, List<ClampPointData> clamps)
-    //    : base(step, type)
-    //{
-    //    if (clamps == null)
-    //    {
-    //        ClampPoints = new List<ClampPointData>();
-    //    }
-    //    else
-    //    {
-    //        ClampPoints = clamps;
-    //    }
-    //}
+    public override float MaxScore
+    {
+        get { return ClampData.CalculateTotalMaxScore(); }
+    }
 
-    //public override bool Equals(object obj)
-    //{
-    //    if (object.ReferenceEquals(this, obj)) return true;
-    //    return EqualsInheritance(obj) && obj.GetType() == typeof(ClampStepRequirement);
-    //}
+    public override float MaxScoreFromDatabase
+    {
+        get
+        {
+            float total = 0f;
+            foreach (ClampPointData s in ClampPointDatabase.Instance.GetDataForAssociatedRequirement(ID))
+            {
+                total += s.PerfectScore;
+            }
+            return total;
+        }
+    }
 
-    //protected virtual bool EqualsInheritance(object obj)
-    //{
-    //    if (!base.EqualsInheritance(obj)) return false;
-    //    if (obj == null || !(obj is ClampStepRequirement)) return false;
+    public ClampStepRequirement()
+        : base()
+    {
+        ClampData = new WoodshopGameplayContainer<ClampPointData>();
+    }
 
-    //    ClampStepRequirement otherStepRequirements = (ClampStepRequirement)obj;
+    public ClampStepRequirement(float id)
+        : base(id)
+    {
+        ClampData = new WoodshopGameplayContainer<ClampPointData>();
+    }
 
-    //    if (this.ClampPoints != otherStepRequirements.ClampPoints) return false;
+    public ClampStepRequirement(float id, float projectID, float stepID, StepCompletionType type, WoodshopGameplayContainer<ClampPointData> gameplay)
+        : base(id, projectID, stepID, type)
+    {
+        ClampData = gameplay;
+    }
 
-    //    return true;
-    //}
+    public override bool Equals(object obj)
+    {
+        if (object.ReferenceEquals(this, obj)) return true;
+        return EqualsInheritance(obj) && obj.GetType() == typeof(ClampStepRequirement);
+    }
 
-    //public override int GetHashCode()
-    //{
-    //    return base.GetHashCode();
-    //}
+    protected override bool EqualsInheritance(object obj)
+    {
+        if (!base.EqualsInheritance(obj)) return false;
+        if (obj == null || !(obj is ClampStepRequirement)) return false;
+
+        ClampStepRequirement otherStepRequirements = (ClampStepRequirement)obj;
+
+        if (this.ClampData != otherStepRequirements.ClampData) return false;
+
+        return true;
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
 }

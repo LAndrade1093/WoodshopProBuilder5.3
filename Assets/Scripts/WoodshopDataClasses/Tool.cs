@@ -3,6 +3,9 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 
+/// <summary>
+/// Data related to the tools in the game
+/// </summary>
 [System.Serializable]
 public class Tool : AbstractAsset
 {
@@ -10,6 +13,8 @@ public class Tool : AbstractAsset
     private string _displayName;
     [SerializeField]
     private Sprite _icon;
+    [SerializeField]
+    private float _storePrice;
 
     public string DisplayName
     {
@@ -23,11 +28,18 @@ public class Tool : AbstractAsset
         private set { _icon = value; }
     }
 
+    public float StorePrice
+    {
+        get { return _storePrice; }
+        private set { _storePrice = value; }
+    }
+
     public Tool()
         : base()
     {
         this.DisplayName = string.Empty;
         this.Icon = null;
+        this.StorePrice = 0f;
     }
 
     public Tool(float id) 
@@ -35,13 +47,15 @@ public class Tool : AbstractAsset
     {
         this.DisplayName = string.Empty;
         this.Icon = null;
+        this.StorePrice = 0f;
     }
 
-    public Tool(float id, string name, Sprite icon)
+    public Tool(float id, string name, Sprite icon, float price = 0f)
         : base(id)
     {
         this.DisplayName = name;
         this.Icon = icon;
+        this.StorePrice = price;
     }
 
     public override bool Equals(object obj)
@@ -53,6 +67,7 @@ public class Tool : AbstractAsset
         if (this.ID != otherTool.ID) return false;
         if (this.DisplayName != otherTool.DisplayName) return false;
         if (this.Icon != otherTool.Icon) return false;
+        if (this.StorePrice != otherTool.StorePrice) return false;
 
         return true;
     }

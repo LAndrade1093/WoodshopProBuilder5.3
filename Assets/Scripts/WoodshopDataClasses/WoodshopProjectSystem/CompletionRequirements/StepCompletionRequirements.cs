@@ -2,34 +2,27 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public enum StepCompletionType
-{
-    None,
-    CutAllLines,
-    CutAllDados,
-    SandPieces,
-    GluePieces,
-    Clamp,
-    Paint
-}
-
 [System.Serializable]
-public class StepCompletionRequirements<T> : AbstractAsset where T : GameplayEntity
+public abstract class StepCompletionRequirements : AbstractAsset
 {
+    [SerializeField]
+    private float _associatedProjectID;
+    [SerializeField]
     private float _associatedStepID;
+    [SerializeField]
     private StepCompletionType _type;
-    private List<T> _gameplayEntities;
 
-    public float AssociatedStep
+    public float AssociatedProjectID
+    {
+        get { return _associatedProjectID; }
+        private set { _associatedProjectID = value; }
+    }
+
+    public float AssociatedStepID
     {
         get { return _associatedStepID; }
         private set { _associatedStepID = value; }
     }
-
-    //public Step AssociatedStep
-    //{
-    //    get { return StepsDatabase }
-    //}
 
     public StepCompletionType Type
     {
@@ -37,53 +30,52 @@ public class StepCompletionRequirements<T> : AbstractAsset where T : GameplayEnt
         private set { _type = value; }
     }
 
-    public List<T> GameplayEntities
-    {
-        get
-        {
-            if(_gameplayEntities == null)
-            {
-                _gameplayEntities = new List<T>();
-            }
-            return _gameplayEntities;
-        }
-        private set { _gameplayEntities = value; }
-    }
-
     public StepCompletionRequirements()
         : base()
     {
-        this.AssociatedStep = -1;
+        this.AssociatedProjectID = -1f;
+        this.AssociatedStepID = -1f;
         this.Type = StepCompletionType.None;
     }
 
     public StepCompletionRequirements(float id)
         : base(id)
     {
-        this.AssociatedStep = -1;
+        this.AssociatedProjectID = -1f;
+        this.AssociatedStepID = -1f;
         this.Type = StepCompletionType.None;
     }
 
-    public StepCompletionRequirements(float id, float stepID, StepCompletionType type)
+    public StepCompletionRequirements(float id, float projectID, float stepID, StepCompletionType type)
         : base(id)
     {
-        this.AssociatedStep = stepID;
+        this.AssociatedProjectID = projectID;
+        this.AssociatedStepID = stepID;
         this.Type = type;
     }
+
+    /// <summary>
+    /// Use this when the container is loaded in (Usually when the player is working on a project)
+    /// </summary>
+    public abstract float MaxScore { get; }
+
+    /// <summary>
+    /// Use this when getting the max score outside of a project (Container may not be loaded in for the other Property outside of a project)
+    /// </summary>
+    public abstract float MaxScoreFromDatabase { get; }
 
     public override bool Equals(object obj)
     {
         if (object.ReferenceEquals(this, obj)) return true;
-        return EqualsInheritance(obj) && obj.GetType() == typeof(StepCompletionRequirements<T>);
+        return EqualsInheritance(obj) && obj.GetType() == typeof(StepCompletionRequirements);
     }
 
     protected virtual bool EqualsInheritance(object obj)
     {
-        if (obj == null || !(obj is StepCompletionRequirements<T>)) return false;
+        if (obj == null || !(obj is StepCompletionRequirements)) return false;
 
-        StepCompletionRequirements<T> otherStepRequirements = (StepCompletionRequirements<T>)obj;
-
-        if (this.AssociatedStep != otherStepRequirements.AssociatedStep) return false;
+        StepCompletionRequirements otherStepRequirements = (StepCompletionRequirements)obj;
+        if (this.AssociatedStepID != otherStepRequirements.AssociatedStepID) return false;
         if (this.Type != otherStepRequirements.Type) return false;
 
         return true;

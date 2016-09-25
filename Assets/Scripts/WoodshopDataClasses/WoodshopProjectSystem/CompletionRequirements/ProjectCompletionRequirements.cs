@@ -56,7 +56,7 @@ public class ProjectCompletionRequirements : AbstractAsset
         if (stepIndex >= 0 && stepIndex <= StepIDs.Count - 1)
         {
             float id = StepIDs[stepIndex];
-            step = StepsDatabase.RetrieveStep(id);
+            step = StepsDatabase.Instance.RetrieveEntity(id);
         }
         return step;
     }
@@ -66,9 +66,20 @@ public class ProjectCompletionRequirements : AbstractAsset
         Step step = null;
         if (ProjectContainsStep(stepID))
         {
-            step = StepsDatabase.RetrieveStep(stepID);
+            step = StepsDatabase.Instance.RetrieveEntity(stepID);
         }
         return step;
+    }
+
+    public float GetTotalProjectScore(bool getFromDatabase = true)
+    {
+        float total = 0f;
+        foreach(float stepID in StepIDs)
+        {
+            Step step = GetStepByID(stepID);
+            total += step.GetTotalStepScore(getFromDatabase);
+        }
+        return total;
     }
 
     public bool ProjectContainsStep(float stepID)

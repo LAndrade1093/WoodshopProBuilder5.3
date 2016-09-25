@@ -26,7 +26,7 @@ public class ProjectMaterialRequirementsDatabase : AbstractDatabase<ProjectMater
     {
         get
         {
-            return new List<string> { "GameCSVData/ProjectRequirement" };
+            return new List<string> { "GameCSVData/ProjectMaterialsRequirement" };
         }
     }
 

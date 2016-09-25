@@ -3,8 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+/// <summary>
+/// Database class to store all SnapPoint data instances.
+/// </summary>
 [System.Serializable]
-public class SnapPointDatabase : AbstractDatabase<GlueAreaData>
+public class SnapPointDatabase : GameplayDatabase<GlueAreaData>
 {
     private static SnapPointDatabase _instance;
 

@@ -2,94 +2,44 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
-public class StepsDatabase
+[System.Serializable]
+public class StepsDatabase : AbstractDatabase<Step>
 {
-    private static Dictionary<float, Step> projectStepDictionary;
+    private static StepsDatabase _instance;
 
-    public static void ValidateDatabase()
+    public static StepsDatabase Instance
     {
-        if (projectStepDictionary == null)
+        get
         {
-            projectStepDictionary = new Dictionary<float, Step>();
+            if (_instance == null)
+            {
+                _instance = new StepsDatabase();
+            }
+            return _instance;
         }
     }
 
-    public static void CreateStep(Step step)
-    {
-        ValidateDatabase();
-        if (projectStepDictionary.ContainsKey(step.ID))
-        {
-            Debug.LogError("Step ID " + step.ID + " is already used. Step was not saved.");
-        }
-        else
-        {
-            projectStepDictionary.Add(step.ID, step);
-        }
-    }
-
-    public static Step RetrieveStep(float stepID)
-    {
-        ValidateDatabase();
-        Step step = null;
-        if (projectStepDictionary.ContainsKey(stepID))
-        {
-            step = projectStepDictionary[stepID];
-        }
-        return step;
-    }
+    private StepsDatabase() { }
 
     public static List<Step> RetrieveStepsInProject(float projectID)
     {
-        ValidateDatabase();
         List<Step> allSteps = new List<Step>();
-        allSteps = projectStepDictionary.Values.Where(x => x.AssociatedProjectID == projectID).ToList();
+        allSteps = Instance.Entities.FindAll(x => x.AssociatedProjectID == projectID);
         return allSteps;
     }
 
-    public static List<Step> RetrieveAllSteps()
+    protected override List<string> DataFilePaths
     {
-        ValidateDatabase();
-        List<Step> allSteps = new List<Step>();
-        if (projectStepDictionary.Count > 0)
+        get
         {
-            allSteps = projectStepDictionary.Values.ToList();
+            return new List<string> { "GameCSVData/Steps" };
         }
-        return allSteps;
+    }
+
+    protected override void LoadFromDataFile()
+    {
+        throw new NotImplementedException();
     }
 }
-
-
-
-
-
-
-
-
-
-//public static void UpdateStep(Step step)
-//{
-//    ValidateDatabase();
-//    if (!projectStepDictionary.ContainsKey(step.ID))
-//    {
-//        CreateStep(step);
-//    }
-//    else
-//    {
-//        projectStepDictionary[step.ID].PointsToScore = step.PointsToScore;
-//        projectStepDictionary[step.ID].PlanDrawing = step.PlanDrawing;
-//        projectStepDictionary[step.ID].CompletionInstructions = step.CompletionInstructions;
-//        projectStepDictionary[step.ID].CompletionRequirements = step.CompletionRequirements;
-//    }
-//}
-
-//public static bool DeleteStep(int stepID)
-//{
-//    ValidateDatabase();
-//    bool successful = false;
-//    if (projectStepDictionary.ContainsKey(stepID))
-//    {
-//        successful = projectStepDictionary.Remove(stepID);
-//    }
-//    return successful;
-//}

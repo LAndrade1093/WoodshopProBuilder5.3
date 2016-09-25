@@ -1,51 +1,76 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 [System.Serializable]
-public class SwipingStepRequirement// : StepCompletionRequirements
+public class SwipingStepRequirement : StepCompletionRequirements
 {
-    //private List<WoodPieceData> _pieces;
+    [SerializeField]
+    private WoodshopGameplayContainer<SwipingData> _swipingData;
 
-    //public List<WoodPieceData> Pieces
-    //{
-    //    get { return _pieces; }
-    //    private set { _pieces = value; }
-    //}
+    public WoodshopGameplayContainer<SwipingData> SwipingData
+    {
+        get { return _swipingData; }
+        set{ _swipingData = value; }
+    }
 
-    //public SwipingStepRequirement(Step step, StepCompletionType type, List<WoodPieceData> pieces)
-    //    : base(step, type)
-    //{
-    //    if (pieces == null)
-    //    {
-    //        Pieces = new List<WoodPieceData>();
-    //    }
-    //    else
-    //    {
-    //        Pieces = pieces;
-    //    }
-    //}
+    public override float MaxScore
+    {
+        get { return SwipingData.CalculateTotalMaxScore(); }
+    }
 
-    //public override bool Equals(object obj)
-    //{
-    //    if (object.ReferenceEquals(this, obj)) return true;
-    //    return EqualsInheritance(obj) && obj.GetType() == typeof(SwipingStepRequirement);
-    //}
+    public override float MaxScoreFromDatabase
+    {
+        get
+        {
+            float total = 0f;
+            foreach(SwipingData s in SwipingDatabase.Instance.GetDataForAssociatedRequirement(ID))
+            {
+                total += s.PerfectScore;
+            }
+            return total;
+        }
+    }
 
-    //protected virtual bool EqualsInheritance(object obj)
-    //{
-    //    if (!base.EqualsInheritance(obj)) return false;
-    //    if (obj == null || !(obj is SwipingStepRequirement)) return false;
+    public SwipingStepRequirement()
+        : base()
+    {
+        SwipingData = new WoodshopGameplayContainer<SwipingData>();
+    }
 
-    //    SwipingStepRequirement otherStepRequirements = (SwipingStepRequirement)obj;
+    public SwipingStepRequirement(float id)
+        : base(id)
+    {
+        SwipingData = new WoodshopGameplayContainer<SwipingData>();
+    }
 
-    //    if (this.Pieces != otherStepRequirements.Pieces) return false;
+    public SwipingStepRequirement(float id, float projectID, float stepID, StepCompletionType type, WoodshopGameplayContainer<SwipingData> gameplay)
+        : base(id, projectID, stepID, type)
+    {
+        SwipingData = gameplay;
+    }
 
-    //    return true;
-    //}
+    public override bool Equals(object obj)
+    {
+        if (object.ReferenceEquals(this, obj)) return true;
+        return EqualsInheritance(obj) && obj.GetType() == typeof(SwipingStepRequirement);
+    }
 
-    //public override int GetHashCode()
-    //{
-    //    return base.GetHashCode();
-    //}
+    protected override bool EqualsInheritance(object obj)
+    {
+        if (!base.EqualsInheritance(obj)) return false;
+        if (obj == null || !(obj is SwipingStepRequirement)) return false;
+
+        SwipingStepRequirement otherStepRequirements = (SwipingStepRequirement)obj;
+
+        if (this.SwipingData != otherStepRequirements.SwipingData) return false;
+
+        return true;
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
 }

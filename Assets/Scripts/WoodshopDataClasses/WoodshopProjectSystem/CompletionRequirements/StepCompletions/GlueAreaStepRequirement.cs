@@ -1,67 +1,98 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System;
 
 [System.Serializable]
-public class GlueAreaStepRequirement// : StepCompletionRequirements<GlueAreaData>
+public class GlueAreaStepRequirement : StepCompletionRequirements
 {
-    private List<SnapPointData> _snapPoints;
+    [SerializeField]
+    private WoodshopGameplayContainer<GlueAreaData> _glueData;
+    [SerializeField]
+    private WoodshopGameplayContainer<SnapPointData> _snapPoints;
 
-    //public List<GlueAreaData> GlueAreas
-    //{
-    //    get { return _glueAreas; }
-    //    private set { _glueAreas = value; }
-    //}
+    public WoodshopGameplayContainer<GlueAreaData> GlueData
+    {
+        get { return _glueData; }
+        set { _glueData = value; }
+    }
 
-    //public List<SnapPointData> SnapPoints
-    //{
-    //    get { return _snapPoints; }
-    //    private set { _snapPoints = value; }
-    //}
+    public WoodshopGameplayContainer<SnapPointData> SnapPoints
+    {
+        get { return _snapPoints; }
+        set { _snapPoints = value; }
+    }
 
-    //public GlueAreaStepRequirement(Step step, StepCompletionType type, List<GlueAreaData> glueAreas, List<SnapPointData> snapPoints)
-    //    : base(step, type)
-    //{
-    //    if (glueAreas == null)
-    //    {
-    //        GlueAreas = new List<GlueAreaData>();
-    //    }
-    //    else
-    //    {
-    //        GlueAreas = glueAreas;
-    //    }
+    public override float MaxScore
+    {
+        get { return GlueData.CalculateTotalMaxScore(); }
+    }
 
-    //    if (snapPoints == null)
-    //    {
-    //        SnapPoints = new List<SnapPointData>();
-    //    }
-    //    else
-    //    {
-    //        SnapPoints = snapPoints;
-    //    }
-    //}
+    public override float MaxScoreFromDatabase
+    {
+        get
+        {
+            float total = 0f;
+            foreach (GlueAreaData s in GlueAreaDatabase.Instance.GetDataForAssociatedRequirement(ID))
+            {
+                total += s.PerfectScore;
+            }
+            return total;
+        }
+    }
+    
+    public GlueAreaStepRequirement()
+        : base()
+    {
+        GlueData = new WoodshopGameplayContainer<GlueAreaData>();
+        SnapPoints = new WoodshopGameplayContainer<SnapPointData>();
+    }
 
-    //public override bool Equals(object obj)
-    //{
-    //    if (object.ReferenceEquals(this, obj)) return true;
-    //    return EqualsInheritance(obj) && obj.GetType() == typeof(GlueAreaStepRequirement);
-    //}
+    public GlueAreaStepRequirement(float id)
+        : base(id)
+    {
+        GlueData = new WoodshopGameplayContainer<GlueAreaData>();
+        SnapPoints = new WoodshopGameplayContainer<SnapPointData>();
+    }
 
-    //protected virtual bool EqualsInheritance(object obj)
-    //{
-    //    if (!base.EqualsInheritance(obj)) return false;
-    //    if (obj == null || !(obj is GlueAreaStepRequirement)) return false;
+    public GlueAreaStepRequirement(float id, float projectID, float stepID, StepCompletionType type, WoodshopGameplayContainer<GlueAreaData> glueData, WoodshopGameplayContainer<SnapPointData> snapPoints)
+        : base(id, projectID, stepID, type)
+    {
+        GlueData = glueData;
+        SnapPoints = snapPoints;
+    }
 
-    //    GlueAreaStepRequirement otherStepRequirements = (GlueAreaStepRequirement)obj;
+    public float CalculateTotalDryTime()
+    {
+        float totalDryTime = 0f;
+        foreach (GlueAreaData s in GlueAreaDatabase.Instance.GetDataForAssociatedRequirement(ID))
+        {
+            totalDryTime += s.TimeToDryInMinutes;
+        }
+        return totalDryTime;
+    }
 
-    //    if (this.GlueAreas != otherStepRequirements.GlueAreas) return false;
-    //    if (this.SnapPoints != otherStepRequirements.SnapPoints) return false;
+    public override bool Equals(object obj)
+    {
+        if (object.ReferenceEquals(this, obj)) return true;
+        return EqualsInheritance(obj) && obj.GetType() == typeof(GlueAreaStepRequirement);
+    }
 
-    //    return true;
-    //}
+    protected override bool EqualsInheritance(object obj)
+    {
+        if (!base.EqualsInheritance(obj)) return false;
+        if (obj == null || !(obj is GlueAreaStepRequirement)) return false;
 
-    //public override int GetHashCode()
-    //{
-    //    return base.GetHashCode();
-    //}
+        GlueAreaStepRequirement otherStepRequirements = (GlueAreaStepRequirement)obj;
+
+        if (this.GlueData != otherStepRequirements.GlueData) return false;
+        if (this.SnapPoints != otherStepRequirements.SnapPoints) return false;
+
+        return true;
+    }
+
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
+    }
 }

@@ -11,9 +11,9 @@ public class Project : AbstractAsset
     [SerializeField]
     private string _name;
     [SerializeField]
-    private float _salePrice;
+    private float _salePrice; //Max price to sell the project at once complete
     [SerializeField]
-    private float _projectPlansPrice;
+    private float _projectPlansPrice; //The price to buy the project from the store
     [SerializeField]
     private float _materialRequirementsID;
     [SerializeField]
@@ -43,9 +43,9 @@ public class Project : AbstractAsset
         private set { _materialRequirementsID = value; }
     }
 
-    public ProjectMaterialRequirements GetMaterialRequirements()
+    public ProjectMaterialRequirements MaterialRequirements
     {
-        return ProjectMaterialRequirementsDatabase.Instance.RetrieveEntity(MaterialRequirementID);
+        get { return ProjectMaterialRequirementsDatabase.Instance.RetrieveEntity(MaterialRequirementID); }
     }
 
     public float CompletionRequirementID
@@ -54,10 +54,27 @@ public class Project : AbstractAsset
         private set { _completionRequirementsID = value; }
     }
 
-    //public ProjectCompletionRequirements GetProjectCompletionRequirements()
-    //{
-    //    return ProjectRequirementsCollection
-    //}
+    public ProjectCompletionRequirements ProjectCompletionRequirements
+    {
+        get { return ProjectRequirementsDatabase.Instance.RetrieveEntity(CompletionRequirementID); }
+    }
+
+    public float TotalProjectScore
+    {
+        get { return ProjectCompletionRequirements.GetTotalProjectScore(); }
+    }
+
+    public float CalculateFinalSalePrice(float scoreAchieved)
+    {
+        float finalSalePrice = 0f;
+        if (scoreAchieved > 0f)
+        {
+            float temp = scoreAchieved * 100f;
+            float scorePercentage = (temp / TotalProjectScore) * 0.01f;
+            finalSalePrice = SalePrice * scorePercentage;
+        }
+        return finalSalePrice;
+    }
 
     public Project()
         : base()

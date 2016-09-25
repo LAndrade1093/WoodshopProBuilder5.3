@@ -3,33 +3,29 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-/// <summary>
-/// Database class to store all DadoCut data instances.
-/// </summary>
-[System.Serializable]
-public class DadoCutAreaDatabase : GameplayDatabase<DadoCutAreaData>
+public class ProjectRequirementsDatabase : AbstractDatabase<ProjectCompletionRequirements>
 {
-    private static DadoCutAreaDatabase _instance;
+    private static ProjectRequirementsDatabase _instance;
 
-    public static DadoCutAreaDatabase Instance
+    public static ProjectRequirementsDatabase Instance
     {
         get
         {
             if (_instance == null)
             {
-                _instance = new DadoCutAreaDatabase();
+                _instance = new ProjectRequirementsDatabase();
             }
             return _instance;
         }
     }
 
-    private DadoCutAreaDatabase() { }
+    private ProjectRequirementsDatabase() { }
 
     protected override List<string> DataFilePaths
     {
         get
         {
-            return new List<string> { "GameCSVData/DadoCutAreas" };
+            return new List<string> { "GameCSVData/ProjectCompletionRequirement" };
         }
     }
 

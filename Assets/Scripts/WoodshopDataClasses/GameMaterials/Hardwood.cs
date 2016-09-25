@@ -46,8 +46,8 @@ public class Hardwood : WoodshopMaterial
         this.ActualDimensionSurfacedTwoSides = string.Empty;
     }
 
-    public Hardwood(float id, string name, WoodshopMaterialType type, Sprite icon, string roughSize, string nominalSize, string actualDimensionS1S, string actualDimensionS2S)
-        : base(id, name, type, icon)
+    public Hardwood(float id, string name, WoodshopMaterialType type, Sprite icon, float price, string roughSize, string nominalSize, string actualDimensionS1S, string actualDimensionS2S)
+        : base(id, name, type, icon, price)
     {
         this.RoughSizeInInches = roughSize;
         this.NominalSize = nominalSize;

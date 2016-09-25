@@ -2,8 +2,8 @@
 using System.Collections;
 
 /// <summary>
-/// The individual planes on a gluing area
-/// Used to instantiate the individual sections of a gluing area
+/// The individual planes on a gluing area.
+/// Used to instantiate the individual sections of a gluing area.
 /// </summary>
 [System.Serializable]
 public class GluePlaneData : AbstractAsset

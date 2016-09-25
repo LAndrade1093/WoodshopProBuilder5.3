@@ -6,9 +6,9 @@ using Woodshop.Utility.Exceptions;
 using System.Linq;
 
 /// <summary>
-/// Parent class for all database classes
+/// Parent class for all database classes.
 /// </summary>
-/// <typeparam name="T">The type that will be saved in the database, as long as it implements IDalAsset to use the ID functionality</typeparam>
+/// <typeparam name="T">Concrete type of T must implement IDalAsset in order to have an ID for each object</typeparam>
 public abstract class AbstractDatabase<T> : ScriptableObject, IDal<T> where T : IDalAsset
 {
     private List<T> _entities;
@@ -32,7 +32,7 @@ public abstract class AbstractDatabase<T> : ScriptableObject, IDal<T> where T : 
 
     public virtual T CreateEntity(T entity)
     {
-        if(entity.ID <= -1)
+        if(entity.ID <= -1f)
         {
             entity.ID = GetNextID();
         }

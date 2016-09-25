@@ -37,8 +37,8 @@ public class Plywood : WoodshopMaterial
         this.LengthInFeet = string.Empty;
     }
 
-    public Plywood(float id, string name, WoodshopMaterialType type, Sprite icon, string thickness, string width, string length)
-        : base(id, name, type, icon)
+    public Plywood(float id, string name, WoodshopMaterialType type, Sprite icon, float price, string thickness, string width, string length)
+        : base(id, name, type, icon, price)
     {
         this.ThicknessInInches = thickness;
         this.WidthInFeet = width;

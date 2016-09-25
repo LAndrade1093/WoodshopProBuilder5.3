@@ -15,6 +15,8 @@ public class WoodshopMaterial : AbstractAsset
     private WoodshopMaterialType _type;
     [SerializeField]
     private Sprite _icon;
+    [SerializeField]
+    private float _storePrice;
 
     public string Name
     {
@@ -34,11 +36,18 @@ public class WoodshopMaterial : AbstractAsset
         set { _icon = value; }
     }
 
+    public float StorePrice
+    {
+        get { return _storePrice; }
+        set { _storePrice = value; }
+    }
+
     public WoodshopMaterial() : base()
     {
         this.Name = string.Empty;
         this.Type = WoodshopMaterialType.None;
         this.Icon = null;
+        this.StorePrice = 0f;
     }
 
     public WoodshopMaterial(float id, string name, WoodshopMaterialType type)
@@ -47,14 +56,16 @@ public class WoodshopMaterial : AbstractAsset
         this.Name = name;
         this.Type = type;
         this.Icon = null;
+        this.StorePrice = 0f;
     }
 
-    public WoodshopMaterial(float id, string name, WoodshopMaterialType type, Sprite icon) 
+    public WoodshopMaterial(float id, string name, WoodshopMaterialType type, Sprite icon, float price = 0f) 
         : base(id)
     {
         this.Name = name;
         this.Type = type;
         this.Icon = icon;
+        this.StorePrice = price;
     }
 
     public override bool Equals(object obj)
@@ -73,6 +84,7 @@ public class WoodshopMaterial : AbstractAsset
         if (this.Name != otherGameMaterial.Name) return false;
         if (this.Type != otherGameMaterial.Type) return false;
         if (this.Icon != otherGameMaterial.Icon) return false;
+        if (this.StorePrice != otherGameMaterial.StorePrice) return false;
 
         return true;
     }

@@ -28,8 +28,8 @@ public class Dowel : WoodshopMaterial
         this.LengthInInches = string.Empty;
     }
 
-    public Dowel(float id, string name, WoodshopMaterialType type, Sprite icon, string diameter, string length)
-        : base(id, name, type, icon)
+    public Dowel(float id, string name, WoodshopMaterialType type, Sprite icon, float price, string diameter, string length)
+        : base(id, name, type, icon, price)
     {
         this.DiameterInInches = diameter;
         this.LengthInInches = length;

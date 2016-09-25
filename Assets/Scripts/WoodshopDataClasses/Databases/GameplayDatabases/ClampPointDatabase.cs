@@ -3,7 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class ClampPointDatabase : AbstractDatabase<ClampPointData> 
+/// <summary>
+/// Database class to store all ClampPoint data instances.
+/// </summary>
+[System.Serializable]
+public class ClampPointDatabase : GameplayDatabase<ClampPointData> 
 {
     private static ClampPointDatabase _instance;
 

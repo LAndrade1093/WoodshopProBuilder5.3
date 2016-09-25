@@ -57,6 +57,16 @@ public class Step : AbstractAsset
         private set { _stepCompletionRequirementID = value; }
     }
 
+    public StepCompletionRequirements StepCompletionRequirement
+    {
+        get { return StepRequirementsDatabase.Instance.RetrieveEntity(StepCompletionRequirementsID); }
+    }
+
+    public string ToolName
+    {
+        get { return Tool.ToString();  }
+    }
+
     public Step()
         : base()
     {
@@ -90,9 +100,16 @@ public class Step : AbstractAsset
         this.StepCompletionRequirementsID = stepCompletion;
     }
 
-    public float GetMaxScoreForStep()
+    public float GetTotalStepScore(bool getFromDatabase = true)
     {
-        return 0;
+        if(getFromDatabase)
+        {
+            return StepCompletionRequirement.MaxScoreFromDatabase;
+        }
+        else
+        {
+            return StepCompletionRequirement.MaxScore;
+        }
     }
 
     public override bool Equals(object obj)

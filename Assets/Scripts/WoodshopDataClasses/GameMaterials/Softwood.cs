@@ -37,8 +37,8 @@ public class Softwood : WoodshopMaterial
         this.LengthInFeet = string.Empty;
     }
 
-    public Softwood(float id, string name, WoodshopMaterialType type, Sprite icon, string nominal, string actual, string length)
-        : base(id, name, type, icon)
+    public Softwood(float id, string name, WoodshopMaterialType type, Sprite icon, float price, string nominal, string actual, string length)
+        : base(id, name, type, icon, price)
     {
         this.NomimalInches = nominal;
         this.ActualInches = actual;

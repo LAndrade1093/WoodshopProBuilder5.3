@@ -1,37 +1,37 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 using System;
+using System.Collections.Generic;
 
 /// <summary>
-/// Database class to store all DadoCut data instances.
+/// Database class to store all SwipeGameplay data instances.
 /// </summary>
 [System.Serializable]
-public class DadoCutAreaDatabase : GameplayDatabase<DadoCutAreaData>
+public class SwipingDatabase : GameplayDatabase<SwipingData>
 {
-    private static DadoCutAreaDatabase _instance;
+    private static SwipingDatabase _instance;
 
-    public static DadoCutAreaDatabase Instance
+    public static SwipingDatabase Instance
     {
         get
         {
             if (_instance == null)
             {
-                _instance = new DadoCutAreaDatabase();
+                _instance = new SwipingDatabase();
             }
             return _instance;
         }
     }
 
-    private DadoCutAreaDatabase() { }
-
     protected override List<string> DataFilePaths
     {
         get
         {
-            return new List<string> { "GameCSVData/DadoCutAreas" };
+            return new List<string> { "GameCSVData/SwipeData" };
         }
     }
+
+    private SwipingDatabase() { }
 
     protected override void LoadFromDataFile()
     {

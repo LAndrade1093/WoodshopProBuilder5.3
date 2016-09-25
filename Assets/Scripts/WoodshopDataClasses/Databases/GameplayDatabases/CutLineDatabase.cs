@@ -3,7 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class CutLineDatabase : AbstractDatabase<CutLineData>
+/// <summary>
+/// Database class to store all CutLine data instances.
+/// </summary>
+[System.Serializable]
+public class CutLineDatabase : GameplayDatabase<CutLineData>
 {
     private static CutLineDatabase _instance;
 
