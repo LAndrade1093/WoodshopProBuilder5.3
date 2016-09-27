@@ -2,8 +2,13 @@
 using System.Collections;
 using System;
 
+/// <summary>
+/// A class used to track the amount of time that has passed.
+/// </summary>
 public class GameTimer 
 {
+    //This class can be used to track how long a player lasts on each step and/or project.
+
     private long _totalTime;
 
     private DateTime startTime;

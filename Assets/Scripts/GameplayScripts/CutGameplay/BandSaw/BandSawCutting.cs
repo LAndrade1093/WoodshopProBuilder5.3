@@ -99,7 +99,7 @@ public class BandSawCutting : MonoBehaviour
                     if (totalTimePassed >= timeUpdateFrequency)
                     {
                         totalTimePassed = 0.0f;
-                        lineScore -= 0.5f;
+                        lineScore -= 0.6f;
                     }
                     totalTimeNotCuttingLine += Time.deltaTime;
                     if (totalTimeNotCuttingLine >= MaxTimeAwayFromLine)

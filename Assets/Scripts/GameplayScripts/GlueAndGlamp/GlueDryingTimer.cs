@@ -1,33 +1,18 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Countdown timer script for when the gluing is drying in the Clamping step of a project.
+/// </summary>
 public class GlueDryingTimer : MonoBehaviour 
 {
-    public static GlueDryingTimer instance = null;
-    protected GlueDryingTimer() { }
-
-    private Project _projectDrying;
+    private static string HourKey = "DryingProject_Hours";
+    private static string MinuteKey = "DryingProject_Minutes";
+    private static string SecondsKey = "DryingProject_Seconds";
     private CountdownTimer timer;
 
-    public Project ProjectDrying
+    void Awake () 
     {
-        get { return _projectDrying; }
-        private set { _projectDrying = value; }
-    }
-
-	void Awake () 
-    {
-        if (instance == null)
-        {
-            instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (instance != this)
-        {
-            Destroy(gameObject);
-        }
-
-        _projectDrying = null;
         timer = null;
 	}
 	
@@ -43,16 +28,14 @@ public class GlueDryingTimer : MonoBehaviour
         }
 	}
 
-    public void SetUpDryingTime(Project project, TimeUnits timer)
+    public void SetUpDryingTime(TimeUnits timer)
     {
-        this.ProjectDrying = project;
         this.timer = new CountdownTimer();
         this.timer.SetCountdown(timer);
     }
 
-    public void SetUpDryingTime(Project project, int hoursToDry, int minutesToDry, int secondsToDry)
+    public void SetUpDryingTime(int hoursToDry, int minutesToDry, int secondsToDry)
     {
-        this.ProjectDrying = project;
         this.timer = new CountdownTimer();
         this.timer.SetCountdown(hoursToDry, minutesToDry, secondsToDry);
     }
@@ -60,13 +43,31 @@ public class GlueDryingTimer : MonoBehaviour
     public void StartDrying()
     {
         timer.StartCountdown();
-        //Set game state to drying project
     }
 
     public void StopDrying()
     {
-        this.ProjectDrying = null;
         timer.StopCountdown();
         timer = null;
+    }
+
+    public void SaveTimer()
+    {
+        TimeUnits timeLeft = timer.GetTimeRemaining();
+        PlayerPrefs.SetInt(HourKey, timeLeft.Hours);
+        PlayerPrefs.SetInt(MinuteKey, timeLeft.Minutes);
+        PlayerPrefs.SetInt(SecondsKey, timeLeft.Seconds);
+    }
+
+    public bool LoadInTimer()
+    {
+        bool canBeLoadedIn = (PlayerPrefs.HasKey(HourKey) && PlayerPrefs.HasKey(MinuteKey) && PlayerPrefs.HasKey(SecondsKey));
+        if(canBeLoadedIn)
+        {
+            TimeUnits time = new TimeUnits(PlayerPrefs.GetInt(HourKey), PlayerPrefs.GetInt(MinuteKey), PlayerPrefs.GetInt(SecondsKey));
+            SetUpDryingTime(time);
+            StartDrying();
+        }
+        return canBeLoadedIn;
     }
 }

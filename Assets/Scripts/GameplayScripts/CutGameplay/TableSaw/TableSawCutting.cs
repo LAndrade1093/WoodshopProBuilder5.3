@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Replaced by TableSawCut
+/// </summary>
 public class TableSawCutting : MonoBehaviour 
 {
     public TableSawManager manager;

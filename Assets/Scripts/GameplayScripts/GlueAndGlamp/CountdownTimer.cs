@@ -3,55 +3,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// A class used to countdown time for the specified amount of time.
+/// </summary>
 [System.Serializable]
-public class TimeUnits
-{
-    private int _hours;
-    private int _minutes;
-    private int _seconds;
-
-    public int Hours
-    {
-        get { return _hours; }
-        private set { _hours = value; }
-    }
-
-    public int Minutes
-    {
-        get { return _minutes; }
-        private set { _minutes = value; }
-    }
-
-    public int Seconds
-    {
-        get { return _seconds; }
-        private set { _seconds = value; }
-    }
-
-    public TimeUnits()
-    {
-        this.Hours = 0;
-        this.Minutes = 0;
-        this.Seconds = 0;
-    }
-
-    public TimeUnits(int hours, int minutes, int seconds)
-    {
-        this.Hours = hours;
-        this.Minutes = minutes;
-        this.Seconds = seconds;
-    }
-
-    public TimeUnits(TimeSpan timeSpan)
-    {
-        this.Hours = timeSpan.Hours;
-        this.Minutes = timeSpan.Minutes;
-        this.Seconds = timeSpan.Seconds;
-    }
-}
-
 public class CountdownTimer
 {
+    //Meant to be used when waiting for glue to dry in the Clamping steps of each project
+
     private TimeUnits _units;
     private bool _countingDown;
     private bool _paused;
@@ -160,7 +119,6 @@ public class CountdownTimer
             if (CountdownIsDone())
             {
                 StopCountdown();
-                //Message listeners
             }
         }
     }
@@ -208,5 +166,64 @@ public class CountdownTimer
             timeUp = (currentTime.CompareTo(EndTime) >= 0);
         }
         return timeUp;
+    }
+}
+
+[System.Serializable]
+public class TimeUnits
+{
+    private int _hours;
+    private int _minutes;
+    private int _seconds;
+
+    public int Hours
+    {
+        get { return _hours; }
+        private set { _hours = value; }
+    }
+
+    public int Minutes
+    {
+        get { return _minutes; }
+        private set { _minutes = value; }
+    }
+
+    public int Seconds
+    {
+        get { return _seconds; }
+        private set { _seconds = value; }
+    }
+
+    public TimeUnits()
+    {
+        this.Hours = 0;
+        this.Minutes = 0;
+        this.Seconds = 0;
+    }
+
+    public TimeUnits(int hours, int minutes, int seconds)
+    {
+        this.Hours = hours;
+        this.Minutes = minutes;
+        this.Seconds = seconds;
+    }
+
+    public TimeUnits(int minutes)
+    {
+        this.Hours = 0;
+        this.Minutes = minutes;
+        if (minutes > 59)
+        {
+            this.Hours = minutes / 60;
+            this.Minutes = minutes - (this.Hours * 60);
+        }
+        this.Seconds = 0;
+    }
+
+    public TimeUnits(TimeSpan timeSpan)
+    {
+        this.Hours = timeSpan.Hours;
+        this.Minutes = timeSpan.Minutes;
+        this.Seconds = timeSpan.Seconds;
     }
 }

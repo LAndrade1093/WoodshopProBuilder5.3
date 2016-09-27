@@ -31,8 +31,8 @@ public class MiterGaugeController : MonoBehaviour
     private Vector3 previousPosition;
     private Transform objTransform;
     private float initialRotation = 90f;
-    private bool visible;
-    private bool movementEnabled;
+    private bool visible; //This determines whether or not miter gauge is on the table
+    private bool movementEnabled; //The saw can only be moved when the saw is turned on
 
     void Awake()
     {
@@ -63,38 +63,6 @@ public class MiterGaugeController : MonoBehaviour
                 previousPosition = position;
             }
         }
-    }
-
-    void LateUpdate()
-    {
-        //if (visible)
-        //{
-        //    if (woodMatLocalPositionX == -100f && woodMatLocalPositionZ == -100f)
-        //    {
-        //        woodMatLocalPositionX = WoodMaterial.gameObject.transform.localPosition.x;
-        //        woodMatLocalPositionZ = WoodMaterial.gameObject.transform.localPosition.z;
-        //    }
-        //    else
-        //    {
-        //        float z = 0f;
-        //        Debug.Log("WoodMaterial.gameObject.transform.localPosition.z: " + WoodMaterial.gameObject.transform.localPosition.z);
-        //        Debug.Log("woodMatLocalPositionZ: " + woodMatLocalPositionZ);
-        //        if (WoodMaterial.gameObject.transform.localPosition.z > woodMatLocalPositionZ)
-        //        {
-        //            z = WoodMaterial.gameObject.transform.localPosition.z - woodMatLocalPositionZ;
-        //        }
-        //        float x = 0f;
-        //        if (WoodMaterial.gameObject.transform.localPosition.x > woodMatLocalPositionX)
-        //        {
-        //            x = WoodMaterial.gameObject.transform.localPosition.z - woodMatLocalPositionZ;
-        //        }
-        //        if (WoodMaterial.gameObject.transform.localPosition.x < woodMatLocalPositionX)
-        //        {
-        //            x = WoodMaterial.gameObject.transform.localPosition.z + woodMatLocalPositionZ;
-        //        }
-        //        WoodMaterial.position = new Vector3(WoodMaterial.position.x - x, WoodMaterial.position.y, WoodMaterial.position.z - z);
-        //    }
-        //}
     }
 
     public void EnableMovement(bool enable)

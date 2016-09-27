@@ -2,6 +2,9 @@
 using System.Collections;
 using HedgehogTeam.EasyTouch;
 
+/// <summary>
+/// A simple class for controlling the Fence on the table saw
+/// </summary>
 public class FenceController : MonoBehaviour
 {
     public float MinimumLimitX;
