@@ -2,6 +2,9 @@
 using System.Collections;
 using UnityEngine.UI;
 
+/// <summary>
+/// Container for the glueable pieces buttons in the gluing and snapping gameplay.
+/// </summary>
 public class GlueButtonContainer : ScrollingButtonContainer
 {
     public Color SelectedButtonColor;

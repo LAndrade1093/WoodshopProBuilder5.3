@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// The bounds for an object that can be moved around
+/// </summary>
 public class ObjectBorder : MonoBehaviour 
 {
     public bool RestrictX;

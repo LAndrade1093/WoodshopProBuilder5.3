@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// The UI controller for the gameplay related to connecting pieces together
+/// </summary>
 public class SnapPieceUI : MainUI 
 {
     [Header("Snap Piece UI")]

@@ -3,6 +3,9 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
+/// <summary>
+/// Main UI controller for the UI in the table saw
+/// </summary>
 public class TableSawUI : MonoBehaviour 
 {
     public GameObject SelectedButton;
@@ -41,6 +44,7 @@ public class TableSawUI : MonoBehaviour
         InfoPanel.SetActive(showPlans);
     }
 
+    //Disables the button in the top bar that is currently selected
     public void SwitchActiveButton(GameObject buttonToUse)
     {
         if (buttonToUse != SelectedButton)
@@ -52,6 +56,7 @@ public class TableSawUI : MonoBehaviour
         }
     }
 
+    //Switches which saw blade buttons are enabled
     public void ChangeSawButtons(bool bladeIsActive)
     {
         if (SawButtonsActive)
@@ -69,6 +74,8 @@ public class TableSawUI : MonoBehaviour
         }
     }
 
+    //Updates the buttons that switch between pieces.
+    //Currently though, this UI that uses this is not used in the prototype due to some bugs.
     public void UpdateSelectionButtons(int index, int totalWoodMaterial)
     {
         if (NextButton != null && PreviousButton != null)

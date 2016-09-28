@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using HedgehogTeam.EasyTouch;
 
+
+/// <summary>
+/// A manager class for the gameplay related to connecting pieces together
+/// </summary>
 public class SnapManager : MonoBehaviour 
 {
     public GameObject GameCamera;
@@ -16,14 +20,14 @@ public class SnapManager : MonoBehaviour
     private int DragPieceIndex;
     private List<GameObject> DraggablePieces = new List<GameObject>();
     private Transform cameraTransform;
-    private OrbitCamera cameraControl;
+    private CameraOrbitControl cameraControl;
 
 	void Awake () 
     {
         DragPieceIndex = -1;
         PieceSnapping.enabled = false;
         cameraTransform = GameCamera.transform;
-        cameraControl = GameCamera.GetComponent<OrbitCamera>();
+        cameraControl = GameCamera.GetComponent<CameraOrbitControl>();
         ActivatePieceSnapping();
 	}
 
@@ -31,7 +35,7 @@ public class SnapManager : MonoBehaviour
     {
         GameCamera.transform.position = CameraStartingPosition.position;
         cameraControl.LookAtPoint = CameraLookAt;
-        cameraControl.Distance = 1.5f;
+        cameraControl.Distance = 1.0f;
         cameraControl.ChangeAngle(0f, 0f);
         cameraControl.EnableZoom = true;
         PieceSnapping.enabled = true;

@@ -2,6 +2,9 @@
 using System.Collections;
 using HedgehogTeam.EasyTouch;
 
+/// <summary>
+/// Class that controls how a line is marked on the wood material
+/// </summary>
 public class Ruler : MonoBehaviour 
 {
     public float OffsetFromLine = 0.01f;
@@ -23,6 +26,10 @@ public class Ruler : MonoBehaviour
         CanMeasure = false;
     }
 
+    /// <summary>
+    /// Add the mark line when the player touches the wood material
+    /// </summary>
+    /// <param name="gesture">The gesture containing data about what was touched</param>
     public void AddMark(Gesture gesture)
     {
         if (gesture.pickedObject != null && CanMeasure && gesture.touchCount == 1)
@@ -50,6 +57,10 @@ public class Ruler : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// While the finger is touching the wood material, create a line between the initial touch position and the current touch position
+    /// </summary>
+    /// <param name="gesture">The gesture containing data about what is being swiped</param>
     public void SwipeMark(Gesture gesture)
     {
         if (gesture.pickedObject != null && CanMeasure && gesture.touchCount == 1)
@@ -68,6 +79,10 @@ public class Ruler : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// When the finger is raised, leave the mark and color baed on whether or not the mark is on the line
+    /// </summary>
+    /// <param name="gesture">The gesture containing data about what is touched</param>
     public void LeaveMark(Gesture gesture)
     {
         if (gesture.pickedObject != null && CanMeasure && gesture.touchCount == 1)

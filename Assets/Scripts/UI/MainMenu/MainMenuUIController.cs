@@ -2,6 +2,9 @@
 using System.Collections;
 using UnityEngine.UI;
 
+/// <summary>
+/// UI controller for navigating the main menu UI
+/// </summary>
 public class MainMenuUIController : MonoBehaviour
 {
     public GameObject NavigationMenu;

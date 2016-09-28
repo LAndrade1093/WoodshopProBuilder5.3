@@ -2,6 +2,9 @@
 using System.Collections;
 using UnityEngine.UI;
 
+/// <summary>
+/// Custom button for the draggable icons in the gluing gameplay
+/// </summary>
 public class CustomButtonDisplay : MonoBehaviour 
 {
     public Image ButtonIconImageComponent;

@@ -2,6 +2,15 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/* Notes:
+ * This class controls the blade's rotation and contains data about what hit it and if it is currently
+ * cutting wood material. It also controls the position of the blade edge object, which represents
+ * the edge of the blade when cutting the wood material.
+ */
+
+/// <summary>
+/// A controller for the blade on the table saw and chop saw
+/// </summary>
 public class Blade : MonoBehaviour 
 {
     public bool CuttingWoodBoard { get; private set; }
@@ -140,6 +149,7 @@ public class Blade : MonoBehaviour
         return BladeEdge.position;
     }
 
+    //Used when placing the blade edge on the wood material once the blade makes contact with the wood
     public void SetEdgePosition(Vector3 position)
     {
         if (BladeEdge != null)
@@ -164,20 +174,3 @@ public class Blade : MonoBehaviour
         }
     }
 }
-
-
-
-
-
-//void OnTriggerStay(Collider other)
-//{
-//    if ((other.tag == "Piece" || other.tag == "Leftover" || other.tag == "DadoBlock") && Active)
-//    {
-//        CuttingWoodBoard = true;
-//        NoInteractionWithBoard = false;
-//        for (int i = 0; i < HitObjects.Count; i++)
-//        {
-//            Debug.Log(HitObjects[i]);
-//        }
-//    }
-//}

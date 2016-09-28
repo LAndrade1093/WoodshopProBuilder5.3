@@ -2,6 +2,9 @@
 using System.Collections;
 using HedgehogTeam.EasyTouch;
 
+/// <summary>
+/// Basic movement controller for the ruler
+/// </summary>
 public class RulerMovement : MonoBehaviour 
 {
     public float DistanceFromCenterLimit;

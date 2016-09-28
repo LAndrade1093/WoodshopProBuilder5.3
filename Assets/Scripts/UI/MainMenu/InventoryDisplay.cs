@@ -3,6 +3,9 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
+/// <summary>
+/// Base class for any UI that displays stuff from the player's Inventory
+/// </summary>
 public class InventoryDisplay : PaginationDisplay
 {
     public Text DescriptionText;

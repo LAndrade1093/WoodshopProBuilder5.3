@@ -2,6 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
+//// <summary>
+/// Container class for what the wood material has when a player is working on the project.
+/// This acts as the Graph the holds the node in the WoodPieces list.
+/// </summary>
 public class WoodMaterialObject : MonoBehaviour 
 {
     public List<GameObject> WoodPieces;

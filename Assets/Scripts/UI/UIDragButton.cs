@@ -3,6 +3,9 @@ using System.Collections;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
+/// <summary>
+/// Class for buttons that generate a draggable wood piece icon
+/// </summary>
 [RequireComponent(typeof(Image))]
 public class UIDragButton : MonoBehaviour, IDragHandler, IEndDragHandler, IPointerDownHandler, IPointerUpHandler
 {

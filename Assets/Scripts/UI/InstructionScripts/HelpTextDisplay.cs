@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
+/// <summary>
+/// UI class for UI that displays paginated information
+/// </summary>
 public class HelpTextDisplay : PaginatedDisplay
 {
     public List<HelpText> HelpTextList;

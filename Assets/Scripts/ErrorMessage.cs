@@ -1,6 +1,16 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/* NOTES:
+ * This was meant as a way to return an object with data instead of throwing errors whenever a 
+ * method needed to return a boolean saying that the method was successful. After some use, the 
+ * code became too verbose, so I dedcided to use Exceptions instead. I kept this around in case
+ * I missed any other places still using it.
+ */
+
+/// <summary>
+/// Class that returns the results of a method with a message
+/// </summary>
 public class MethodResult 
 {
     private string _message;

@@ -9,6 +9,21 @@ public enum LineCutRank
     Failed
 }
 
+/* NOTES:
+ * Most of the prototype is using percentages to determine what the final score is for a project. After the prototype
+ * was done and I began working on the data classes, I decided that the score should be stored with the gameplay 
+ * data and the percentages can be used to determine if the player gets a Perfect, Good, or Passable score. 
+ * I never got around to fully implementing this, but with the data classes already set up this can work as
+ * a basis for that system.
+ *      -Set up similar classes that track how well a player finishes a task using percentages (100% to 0%)
+ *      -Based on the percentage, the player will wither get a Perfect, Good, or Passable score.
+ *      -If the percentage or score is too low, then the player fails and has to start over.
+ *          - All the materials used will need to be bought again.
+ */
+
+/// <summary>
+/// A prototype and test script for the SpiceRack prototype. Can still be repurposed to use the data from the CutLineData class.
+/// </summary>
 public class LineCutScoring : MonoBehaviour
 {
     [Header("Score Values")]

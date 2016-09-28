@@ -5,6 +5,9 @@ using System.IO;
 using System.Collections.Generic;
 using System.Text;
 
+/// <summary>
+/// Testing the CSV importer
+/// </summary>
 public class CSVImportTest : MonoBehaviour {
 
     public Text TextDisplay;

@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Displays the materials the current player has in their Inventory
+/// </summary>
 public class MaterialMenu : InventoryDisplay
 {
     void Awake()

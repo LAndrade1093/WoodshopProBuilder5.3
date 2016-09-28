@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Script for anything that needs to rotate at a consistent rate.
+/// Right now, only Blade gameobjects use this
+/// </summary>
 public class Rotate : MonoBehaviour 
 {
     public float RotationSpeed = 10;

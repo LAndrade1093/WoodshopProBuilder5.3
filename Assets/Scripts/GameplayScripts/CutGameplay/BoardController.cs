@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using HedgehogTeam.EasyTouch;
 
+/// <summary>
+/// Controller class for the wood material gameobject
+/// </summary>
 public class BoardController : MonoBehaviour
 {
     public bool Moveable;

@@ -13,7 +13,7 @@ public class GlueManager : MonoBehaviour
     private int selectedPieceIndex;
     private Vector3 selectedPiecePreviousPosition;
     private Transform cameraTransform;
-    private OrbitCamera orbitCameraControl;
+    private CameraOrbitControl orbitCameraControl;
     private PanCamera panCameraControl;
     private float distancePadding;
 
@@ -24,7 +24,7 @@ public class GlueManager : MonoBehaviour
         selectedPieceIndex = 0;
         selectedPiecePreviousPosition = Vector3.zero;
         cameraTransform = GameCamera.transform;
-        orbitCameraControl = GameCamera.GetComponent<OrbitCamera>();
+        orbitCameraControl = GameCamera.GetComponent<CameraOrbitControl>();
         panCameraControl = GameCamera.GetComponent<PanCamera>();
         distancePadding = 2.2f;
     }

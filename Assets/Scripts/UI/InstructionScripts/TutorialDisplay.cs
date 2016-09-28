@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
+/// <summary>
+/// The UI controller for the tutorials in the game
+/// </summary>
 public class TutorialDisplay : PaginatedDisplay
 {
     public List<TutorialHelpText> GestureTutorialsList;

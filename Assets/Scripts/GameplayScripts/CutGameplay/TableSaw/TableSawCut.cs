@@ -2,11 +2,21 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/* Notes:
+ * On the table saw, chop saw, and band saw, the idea is that a perfect cut is made if the player cuts at a decent speed and as close
+ * to the line as possible. The score is lowered if they cut too far from the line and if they push the wood against the blade
+ * too fast or too slow. Lose enough points, and the player loses, forcing them to lose valuable materials and start over.
+ * Currently, the band saw's score is not affected by the speed.
+ */
+
+/// <summary>
+/// Class that handles detecting the line being cut and how it affects the score
+/// </summary>
 public class TableSawCut : MonoBehaviour 
 {
     public TableSawManager manager;
     public Blade SawBlade;
-    public float ValidCutOffset = 0.005f;
+    public float ValidCutOffset = 0.005f; //The distance the blade can be at before the player starts losing points
     public float MaxStallTime = 3.0f;
     public FeedRate FeedRateTracker;
     public CutState CurrentState { get; set; }
@@ -31,6 +41,9 @@ public class TableSawCut : MonoBehaviour
         CurrentState = CutState.ReadyToCut;
     }
 
+    /// <summary>
+    /// Finds the nearest marked line and highlights it
+    /// </summary>
     private void SwitchLine()
     {
         CutLine nearestLine = manager.GetNearestLine(SawBlade.transform.position);
@@ -48,6 +61,10 @@ public class TableSawCut : MonoBehaviour
         currentLine = nearestLine;
     }
 
+    /// <summary>
+    /// When the blade hits the wood material, set up the blade edge to better track how close the blade is to the line.
+    /// </summary>
+    /// <param name="cutStartPoint">The point at which the blade hit the wood material</param>
     private void StartWoodCutting(Vector3 cutStartPoint)
     {
         SawBlade.SetEdgePosition(cutStartPoint);
@@ -55,6 +72,7 @@ public class TableSawCut : MonoBehaviour
 
         float distanceFromBlade = currentLine.CalculateDistance(SawBlade.EdgePosition());
         cuttingAlongLine = (distanceFromBlade <= ValidCutOffset);
+        //If the blade is already to far from the line, change the score in the Feed Rate
         if (cuttingAlongLine && distanceFromBlade >= 0.003f)
         {
             FeedRateTracker.ReduceScoreDirectly(0.5f);
@@ -63,7 +81,7 @@ public class TableSawCut : MonoBehaviour
         {
             FeedRateTracker.ReduceScoreDirectly(1.0f);
         }
-
+        //Restrict the movement of the board to just the z direction
         manager.RestrictCurrentBoardMovement(false, true);
         previousPiecePosition = manager.GetCurrentBoardPosition();
         CurrentState = CutState.Cutting;
@@ -100,10 +118,12 @@ public class TableSawCut : MonoBehaviour
             totalTimePassed += Time.deltaTime;
             UpdateFeedRateData();
 
+            //Waiting for the wood material to touch the blade
             if (CurrentState == CutState.ReadyToCut)
             {
                 SwitchLine();
 
+                //The blade has touched the wood material
                 if (SawBlade.CuttingWoodBoard && SawBlade.SawBladeActive)
                 {
                     Vector3 origin = SawBlade.EdgePosition() + new Vector3(0.0f, 0.5f, 0.0f);
@@ -115,6 +135,7 @@ public class TableSawCut : MonoBehaviour
                     }
                 }
             }
+            //The blade is now cutting the wood material
             else if (CurrentState == CutState.Cutting && SawBlade.SawBladeActive)
             {
                 if (cuttingAlongLine)

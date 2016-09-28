@@ -1,6 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/* Notes:
+ * This class currently has it's own line score percentage to determine how well the player did with their feed rate. Since the score
+ * is now stored on the CutLineData class and is tracked by the Score clas, this not be necessary.
+ * Refactor the gameplay to use the score in those classes
+ */
+
+/// <summary>
+/// Class that tracks how fast the player is pushing the wood material into the saw
+/// </summary>
 public class FeedRate : MonoBehaviour 
 {
     public float MinPerfectRate;
@@ -19,6 +28,10 @@ public class FeedRate : MonoBehaviour
         RateTooFast = false;
     }
 
+    /// <summary>
+    /// Updates the score if pushing too fast or too slow
+    /// </summary>
+    /// <param name="rate">The current speed</param>
     public void UpdateScoreWithRate(float rate)
     {
         if (rate < MinPerfectRate || rate > MaxPerfectRate)
@@ -34,6 +47,10 @@ public class FeedRate : MonoBehaviour
         LineScorePercentage -= amount;
     }
 
+    /// <summary>
+    /// Updates the Feed rate UI
+    /// </summary>
+    /// <param name="rate">The current speed</param>
     public void UpdateDataDisplay(float rate)
     {
         RateDisplay.UpdateBar(rate, MaxFeedRate);

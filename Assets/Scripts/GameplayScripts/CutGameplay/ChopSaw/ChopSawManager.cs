@@ -2,10 +2,26 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/* Notes:
+ * Most of the changes in this milestone will happen here. Currently, data is coming in from the Editor, 
+ * which has prototype game data. Once data can be loaded in from databases, we want to be able to 
+ * load in that data in here and create the necessary gameobjects
+ * The data will be used to create and/or load the following objects
+ *      -CutLineData will be used to setup the lines in the game
+ *      -The Step class will give the project plans UI the necessary instructions, project
+ *       plans sprite, and the step number
+ *      -We use the pieceNodeID in the CutLineData to determine what wood material to display and add
+ *       to the AvailableWoodMaterial list
+ */
+
+/// <summary>
+/// This is the manager for the chop saw scene.
+/// </summary>
 public class ChopSawManager : MonoBehaviour, IToolManager
 {
     public List<GameObject> AvailableWoodMaterial;
     public List<CutLine> LinesToCut;
+    //Spawn point variable are for where the wood materials spawns on the table saw
     public Transform FromSawSpawnPoint;
     public Transform CameraSawLookAtPoint;
     public Transform FromRulerSpawnPoint;
@@ -84,8 +100,13 @@ public class ChopSawManager : MonoBehaviour, IToolManager
         UI_Manager.NextSceneButton.gameObject.SetActive(false);
     }
 
+    /// <summary>
+    /// Handles what happens after a line is cut
+    /// </summary>
+    /// <param name="lineToRemove">The line that was cut</param>
     public void SplitMaterial(CutLine lineToRemove)
     {
+        //Delete the cut line and get the split wood material
         WoodMaterialObject board = AvailableWoodMaterial[currentPieceIndex].GetComponent<WoodMaterialObject>();
         BoardController previousBoardController = AvailableWoodMaterial[currentPieceIndex].GetComponent<BoardController>();
         LinesToCut.Remove(lineToRemove);
@@ -95,6 +116,8 @@ public class ChopSawManager : MonoBehaviour, IToolManager
                                                     board, lineToRemove);
 
         bool pieceAdded = false;
+        //This loop looks through the wood materials returned, assigns them a BoardController, and use the first piece found as the piece
+        //to put on the table saw. All other pieces are hidden away until they are needed. 
         foreach (GameObject piece in pieces)
         {
             WoodMaterialObject boardPiece = piece.GetComponent<WoodMaterialObject>();
@@ -105,6 +128,7 @@ public class ChopSawManager : MonoBehaviour, IToolManager
                 {
                     lineFound = boardPiece.ContainsLine(LinesToCut[i]);
                 }
+                //If a line is found, then the piece is a wood material gameobject
                 if (lineFound)
                 {
                     BoardController controller = piece.AddComponent<BoardController>();
@@ -137,9 +161,13 @@ public class ChopSawManager : MonoBehaviour, IToolManager
             }
             else
             {
+                //This was kept around for the prototype, 
+                //but we technically want to keep the piece around if it is a piece gameobject, or a wood material gameobject
+                //There just needs to be a container that will store all of the pieces and wood materials in the project.
                 Destroy(piece);
             }
 
+            //If none of the pieces were wood material gameobjects, find one from the AvailableWoodMaterial list
             if (!pieceAdded && AvailableWoodMaterial.Count > 0)
             {
                 currentPieceIndex = 0;
@@ -162,6 +190,7 @@ public class ChopSawManager : MonoBehaviour, IToolManager
             UI_Manager.ChangeSawButtons(false);
         }
 
+        //If all the lines are cut, the step is done
         if (LinesToCut.Count > 0)
         {
             UI_Manager.UpdateSelectionButtons(currentPieceIndex, AvailableWoodMaterial.Count);
@@ -246,6 +275,9 @@ public class ChopSawManager : MonoBehaviour, IToolManager
         }
     }
 
+    //As the method name states, this was meant to switch between the available wood material in the game
+    //However, due to a bug where the gameobject falls through the table saw, don't use this until the bug is fixed
+    //Seems to be a physics issue where the velocity of the gameobject is making it go through the table saw
     private void SwitchPiece(int indexToSwitchTo)
     {
         AvailableWoodMaterial[currentPieceIndex].transform.position = Vector3.zero;

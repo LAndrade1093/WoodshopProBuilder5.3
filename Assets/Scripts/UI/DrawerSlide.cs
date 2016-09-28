@@ -1,6 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/* NOTES:
+ * This was a class made early on for UI that can be hidden out of view and then 
+ * revealed with a button press. Currently, only the color picker in the 
+ * painting scene uses it.
+ */
+
+/// <summary>
+/// Gives UI the sliding functionality, like a drawer.
+/// </summary>
 public class DrawerSlide : MonoBehaviour 
 {
     public Vector3 VisibleAnchoredPosition;

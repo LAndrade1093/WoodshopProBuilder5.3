@@ -3,6 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
+/// <summary>
+/// Basic CSV importer to read .csv files with data to load databases
+/// </summary>
 public static class CSVImporter
 {
     private const char CommaDataSeparator = ',';

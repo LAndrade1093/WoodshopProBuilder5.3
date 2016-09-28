@@ -2,6 +2,10 @@
 using System.Collections;
 using UnityEngine.UI;
 
+/// <summary>
+/// UI controller for the project plans UI.
+/// Contains methods for setting the step number, the instructions, and the proejct plans sprite/image
+/// </summary>
 public class ProjectPlansUI : MonoBehaviour
 {
     public GameObject InstructionsPanel;

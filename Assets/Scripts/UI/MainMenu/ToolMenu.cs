@@ -3,6 +3,9 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
+/// <summary>
+/// Displays the tools the current player has in their Inventory
+/// </summary>
 public class ToolMenu : InventoryDisplay
 {
     void Awake ()

@@ -3,6 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
+/* Notes:
+ * This was created before the PaginationDisplay class was made, but I never got around to implementing it
+ * here. There is no rush to do so, but it would be a good idea to do so for consistency
+ */
+
+/// <summary>
+/// A UI controller for Ui that displays controls and other helpful info.
+/// </summary>
 public class InformationText : MonoBehaviour
 {
     public Text InfoTextDisplay;

@@ -2,6 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Interface for database classes
+/// </summary>
+/// <typeparam name="T">Generic T type that must implement IDalAsset</typeparam>
 public interface IDal<T> where T : IDalAsset
 {
     /// <summary>

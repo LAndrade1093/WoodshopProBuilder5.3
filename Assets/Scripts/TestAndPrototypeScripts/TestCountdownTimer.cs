@@ -2,6 +2,10 @@
 using System.Collections;
 using UnityEngine.UI;
 
+/* NOTES:
+ * Testing CountdownTimer class. Ignore or delete 
+ */
+
 public class TestCountdownTimer : MonoBehaviour 
 {
     public int hours;

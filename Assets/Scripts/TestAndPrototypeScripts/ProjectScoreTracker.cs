@@ -1,8 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/* NOTES:
+ * Replace the scoring and points with the Score class and the cash value calculations with the methods in the Project class
+ */
+
 /// <summary>
-/// Simple score tracker for the prototype (Replace with Score class)
+/// Simple score tracker for the SpiceRack prototype 
 /// </summary>
 public class ProjectScoreTracker : MonoBehaviour 
 {

@@ -60,6 +60,9 @@ public class CutLine : MonoBehaviour
         lineRenderer.material.color = color;
     }
 
+    /// <summary>
+    /// Disconnects the given nodes from each other
+    /// </summary>
     public void SeverConnections()
     {
         foreach (Connection c in Connections)

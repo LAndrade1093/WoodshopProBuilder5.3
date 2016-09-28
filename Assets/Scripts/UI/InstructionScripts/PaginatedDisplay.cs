@@ -3,6 +3,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 
+/* Notes:
+ * There is another base class called PaginationDisplay that is a bit simpler than this. This was made 
+ * earlier though and it was designed with the idea that anything that is paginated would at least
+ * need a title and body of text
+ */
+
+/// <summary>
+/// Base class for anything that needs pgination and displays title and info text
+/// </summary>
 public class PaginatedDisplay: MonoBehaviour
 {
     public Text TitleText;

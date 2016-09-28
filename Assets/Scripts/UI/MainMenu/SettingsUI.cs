@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// UI controller for the Setting UI
+/// </summary>
 public class SettingsUI : MonoBehaviour 
 {
     public GameObject TutorialsOnButton;

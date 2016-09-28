@@ -1,6 +1,10 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/*NOTES:
+ * Just messing around with the Animator class, ignore this or delete
+ */
+
 public class TestRotate : MonoBehaviour
 {
     private Animator AnimationController;

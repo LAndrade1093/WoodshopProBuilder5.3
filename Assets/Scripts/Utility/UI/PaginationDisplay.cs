@@ -2,6 +2,16 @@
 using System.Collections;
 using UnityEngine.UI;
 
+/* Notes:
+ * A simpler version of the PaginatedDisplay class. This is used by the main menu UI for the
+ * tools and materials displays. This was meant to replace the PaginatedDisplay class so 
+ * that it would be a better abstraction of the pagination controls from what the 
+ * implemeting UI
+ */
+
+/// <summary>
+/// A simpler base class for paginated UI
+/// </summary>
 public class PaginationDisplay : MonoBehaviour
 {
     public Button NextButton;

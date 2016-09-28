@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Saves and provides the settings for the game
+/// </summary>
 public class GameSettings : MonoBehaviour
 {
     private static string MusicKey = "musicVolume";

@@ -2,6 +2,9 @@
 using System.Collections;
 using UnityEngine.UI;
 
+/// <summary>
+/// UI controller for the Heads Up Display on the top of the main menu
+/// </summary>
 public class HeadsUpDisplay : MonoBehaviour
 {
     public Text CurrentProjectText;

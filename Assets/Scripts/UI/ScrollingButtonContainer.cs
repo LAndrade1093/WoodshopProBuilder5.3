@@ -3,6 +3,9 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
+/// <summary>
+/// Base class for a button container that can scroll to show more buttons, if needed.
+/// </summary>
 public class ScrollingButtonContainer : MonoBehaviour 
 {
     public GameObject WoodPieceButton;

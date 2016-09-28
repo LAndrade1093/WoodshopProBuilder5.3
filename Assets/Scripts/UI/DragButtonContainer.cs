@@ -2,6 +2,9 @@
 using System.Collections;
 using UnityEngine.UI;
 
+/// <summary>
+/// Container for the drag buttons in the gluing and snapping gameplay
+/// </summary>
 public class DragButtonContainer : ScrollingButtonContainer
 {
     public Transform canvas;
@@ -15,6 +18,12 @@ public class DragButtonContainer : ScrollingButtonContainer
         CreateDraggingIcon(button, iconSprite, pieceName);
     }
 
+    /// <summary>
+    /// When a drag button is pressed, a draggable icon is created
+    /// </summary>
+    /// <param name="button">The button gameobject pressed</param>
+    /// <param name="iconSprite">The sprite that will be added to the dragIconObject</param>
+    /// <param name="pieceName">A name the icon is associated to</param>
     private void CreateDraggingIcon(GameObject button, Sprite iconSprite, string pieceName)
     {
         GameObject dragIcon = Instantiate(dragIconObject) as GameObject;
@@ -51,12 +60,20 @@ public class DragButtonContainer : ScrollingButtonContainer
         return AvailableButtonsList.IndexOf(button);
     }
 
+    /// <summary>
+    /// Disables the UIDragButton at the given index
+    /// </summary>
+    /// <param name="buttonToDisable">Index of UIDragButton script to disable</param>
     public void DisableButton(int buttonIndex)
     {
         GameObject buttonToDisable = AvailableButtonsList[buttonIndex];
         DisableButton(buttonToDisable.GetComponent<UIDragButton>());
     }
 
+    /// <summary>
+    /// Disables the given UIDragButton
+    /// </summary>
+    /// <param name="buttonToDisable">The UIDragButton script to disable</param>
     public void DisableButton(UIDragButton buttonToDisable)
     {
         UIDragButton button = buttonToDisable.GetComponent<UIDragButton>();

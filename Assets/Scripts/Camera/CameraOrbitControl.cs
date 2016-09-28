@@ -3,6 +3,9 @@ using System.Collections;
 using HedgehogTeam.EasyTouch;
 using System;
 
+/// <summary>
+/// A camera orbit control script that uses velocity and smooth dampening
+/// </summary>
 public class CameraOrbitControl : CameraControl
 {
     public float OrbitSensitivity = 5.0f;

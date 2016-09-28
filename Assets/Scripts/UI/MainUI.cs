@@ -3,6 +3,16 @@ using System.Collections;
 using UnityEngine.UI;
 using System.Collections.Generic;
 
+/*NOTE:
+ * Not all UI classes implement this yet. It was built with the intent of delegating the same
+ * UI in a tool scene to one, base class. Anything unique would extend this class. I didn't
+ * implement it in all the other classes because UI wasn't supposed to be the main focus 
+ * until milestone 4, the vertical slice.
+ */
+
+/// <summary>
+/// Base class for the main UI in the tool scenes
+/// </summary>
 public class MainUI : MonoBehaviour 
 {
     [Header("Main UI In Every Tool")]

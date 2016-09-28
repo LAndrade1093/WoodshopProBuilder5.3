@@ -8,6 +8,11 @@ using System;
 using UnityEngine.SocialPlatforms;
 using UnityEngine.UI;
 
+/* NOTES:
+ * This is a prototype and test script for starting up the prototype SpiceRack project.
+ * Once data can be loaded in from databases, it can be deleted.
+ */
+
 public class IntroScript : MonoBehaviour 
 {
     public string FirstScene;

@@ -2,6 +2,9 @@
 using System.Collections;
 using UnityEngine.UI;
 
+/// <summary>
+/// A data container for the animation used in the tutorials
+/// </summary>
 [System.Serializable]
 public class GestureController : MonoBehaviour
 {

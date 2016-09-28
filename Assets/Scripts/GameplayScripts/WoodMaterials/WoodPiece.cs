@@ -2,6 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
+/// <summary>
+/// Container class for what the wood piece has when a player is working on the project
+/// </summary>
 [RequireComponent(typeof(MeshCollider))]
 public class WoodPiece : MonoBehaviour
 {

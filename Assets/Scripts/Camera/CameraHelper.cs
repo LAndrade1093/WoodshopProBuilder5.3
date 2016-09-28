@@ -1,8 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+/// <summary>
+/// Static helper class for the camera scripts
+/// </summary>
 public static class CameraHelper
 {
+    //Stores teh coordinates of the near clip plane
     public class ClipPlaneCoordinates
     {
         public Vector3 TopLeft;
@@ -23,6 +27,11 @@ public static class CameraHelper
         }
     }
 
+    /// <summary>
+    /// Calculates the vector3 coordinates of the corners and center of the near clip plane
+    /// </summary>
+    /// <param name="cameraPos">The vector3 postion of the main camera</param>
+    /// <returns>A ClipPlaneCoordinates object with the coordinates of the near clip plane</returns>
     public static ClipPlaneCoordinates getNearClipPlanePoints(Vector3 cameraPos)
     {
         if (Camera.main == null)
