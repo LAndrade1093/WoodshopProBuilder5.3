@@ -2,6 +2,9 @@
 using System.Collections;
 using TestFairyUnity;
 
+/// <summary>
+/// For the TestFairy site, which helps track analytics and records video for debugging
+/// </summary>
 public class TestFairySetupScript : MonoBehaviour
 {
 	void Start () {
