@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
+/// <summary>
+/// Database for each Project instance
+/// </summary>
+[System.Serializable]
 public class ProjectsDatabase : AbstractDatabase<Project>
 {
     private static ProjectsDatabase _instance;

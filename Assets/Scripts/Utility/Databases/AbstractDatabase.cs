@@ -5,6 +5,11 @@ using System.Collections.Generic;
 using Woodshop.Utility.Exceptions;
 using System.Linq;
 
+/* NOTES:
+ * Unless otherwise specified, anything that inherits from this class is expected to 
+ * be loaded in from a CSV file.
+ */
+
 /// <summary>
 /// Parent class for all database classes.
 /// </summary>

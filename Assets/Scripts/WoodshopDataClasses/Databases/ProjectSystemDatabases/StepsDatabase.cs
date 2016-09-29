@@ -4,6 +4,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
+/// <summary>
+/// Database for each Step instance
+/// </summary>
 [System.Serializable]
 public class StepsDatabase : AbstractDatabase<Step>
 {

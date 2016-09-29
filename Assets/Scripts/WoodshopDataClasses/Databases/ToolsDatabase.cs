@@ -4,6 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
+/// <summary>
+/// Stores all the different tools in the game
+/// </summary>
+[System.Serializable]
 public class ToolsDatabase : AbstractDatabase<Tool>
 {
     private static ToolsDatabase _instance;

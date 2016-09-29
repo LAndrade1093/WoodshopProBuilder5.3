@@ -4,7 +4,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
-public class PlayerProfileDatabase : AbstractDatabase<PlayerProfile>
+/* NOTES:
+ * This is sensitive game data. 
+ * Save this data to a binary file on the user's phone.
+ */
+
+/// <summary>
+/// Database for the PlayerProfile
+/// </summary>
+[System.Serializable]
+public class PlayerProfileDatabase : AbstractDatabase<PlayerProfile>, IBinaryDatabase
 {
     private static PlayerProfileDatabase _instance;
 
@@ -59,11 +68,16 @@ public class PlayerProfileDatabase : AbstractDatabase<PlayerProfile>
         get
         {
             //Save to binary file on the user's device
-            return new List<string> { "PlayerProfiles" };
+            return new List<string> { Application.persistentDataPath + "PlayerProfiles" };
         }
     }
 
     protected override void LoadFromDataFile()
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool SaveToBinaryFile()
     {
         throw new NotImplementedException();
     }

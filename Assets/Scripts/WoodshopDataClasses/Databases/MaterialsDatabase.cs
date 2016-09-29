@@ -7,6 +7,7 @@ using System;
 /// <summary>
 /// Stores all the different types of materials in the game
 /// </summary>
+[System.Serializable]
 public class MaterialsDatabase : AbstractDatabase<WoodshopMaterial>
 {
     private static MaterialsDatabase _instance;

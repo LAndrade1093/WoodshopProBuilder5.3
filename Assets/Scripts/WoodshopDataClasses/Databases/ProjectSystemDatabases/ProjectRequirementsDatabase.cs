@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+/// <summary>
+/// Database for each project requirement
+/// </summary>
+[System.Serializable]
 public class ProjectRequirementsDatabase : AbstractDatabase<ProjectCompletionRequirements>
 {
     private static ProjectRequirementsDatabase _instance;

@@ -96,12 +96,12 @@ public class ScoreLock : AbstractAsset
 
     public void UnlockProject(float playerProfileID, bool alertListeners = true)
     {
-        bool projectAlreadyUnlocked = ScoreLockProfileLinkDatabase.Instance.IsProjectUnlockedForProfile(ProjectIDToUnlock, playerProfileID);
+        bool projectAlreadyUnlocked = PlayerProjectLinkDatabase.Instance.IsProjectUnlockedForProfile(ProjectIDToUnlock, playerProfileID);
         if (!projectAlreadyUnlocked)
         {
             if (AllRequirementsAreMetByPlayer(playerProfileID))
             {
-                ScoreLockProfileLinkDatabase.Instance.UnlockProjectForProfile(ID, playerProfileID);
+                PlayerProjectLinkDatabase.Instance.UnlockProjectForProfile(ProjectIDToUnlock, playerProfileID);
                 if (alertListeners && onProjectUnlocked != null)
                 {
                     Project project = ProjectsDatabase.Instance.RetrieveEntity(ProjectIDToUnlock);

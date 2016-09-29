@@ -1,13 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum LineCutRank
-{
-    Perfect,
-    Good,
-    Passable,
-    Failed
-}
+
 
 /* NOTES:
  * Most of the prototype is using percentages to determine what the final score is for a project. After the prototype
@@ -47,7 +41,7 @@ public class LineCutScoring : MonoBehaviour
     public float FailedCutScore = 35f;
 
     private float scorePercentage = 100f;
-    private LineCutRank lineRank = LineCutRank.Perfect;
+    private GameplayScoreRank lineRank = GameplayScoreRank.Perfect;
     private CutLine line;
 
     void Start()
@@ -56,20 +50,20 @@ public class LineCutScoring : MonoBehaviour
         line = GetComponent<CutLine>();
     }
 
-    public LineCutRank UpdateScore(float amountToDecrease)
+    public GameplayScoreRank UpdateScore(float amountToDecrease)
     {
         scorePercentage -= amountToDecrease;
         if (ScoreDecreasedToGoodCutRank())
         {
-            lineRank = LineCutRank.Good;
+            lineRank = GameplayScoreRank.Good;
         }
         else if (ScoreDecreasedToPassableCutRank())
         {
-            lineRank = LineCutRank.Passable;
+            lineRank = GameplayScoreRank.Passable;
         }
         else if (ScoreDecreasedToFailedRank())
         {
-            lineRank = LineCutRank.Failed;
+            lineRank = GameplayScoreRank.Failed;
         }
         return lineRank;
     }
@@ -88,21 +82,21 @@ public class LineCutScoring : MonoBehaviour
     {
         return (scorePercentage < PerfectCutMinimumScore &&
                 scorePercentage >= GoodCutMinimumScore &&
-                lineRank == LineCutRank.Perfect && lineRank != LineCutRank.Good);
+                lineRank == GameplayScoreRank.Perfect && lineRank != GameplayScoreRank.Good);
     }
 
     private bool ScoreDecreasedToPassableCutRank()
     {
         return (scorePercentage < GoodCutMinimumScore &&
                 scorePercentage >= PassableCutMinimumScore &&
-                lineRank == LineCutRank.Good && lineRank != LineCutRank.Passable);
+                lineRank == GameplayScoreRank.Good && lineRank != GameplayScoreRank.Passable);
     }
 
     private bool ScoreDecreasedToFailedRank()
     {
         return (scorePercentage < PassableCutMinimumScore &&
                 scorePercentage <= FailedCutScore &&
-                lineRank == LineCutRank.Passable && lineRank != LineCutRank.Failed);
+                lineRank == GameplayScoreRank.Passable && lineRank != GameplayScoreRank.Failed);
     }
 
     private void CheckScoreRanges()

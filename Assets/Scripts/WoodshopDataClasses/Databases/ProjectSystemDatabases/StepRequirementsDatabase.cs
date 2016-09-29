@@ -3,6 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
+/// <summary>
+/// Database for each Step Requirement instance
+/// </summary>
+[System.Serializable]
 public class StepRequirementsDatabase : AbstractDatabase<StepCompletionRequirements>
 {
     private static StepRequirementsDatabase _instance;

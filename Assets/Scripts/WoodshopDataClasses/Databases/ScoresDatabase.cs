@@ -4,10 +4,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System;
 
+/* NOTES:
+ * This is sensitive game data. 
+ * Save this data to a binary file on the user's phone.
+ * 
+ * There needs to be an instance of a Score class for each link between a player 
+ * and a project
+ */
+
 /// <summary>
 /// Stores all scores in the game
 /// </summary>
-public class ScoresDatabase : AbstractDatabase<Score>
+[System.Serializable]
+public class ScoresDatabase : AbstractDatabase<Score>, IBinaryDatabase
 {
     private static ScoresDatabase _instance;
 
@@ -65,11 +74,16 @@ public class ScoresDatabase : AbstractDatabase<Score>
         get
         {
             //Save to binary file on the user's device
-            return new List<string> { "Scores" };
+            return new List<string> { Application.persistentDataPath + "Scores" };
         }
     }
 
     protected override void LoadFromDataFile()
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool SaveToBinaryFile()
     {
         throw new NotImplementedException();
     }

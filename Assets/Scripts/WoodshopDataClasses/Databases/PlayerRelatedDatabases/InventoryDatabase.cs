@@ -3,10 +3,16 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 
+/* NOTES:
+ * This is sensitive game data. 
+ * Save this data to a binary file on the user's phone.
+ */
+
 /// <summary>
 /// Stores the different inventory instances (one instance per player)
 /// </summary>
-public class InventoryDatabase : AbstractDatabase<Inventory>
+[System.Serializable]
+public class InventoryDatabase : AbstractDatabase<Inventory>, IBinaryDatabase
 {
     private static InventoryDatabase _instance;
 
@@ -35,11 +41,16 @@ public class InventoryDatabase : AbstractDatabase<Inventory>
         get
         {
             //Save to binary file on the user's device
-            return new List<string> { "PlayerInventory" };
+            return new List<string> { Application.persistentDataPath + "PlayerInventory" };
         }
     }
 
     protected override void LoadFromDataFile()
+    {
+        throw new NotImplementedException();
+    }
+
+    public bool SaveToBinaryFile()
     {
         throw new NotImplementedException();
     }
